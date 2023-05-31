@@ -1,0 +1,23 @@
+<!--
+ * @Description: Low Latency End-to-End Streaming Speech Recognition with a Scout Network 笔记
+ * @Autor: 郭印林
+ * @Date: 2022-08-11 17:14:45
+ * @LastEditors: 郭印林
+ * @LastEditTime: 2022-08-11 17:27:04
+-->
+
+## Low Latency End-to-End Streaming Speech Recognition with a Scout Network 笔记
+1. 基于Transformer，提出了一种新的流式语音识别模型
+2. 包含一个 scout network 和 一个 recognition network
+3. scout network 不看未来的帧来检测整个 word boundary
+4. recognition network 预测下一个sub-word
+
+本文提出的模型和之前的两种方法的区别
+![1660210022560](image/streaming-asr-Scout/1660210022560.png)
+
+### Introduction
+1. MoChA 和 TA 的提出，用于替代encoder-decoder之前的全局注意力
+2. 之前的流式识别方法：
+    + look-ahead 法
+    + chunk-based 法
+3. 
