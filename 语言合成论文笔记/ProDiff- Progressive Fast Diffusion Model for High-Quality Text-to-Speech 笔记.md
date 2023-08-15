@@ -31,8 +31,6 @@ DDPM 在语音合成有两个阻碍：
 	+ 此时，$p_\theta\left(\boldsymbol{x}_0 \mid \boldsymbol{x}_t\right)$ 是显示的分布，是通过神经网络 $f_\theta\left(\boldsymbol{x}_t, t\right)$ 直接输入 $\boldsymbol{x}_t$ 输出 $\boldsymbol{x}_0$ 来建模的，然后根据后验分布 $q\left(\boldsymbol{x}_{t-1} \mid \boldsymbol{x}_t, \boldsymbol{x}_0\right)$ 采样生成 $\boldsymbol{x}_{t-1}$
 	+ 此时损失就定义为数据空间 $\boldsymbol{x}$ 的均方误差，采用 SGD 优化：$$\mathcal{L}_\theta^{\mathrm{Gen}}=\left\|\boldsymbol{x}_\theta\left(\alpha_t \boldsymbol{x}_0+\sqrt{1-\alpha_t^2} \boldsymbol{\epsilon}\right)-\boldsymbol{x}_0\right\|_2^2, \boldsymbol{\epsilon} \sim \mathcal{N}(0, \boldsymbol{I})$$
 
-
-
 ## ProDiff
 
 ### Motivation
@@ -55,7 +53,7 @@ DDIM 使用非马尔可夫生成过程来加速推理，同时还保留了 DDPM 
 
 ### 架构
 
-基于 FastSpeech2 的结构，如图：![](../../Pasted%20image%2020230527213138.png)
+基于 FastSpeech2 的结构，如图：![](image/Pasted%20image%2020230527213138.png)
 包含：
 + phoneme encoder，把 phoneme embedding 转换成 hidden sequence，由 feed-forward transformer blocks 组成
 + variance adaptor 预测每个 phoneme 的duration，将 hidden sequence 的长度转成语音帧的长度，同时也给出一些能量、音高的特征，模型是 2层 1D 卷积 + ReLU + LN + Dropout + Linear
@@ -71,7 +69,7 @@ Variance Reconstruction Loss 音高、持续时间和能量的重构损失：$$\
 
 ### 训练和推理过程
 
-训练：![](../../Pasted%20image%2020230527221719.png)
+训练：![](image/Pasted%20image%2020230527221719.png)
 
 推理：![](../../Pasted%20image%2020230527221849.png)
 推理的时候，迭代预测 $\boldsymbol{x}_0$，然后根据后验概率把噪声加上去，随着 time step 增加，生成的 mel谱细节更多。最后使用预训练的 vocoder 生成波形。

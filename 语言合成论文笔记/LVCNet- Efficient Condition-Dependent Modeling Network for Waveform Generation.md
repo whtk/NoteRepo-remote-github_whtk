@@ -24,7 +24,7 @@
 具体来说，有一个 kernel predictor 根据 local 条件序列来预测 卷积核，local 条件序列中的每个元素都对应一系列的卷积核，用于在相关的序列中进行卷积运算。
 > 换句话说，卷积核在每个序列片段（区间）都不一一样，不同区间使用其对应的卷积核，而这个区间的卷积核与当前的 local 条件向量有关。
 
-![](../../Pasted%20image%2020230527152259.png)
+![](image/Pasted%20image%2020230527152259.png)
 
 和 wavenet 相似，也采用了 gated activation unit，local 条件卷积表示为：$$\begin{aligned}
 & \left\{\boldsymbol{x}_{(i)}\right\}_m=\operatorname{split}(\boldsymbol{x}) \\
@@ -39,7 +39,7 @@
 
 ### LVCNet 和 Parallel WaveGAN
 
-![](../../Pasted%20image%2020230527152946.png)
+![](image/Pasted%20image%2020230527152946.png)
 
 堆叠具有不同 dilations 的 LVC 得到 LVCNet，输入输出添加 linear 层 实现信道转换，同时还有 skip connection。
 

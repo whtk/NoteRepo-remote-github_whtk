@@ -30,7 +30,7 @@
         -   %st：被虚拟机偷走的cpu
 7.  文件传输
     1.  Linux2Win：scp -P 10022 [guoyinlin@10.115.110.54](mailto:guoyinlin@10.115.110.54):/home2/guoyinlin/path/filename path/filename
-    2.  Win2Linux：scp -P 10022 /path/filename [guoyinlin@10.115.110.54](mailto:guoyinlin@10.115.110.54):/home2/guoyinlin/
+    2.  Win2Linux：scp -P 4001 /path/filename guoyinlin@10.13.71.37:/home3/guoyinlin/
     3. linux 互传：scp -r -P 10022  /home/guoyinlin/test.txt guoyinlin@10.13.71.37:/home/destination（-r 表示传输文件夹）
 8.  ls 命令：
     1.  ls -a 查看隐藏文件
@@ -50,6 +50,13 @@
 	1. ps -ef 详细列出所有的进程
 14. 数据搜索
 	1. 在文件中查找关键词（输出关键词所在的行）：grep key_word file，同时 key_word 可以是正则表达式
+15. 修改 dns：sudo vim /etc/hosts；刷新 sudo /etc/init.d/network-manager restart
+16. 重启网络：service networking restart
+17. 解决 gitee 无法使用 ssh 连接：
+	1. 设置 网卡的 mtu 为 1200（一般默认都是 1500）
+	2. 重启网络
+18. linux 审计系统查看：sudo tail -f /var/log/audit/audit.log
+	1. 高级审计：ausearch
 
 
 
@@ -68,3 +75,20 @@ test 中的
 > 注意，判读字符串变量的时候，要加 "${val}" 双引号！！ 
 
 此外，还可以使用 ```[ condition ]``` 来实现（注意方括号之间一定要有空格）。
+
+### linux 种 # profile、bashrc、bash_profile 的区别
+
++ profile：位于 **/etc/profile**，用于设置系统级的环境变量和启动程序，在这个文件下配置会对**所有用户**生效，当用户登录（login）时，文件会被执行，并从 `/etc/profile.d` 目录的配置文件中查找shell设置。
++ bashrc：用于配置函数或别名：
+	+ 系统级的位于 `/etc/bashrc`，对所有用户生效。
+	+ 用户级的位于 `~/.bashrc`，仅对当前用户生效
+	+ bashrc 文件只会对指定的 shell 类型起作用，bashrc 只会被 bash shell 调用
++ bash_profile：只对单一用户有效，文件存储位于`**~/.bash_profile**`，该文件是一个用户级的设置，可以理解为某一个用户的 profile 目录下，这个文件同样也可以用于配置环境变量和启动程序，但只针对单个用户有效。和 profile 文件类似，bash_profile 也会在用户登录（login）时生效，也可以用于设置环境变理。但与 profile 不同，bash_profile 只会对当前用户生效。
+
+这三种文件类型的差异用一句话表述就是：
+
+`/etc/profile`，`/etc/bashrc` 是系统全局环境变量设定；
+
+`~/.profile`，`~/.bashrc` 用户目录下的私有环境变量设定。
+三个文件的执行情况如下：
+![](v2-ea0eb026fe5e9c7a9520a930f34e5125_720w.webp)

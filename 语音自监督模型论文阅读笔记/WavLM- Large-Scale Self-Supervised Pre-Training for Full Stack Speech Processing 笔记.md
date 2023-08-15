@@ -34,10 +34,12 @@ HuBERT 采用 masked speech prediction 任务，损失仅在 masked 的区域进
 ![](image/Pasted%20image%2020230525223344.png)
 采用 Transformer 作为 backbone，包含
 + 卷积特征编码，包含 七个  temporal convolution+layer norm+GELU，一帧大概 25 ms，输出为 $\mathbf{x}$
-+ Transformer Encoder，采用 gated relative position bias，令 $\left\{\mathbf{h}_i\right\}_{i=1}^T$ 表示 attention 的输入，每个 $\mathbf{h}_i$ 都投影到 Q、K、V ：$$\mathbf{q}_i, \mathbf{k}_i, \mathbf{v}_i=\mathbf{h}_i \mathbf{W}^Q, \mathbf{h}_i \mathbf{W}^K, \mathbf{h}_i \mathbf{W}^V$$然后 attention 计算为：$$\begin{aligned}
++ Transformer Encoder，采用 gated relative position bias，令 $\left\{\mathbf{h}_i\right\}_{i=1}^T$ 表示 attention 的输入，每个 $\mathbf{h}_i$ 都投影到 Q、K、V ：$$\mathbf{q}_i, \mathbf{k}_i, \mathbf{v}_i=\mathbf{h}_i \mathbf{W}^Q, \mathbf{h}_i \mathbf{W}^K, \mathbf{h}_i \mathbf{W}^V$$
+然后 attention 计算为：$$\begin{aligned}
 a_{i j} & \propto \exp \left\{\frac{\mathbf{q}_i \cdot \mathbf{k}_j}{\sqrt{d_k}}+r_{i-j}\right\} \\
 \tilde{\mathbf{h}}_i & =\sum_{j=1}^T a_{i j} \mathbf{v}_j
-\end{aligned}$$这里的 $r_{i-j}$ 就是 gated relative position bias，其计算为：$$\begin{aligned}
+\end{aligned}$$
+这里的 $r_{i-j}$ 就是 gated relative position bias，其计算为：$$\begin{aligned}
 & g_i^{\text {(update })}, g_i^{(\text {reset) }}=\sigma\left(\mathbf{q}_i \cdot \mathbf{u}\right), \sigma\left(\mathbf{q}_i \cdot \mathbf{w}\right) \\
 & \tilde{r}_{i-j}=w g_i^{(\text {reset) }} d_{i-j} \\
 & r_{i-j}=d_{i-j}+g_i^{\text {(update })} d_{i-j}+\left(1-g_i^{\text {(update })}\right) \tilde{r}_{i-j}
@@ -69,7 +71,8 @@ $m=800$ 表示 maximum offset。
 
 attention 训练过程种，使用 fp16 训练会出现 overflow，也就是计算 attention score 的时候 $\frac{\mathbf{q}_i \cdot \mathbf{k}_j}{\sqrt{d}}$ 会大于 fp16 的上界。
 
-采用了一个简单的方法来提高其上界，softmax 满足 $$\operatorname{softmax}(\mathbf{x}+\alpha)_k=\operatorname{softmax}(\mathbf{x})_k$$
+采用了一个简单的方法来提高其上界，softmax 满足
+$$\operatorname{softmax}(\mathbf{x}+\alpha)_k=\operatorname{softmax}(\mathbf{x})_k$$
 其中，$\alpha$ 为常数，则计算 score 的时候变为：$$\begin{aligned}
 \alpha_{i, j} & \propto \exp \left\{\frac{\mathbf{q}_i \cdot \mathbf{k}_j}{\sqrt{d}}+r_{i-j}\right\} \\
 & =\exp \left\{\left(\frac{\mathbf{q}_i}{c \sqrt{d}} \cdot \mathbf{k}_j-\max _{j^{\prime} \leq T}\left(\frac{\mathbf{q}_i}{c \sqrt{d}} \cdot \mathbf{k}_{j^{\prime}}\right)\right) \times c+r_{i-j}\right\} .

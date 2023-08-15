@@ -45,7 +45,7 @@ $$L_{VAE}(\phi, \theta) = -\mathbin{E}_{z\sim q_{\phi}(z|x)}[\text{log }p_\theta
 该损失函数也被称为证据下界（ELBO），其右侧第一项称为重建损失，第二项称为KL损失。
 
 ### 2.3 参数化技巧
-损失函数中存在期望项，需要根据分布 $q_\phi(z|x)$ 对 $z$ 进行采样，该过程是一个随机过程且无法被用于梯度的反向传播计算，因此通常将 $z$ 进行参数化为一个确定的变量 $z = \Tau_\phi(x,\epsilon)$，其中 $\epsilon$ 服从均值为 $0$，协方差矩阵为单位阵的多元高斯分布，且 $z = \mu + \sigma * \epsilon$，此时在encoder部分，需要学习从输入变量 $x$ 到 $\mu、\sigma$ 的变换 $\mu = f_{\phi_1}(x)、\sigma = f_{\phi_2}(x)$，且 $\sigma$ 通常为对角阵，此变换通常用神经网络来建模。
+损失函数中存在期望项，需要根据分布 $q_\phi(z|x)$ 对 $z$ 进行采样，该过程是一个随机过程且无法被用于梯度的反向传播计算，因此通常将 $z$ 进行参数化为一个确定的变量 $z = \tau_\phi(x,\epsilon)$，其中 $\epsilon$ 服从均值为 $0$，协方差矩阵为单位阵的多元高斯分布，且 $z = \mu + \sigma * \epsilon$，此时在encoder部分，需要学习从输入变量 $x$ 到 $\mu、\sigma$ 的变换 $\mu = f_{\phi_1}(x)、\sigma = f_{\phi_2}(x)$，且 $\sigma$ 通常为对角阵，此变换通常用神经网络来建模。
   +  $q_\phi(z|x) \sim \mathcal{N}(\mu,\sigma)$
   +  $p_\theta(z) \sim \mathcal{N}(0, I)$
 
