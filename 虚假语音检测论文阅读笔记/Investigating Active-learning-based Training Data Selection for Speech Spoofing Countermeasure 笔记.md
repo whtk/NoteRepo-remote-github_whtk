@@ -30,7 +30,7 @@
 这里的 $\mathcal{U}_{seed}$ 可以假设来自一个精心选择的数据库，而 $\mathcal{U}_{pool}$ 来自各种语音数据的合集。AL 的目的就是从 $\mathcal{U}_{pool}$ 中选择有用的数据。
 
 关键在于第五行，常见的是 certainty scoring ，将 certainty 较小的加入到 train set 中，从而 CM 可以学习对困难的数据进行分类。
-> 关于 AL 的更多原理，见 [[主动学习调研]]。
+> 关于 AL 的更多原理，见 [[../调研笔记/主动学习/主动学习调研]]。
 
 本文比较了几种不同的 score 计算方法，最后都会为每个语音得到一个 score $c_{m}\in \mathbb{R}$，具体见下一节。 
 

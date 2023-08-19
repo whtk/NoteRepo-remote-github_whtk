@@ -8,3 +8,5 @@
 7. Diffusion models from scratch in PyTorch https://www.youtube.com/watch?v=a4Yfz2FxXiY&t=388s
 8. Diffusion and Score-Based Generative Models https://www.youtube.com/watch?v=wMmqCMwuM2Q
 9. Tutorial on Score-Based Generative Modeling (PyTorch) https://colab.research.google.com/drive/120kYYBOVa1i0TD85RjlEkFjaWDxSFUx3?usp=sharing
+10. 科学空间系列博客
+11. Understanding Diffusion Models: A Unified Perspective https://calvinyluo.com/2022/08/26/diffusion-tutorial.html
