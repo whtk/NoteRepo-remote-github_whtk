@@ -43,6 +43,6 @@
 
 堆叠具有不同 dilations 的 LVC 得到 LVCNet，输入输出添加 linear 层 实现信道转换，同时还有 skip connection。
 
-用在 Parallel WaveGAN 中，其实就是直接替换其中的 wavenet 模块。
+用在 Parallel WaveGAN 中，其实就是直接替换其中的 WaveNet 模块。
 
 ## 实验（略）
