@@ -1,11 +1,3 @@
-<!--
- * @Author: guoyinlin 1264514936@qq.com
- * @Date: 2022-08-03 11:05:34
- * @LastEditors: guoyinlin 1264514936@qq.com
- * @LastEditTime: 2022-08-03 15:53:59
- * @FilePath: \论文笔记\nvc-net.md
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 
 ## NVC-Net: End-to-End Adversarial Voice Conversion
 
