@@ -1,7 +1,9 @@
-> ICML 2021，openai
+> ICML 2021，OpenAI
 
 1. 表明只需要一点点的修改，DDPM 可以实现 competitive 的对数似然同时提高采样质量
 2. 学习 reverse diffusion process 的方差，可以减少一个数量级的采样次数，同时保持采样的质量几乎不变
+
+> 总的来说，本文的改进是，将 DDPM scale 到一个更大的数据集，然后调参效果能变好；DDPM 中的方差也变得可学习，而不是一开始就指定好的；改进了 noise schedule，使用余弦而非线性的 schedule。
 
 ## Introduction
 

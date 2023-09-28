@@ -3,6 +3,8 @@
 1. 表明，diffusion 模型可以实现图像合成质量超过 sota 生成模型
 2. 对于 conditional 的图像合成，采用 classifier guidance 来提高生成质量
 
+> 总的来说，本文的贡献就是提出了 classifier guidance 的 diffusion 模型，而且通过改进 diffusion 中的 Unet 结构表明了 diffusion 的效果可以做到很好！
+
 ## Introduction
 
 1. GAN 的合成质量在 FID、Inception score 和 precision 上很不错，但是这些指标并不能体现多样性，GAN 生成的图像也缺乏多样性，而且 GAN 也不好 train
@@ -61,7 +63,7 @@ DDPM 用 UNet 架构 + skip connection + attention + timestep embedding，本文
 
 NCSN 给出一种实现方法，将分类器的梯度作为 diffusion 模型的梯度。具体来说，基于噪声图像 $x_t$ 训练分类器 $p_\phi\left(y \mid x_t, t\right)$，然后用这个模型的梯度 $\nabla_{x_t} \log p_\phi\left(y \mid x_t, t\right)$ 来引导 diffusion 的采样过程。
 
-下面回顾利用分类器推导 conditional 采样过程的两种方法。
+下面给出利用分类器推导 conditional 采样过程的两种方法。
 
 ### Conditional Reverse Noising Process
 

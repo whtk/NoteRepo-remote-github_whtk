@@ -5,6 +5,8 @@
 3. 可以通过调整步数在 推理速度和采样质量之间进行 trade off；且发现只要 6 步就可以生成高质量的样本
 4. 效果超过 adversarial non-autoregressive baselines 而且 匹配 strong likelihood-based autoregressive baseline
 
+> 是一个基于 DPM 的 vocoder，从噪声信号开始，以
+
 ## Introduction
 
 1. 音频生成任务主要是自回归模型，但是速度慢

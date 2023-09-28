@@ -4,6 +4,11 @@
 2. 使用 SDE 框架将传统的 DPM 模型推广到从不同参数的噪声中重构数据，且可以在质量和推理速度之间进行 trade off
 3. MOS 值可以和 SOTA 的方法相竞争
 
+> 简单来说，这篇论文就是把 mel 谱 的生成过程用 diffusion 来建模，但是：
+> 	在一般的 TTS 中，通常是使用 text encoder output representation 作为 mel decoder 的输入
+> 	在一般的 diffusion 模型中，通常是从噪声开始生成样本（先验分布为噪声）
+> 因此，这里就相当于把 text encoder output representation 作为 diffusion 模型的先验来进行 diffusion 过程，由于此时的先验分布不是高斯噪声，所以作者推导了任意高斯分布 $\mathcal{N}(\mu, \Sigma)$ 下的 diffusion 过程。
+
 ## Introduction
 
 1. TTS 系统包含两个部分：
