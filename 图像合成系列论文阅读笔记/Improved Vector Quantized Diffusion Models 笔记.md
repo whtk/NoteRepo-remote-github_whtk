@@ -16,3 +16,7 @@
 ## 背景：VQ-Diffusion
 
 见 [Vector Quantized Diffusion Model for Text-to-Image Synthesis 笔记](Vector%20Quantized%20Diffusion%20Model%20for%20Text-to-Image%20Synthesis%20笔记.md) 。
+
+ VQ-Diffusion 可能存在以下两个问题：
+ 1. 条件信息是直接注入到 $p_\theta(\boldsymbol{x}_{t-1}|\boldsymbol{x}_t,y)$，我们希望网络根据 $\boldsymbol{x}_t,y$ 来恢复 $\boldsymbol{x}_{t-1}$，但是网络可能忽略 $y$ 因为 $\boldsymbol{x}_t$ 已经包含了足够的信息，从而导致生成的图片和 $y$ 相关性不大
+ 2. 对于第 $t$ 个 time step，$\boldsymbol{x}_{t-1}$ 中的每个点都从 $\boldsymbol{x}_{t}$ 中独立采样，从而无法建模不同位置之间的相关性
