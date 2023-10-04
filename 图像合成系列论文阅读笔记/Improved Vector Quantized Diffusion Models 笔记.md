@@ -15,4 +15,4 @@
 
 ## 背景：VQ-Diffusion
 
-略
+见 [Vector Quantized Diffusion Model for Text-to-Image Synthesis 笔记](Vector%20Quantized%20Diffusion%20Model%20for%20Text-to-Image%20Synthesis%20笔记.md) 。
