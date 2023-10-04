@@ -34,11 +34,11 @@
 & e_f=e_m+e_j
 \end{aligned}$$
 如图：
-![](../../Pasted%20image%2020230609225334.png)
+![](image/Pasted%20image%2020230609225334.png)
 
 ### Stacked Multi-scale Residual Convolution（多尺度残差卷积网络）
 
-![](../../Pasted%20image%2020230609225551.png)
+![](image/Pasted%20image%2020230609225551.png)
 
 前面得到的 embedding $e_f$ 输入到 Stacked Multi-scale Residual Convolution（SMRC）子网络中，其包含多个多尺度的卷积层，每个多尺度卷积层的多尺度依次在 channel 维度上concatenate 1×1、3×3和5×5 的kernel。然后再通过残差连接，最后接 BN。
 
@@ -59,7 +59,7 @@
 ### 截断的 BPTT
 
 decoder 采用截断的 BPTT 进行更新，仅处理相关音频序列的一个子序列，同时复用语言序列，直到相关音频序列结束：
-![](../../Pasted%20image%2020230609230910.png)
+![](image/Pasted%20image%2020230609230910.png)
 其实方法很简单，就是重复的部分可以 batch 计算，其他的部分就单独计算。
 
 最后采用 L-BFGS 从mel谱生成语音。
@@ -74,6 +74,6 @@ decoder 采用截断的 BPTT 进行更新，仅处理相关音频序列的一个
 3. 在用表征混合训练的模型中，PWCB 是否优于基于字符的模型
 
 结果：
-![](../../Pasted%20image%2020230609231902.png)
+![](image/Pasted%20image%2020230609231902.png)
 
 + 混合表征模型的质量更好

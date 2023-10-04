@@ -15,7 +15,7 @@
 
 ### soft attention
 
-具体见[Neural machine translation by jointly learning to align and translate 笔记](Neural%20machine%20translation%20by%20jointly%20learning%20to%20align%20and%20translate%20笔记.md)，模型包含两个 RNN，encoder RNN 输入为 $\mathbf{x}=\left\{x_1, \ldots, x_T\right\}$，产生一系列的 hidden state $\mathbf{h}=\left\{h_1, \ldots, h_T\right\}$，这里的 $\mathbf{h}$ 称为 memory，decoder RNN 基于 memory 产生输出序列 $\mathbf{y}=\left\{y_1, \ldots, y_U\right\}$。
+具体见[Neural Machine Translation by Jointly Learning to Align and Translate 笔记](Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate%20笔记.md)，模型包含两个 RNN，encoder RNN 输入为 $\mathbf{x}=\left\{x_1, \ldots, x_T\right\}$，产生一系列的 hidden state $\mathbf{h}=\left\{h_1, \ldots, h_T\right\}$，这里的 $\mathbf{h}$ 称为 memory，decoder RNN 基于 memory 产生输出序列 $\mathbf{y}=\left\{y_1, \ldots, y_U\right\}$。
 
 计算 $y_i$ 时，soft attention-based decoder 采用 learnable nonlinear function $a$ 产生标量 $e_{i,j}$，通常 $a$ 时一个单层神经网络+tanh激活。标量通过 softmax 产生概率分布，然后对 $\mathbf{h}$ 进行加权产生 context vector $c_i$，整个计算过程如下：
 $$\begin{aligned}

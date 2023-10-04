@@ -2,8 +2,10 @@
 
 1. FastSpeech 和 ParaNet 可以并行生成 mel 谱
 2. 但是没有自回归模型 TTS 模型作为外部 aligner 来引导时，并行 TTS 模型无法训练
-3. 提出 Glow-TTS，基于 flow 的并行 TTS 模型，不需要任何外部对齐器，通过结合 flow 和 动态编程，模型可以搜索 文本 和 latent representation 之间最可能的  monotonic alignment，可以实现快速、多样性、可控的生成
+3. 提出 Glow-TTS，基于 flow 的并行 TTS 模型，不需要任何外部对齐器，通过结合 flow 和 dynamic programming，模型可以搜索 文本 和 latent representation 之间最可能的  monotonic alignment，可以实现快速、多样性、可控的生成
 4. 合成质量和 Tacotron 2 差不多
+
+> 使用 flow 来建模生成过程，提出 monotonic alignment search 来进行强制对齐。
 
 ## Introduction
 

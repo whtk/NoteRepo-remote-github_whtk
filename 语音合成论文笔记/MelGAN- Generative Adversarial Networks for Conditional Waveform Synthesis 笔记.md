@@ -3,6 +3,8 @@
 1. 表明，训练GAN可用产生高质量的音频
 2. 提出 MelGAN，是非自回归、全卷积的，参数更少，对未知说话人的 mel 谱 效果也很好，而且速度很快
 
+>总的来说，这篇文章是第一个把 GAN 用于 vocoder 的，主要贡献一个是 generator 网络的设计，另一个是 discriminator 中引入多尺度（MSD）。
+
 ## Introduction
 
 1. 当前的 mel谱 转音频有三个方法：

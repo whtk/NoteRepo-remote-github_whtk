@@ -71,7 +71,7 @@ Variance Reconstruction Loss 音高、持续时间和能量的重构损失：$$\
 
 训练：![](image/Pasted%20image%2020230527221719.png)
 
-推理：![](../../Pasted%20image%2020230527221849.png)
+推理：![](image/Pasted%20image%2020230527221849.png)
 推理的时候，迭代预测 $\boldsymbol{x}_0$，然后根据后验概率把噪声加上去，随着 time step 增加，生成的 mel谱细节更多。最后使用预训练的 vocoder 生成波形。
 
 ## 相关工作（略）

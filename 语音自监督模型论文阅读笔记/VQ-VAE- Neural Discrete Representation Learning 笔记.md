@@ -60,6 +60,10 @@ decoder 仅通过损失的第一项优化，encoder 通过第一和第三项，e
 
 ### 先验
 
+> 为啥需要这样一个先验网络：
+> 因为这里的 VQ-VAE 其实本质上一个 VQ-AE，也就是它只能学习 latent variable，但是不能学习其分布，从而无法做生成任务，于是需要一个先验网络来基于量化后的东西做生成，这里用的就是 pixel-CNN。
+
+
 如前文所述，在训练 VQ-VAE 的时候，先验为均匀分布。训练完成后，在 $z$ 上拟合一个 auto regressive 分布，所以可以通过 ancestral sampling 来生成 $x$。
 
 对于图像，采用 PixelCNN，对于音频，采用 WaveNet，auto regressive 的模型训练的时候是和 VQ-VAE 联合训练的。

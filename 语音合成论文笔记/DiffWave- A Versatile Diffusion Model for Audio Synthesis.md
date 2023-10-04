@@ -5,6 +5,8 @@
 3. DiffWave 可以实现基于 mel 谱 的条件声码器, 以类别为条件的生成 和 无条件生成
 4. 效果和 WaveNet 相匹配，但是速度更快；在无条件生成中超过了基于 GAN 的模型
 
+> 本质为 vocoder，从噪声波形开始进行的迭代去噪，思路就是标准的 DDPM 的思路，但是模型不用 U-Net 而是用的 WaveNet 中的 卷积+gate 的网络，然后生成的时候不是一个点一个点的生成，而是一次生成所有的样本点（因为没有使用因果卷积）。
+
 ## Introduction
 
 1. 自回归模型在无条件下会生成虚构的单词的声音或者效果不好的样本，因为没有任何条件去生成长序列是非常困难的
@@ -12,7 +14,7 @@
 	1. 非自回归，从而可以并行合成高质量音频
 	2. 灵活，相比于 flow-based 模型没有任何结构的约束
 	3. 损失只有 ELBO，没有额外的损失函数（如 spectrogram-based losses）
-	4. 普适：可以进行有条件或五无条件的生成
+	4. 普适：可以进行有条件或无条件的生成
 3. 本文贡献：
 	1. DiffWave 采用类似于 WaveNet 的 feed-forward and bidirectional dilated convolution，在合成质量上和 WaveNet 相匹配，但速度更快
 	2. 只有 2.64M 的参数，在 V100 GPU上合成 22.05 kHz 的音频，且比 real time 快5倍，但是比 SOTA 的 flow-based 模型慢

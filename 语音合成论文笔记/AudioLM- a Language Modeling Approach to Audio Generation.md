@@ -1,4 +1,4 @@
-> Google，ASLP，2023
+> Google，TASLP，2023
 
 1. 提出 AudioLM，一种高质量的音频生成框架，将输入音频映射为离散的 token 序列，然后在离散表征空间下，把音频生成任务看成是一种 language modeling 的任务
 2. 提出一种 hybrid tokenization scheme 可以实现  reconstruction quality 和 long-term structure 之间的 trade-off

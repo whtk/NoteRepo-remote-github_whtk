@@ -84,7 +84,7 @@ $$
 &L_{f m}(G)=\mathbb{E}_{(y, z)}\left[\sum_{l=1}^{T} \frac{1}{N_{l}}\left\|D^{l}(y)-D^{l}(G(z))\right\|_{1}\right]
 \end{aligned}
 $$
-其中，$T 表示判别器的总层数，$D^{l}$ 输出判别器第 $l$ 层共有 $N_l$ 个 feature map 
+其中，$T$ 表示判别器的总层数，$D^{l}$ 输出判别器第 $l$ 层共有 $N_l$ 个 feature map 
 
 #### 总损失
 将VAE和GAN训练进行组合，总训练损失为：

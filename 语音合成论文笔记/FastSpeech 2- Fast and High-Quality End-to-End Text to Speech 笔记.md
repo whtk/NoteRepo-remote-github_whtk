@@ -18,6 +18,8 @@ FastSpeech 2 简化了 1 的 训练，同时避免了信息的损失：
 	+ 将 pitch contour 使用连续的小波变换转换为 pitch spectrogram
 + 提出 FastSpeech 2s，不使用 mel 谱 作为中间输出直接生成波形
 
+> 相比于 FastSpeech 1 的改进在于，引入更多的条件信息（energy、pitch 等），mel 谱 的 decoder 的 target 是 GT（而不是 1 中的蒸馏后的），没有使用额外的 Transformer TTS 来提取对齐，而是用了 forced alignment 来得到 duration label。
+
 ## FastSpeech 2 和 2s
 
 ### Motivation
