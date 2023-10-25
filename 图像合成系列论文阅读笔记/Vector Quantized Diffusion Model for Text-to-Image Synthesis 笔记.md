@@ -1,4 +1,4 @@
-> ICCV 2022，中科大、微软
+> CVPR 2022，中科大、微软
 
 1. 提出 VQ-Diffusion，基于 VQ-VAE，但是 latent space 是用 diffusion model 建模的
 2. 发现在 text-to-image 上的效果特别好，而且生成效率也很高
@@ -44,7 +44,6 @@ forward diffusion 通过马尔可夫链 $q\left(\boldsymbol{x}_t \mid \boldsymbo
 reverse diffusion 从 $\boldsymbol{z}_T$ 开始，从 latent variables 中逐步降噪，通过从 $q\left(\boldsymbol{x}_{t-1} \mid \boldsymbol{x}_t, \boldsymbol{x}_0\right)$ 中进行采样来恢复数据。但是由于推理时 $\boldsymbol{x}_0$ 是未知的，于是训练一个 transformer  网络来近似 $p_\theta\left(\boldsymbol{x}_{t-1} \mid \boldsymbol{x}_t, \boldsymbol{y}\right)$。
 
 给定 image token 记为 $x_0^i \in\{1,2, \ldots, K\}$，忽略上标的位置，简写为 $x_0$。
-> 注意：不使用 boldsymbol 符号的是 token index（也就是一个实数），加粗的是 image。
 
 定义转移概率 $\left[\boldsymbol{Q}_t\right]_{m n}=q\left(x_t=m \mid x_{t-1}=n\right) \in\mathbb{R}^{K\times K}$  ，此时 forward Markov diffusion 可以写为：
 $$q\left(x_t \mid x_{t-1}\right)=\boldsymbol{v}^{\top}\left(x_t\right) \boldsymbol{Q}_t \boldsymbol{v}\left(x_{t-1}\right)$$
@@ -106,6 +105,6 @@ $$\operatorname{AdaLN}(h,t)=a_t\text{LayerNorm}(h)+b_t$$
 
 推理时，可以跳过一些步骤来实现快速的推理。假设 time stride 是 $\Delta_t$，实际上可以不需要按照 $x_T,x_{T-1},x_{T-2},\dots,x_0$，而可以按照 $x_T,x_{T-\Delta_t},x_{T-2\Delta_t}\dots x_0$ 来采样：
 $$p_\theta(x_{t-\Delta_t}|x_t,y)=\sum_{\tilde{x}_0=1}^Kq(x_{t-\Delta_t}|x_t,\tilde{x}_0)p_\theta(\tilde{x}_0|x_t,y)$$
-> 这不就是 DDIM 中的方法吗？？？
+> 其实就是 DDIM 中的方法。
 
 ## 实验（略）

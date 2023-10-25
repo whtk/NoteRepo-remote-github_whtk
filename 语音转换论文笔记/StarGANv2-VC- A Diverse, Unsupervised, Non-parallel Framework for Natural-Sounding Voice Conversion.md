@@ -11,7 +11,7 @@
 2. 模型的效果优于当时的SOTA，AUTO-VC，接近TTS的方法，VTN
 3. 本文贡献：
    1. 把 StarGANv2引入VC
-   2. 提出了一个新型的 adversarial source classifier loss，能够极大的提高转换语音和目标语音的相似性
+   2. 提出了一个新型的 adversarial source classifier loss，能够极大的提高转换语音和目标  语音的相似性
    3. 使用 ASR 网络和 F0 提取网络的感知损失perceptual loss
 
 ## 方法

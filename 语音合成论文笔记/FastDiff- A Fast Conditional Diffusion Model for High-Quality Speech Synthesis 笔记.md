@@ -1,3 +1,4 @@
+> IJCAI 2022，浙江大学，腾讯 AI Lab，Dong Yu，Zhou Zhao
 
 1. DDPM 的迭代采用非常耗时
 2. 提出 FasrDiff，通过堆叠不同 receptive field patterns 的 time-aware location-variable 卷积层来自适应地建模长期依赖，同时采用 noise schedule predictor 来减少采样步数而不牺牲质量

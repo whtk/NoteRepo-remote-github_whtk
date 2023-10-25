@@ -1,4 +1,4 @@
-> 来自论文 - SpecAugment: A Simple Data Augmentation Method for Automatic Speech Recognition，Google Brain 团队，InterSpeech 2019
+> Google Brain ，Interspeech 2019
 
 1. 提出了SpecAugment，用于语音识别的数据增强方法
 2. 直接应用于声学特征，包括三种增强方法：

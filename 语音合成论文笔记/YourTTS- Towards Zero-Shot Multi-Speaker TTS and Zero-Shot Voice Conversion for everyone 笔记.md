@@ -22,7 +22,7 @@
 
 基于 VITS，但是有一些修改以实现 zero-shot multi-speaker 和 multilingual training。
 
-第一，采用 raw text 作为输入而非 phoneme，避免了 grapheme 转到 phoneme 效果不好。
+第一，采用 raw text 作为输入而非 phoneme，避免了 grapheme 转到  phoneme 效果不好。
 
 采用的是 VITS 中用的 transformer-based text encode，但是对于 multilingual training，将一个 4维的可训练的 language embedding 拼接到 character embedding 中，同时把 transformer blocks 增加到 10，channel 数 196，decoder 采用 4 层的 affine coupling layers，每个 layer 都包含 4 个 WaveNet residual blocks。
 

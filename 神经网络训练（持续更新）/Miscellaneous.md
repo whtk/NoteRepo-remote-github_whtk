@@ -18,6 +18,10 @@
 6. 关于 model.train() 和 model.eval() 会导致模型的性能差异，原因是模型中存在 batch norm 和 dropout 层
 7. 李宏毅老师讲的一个故事：对于 sequence to sequence 的模型，在 inference 的时候加上 dropout 会有奇效
 8. 模型的参数中，如果涉及乘法运算（加法除外），其**永远不能初始化为 0**，不然这个参数是不会被更新的！！！
+9. pytorch 中，torch.stft 两个不同的版本差异还挺大的：
+	1. 对于 1.6.0 的版本，torch.stft 返回的维度是 $*\times N\times T \times 2$
+	2. 而对于 1.13 的版本，则通过 return_complex 这个参数来控制：![](image/Pasted%20image%2020231020120537.png)
+	3. 两种不同的返回维度影响 spectrogram 的计算，也就是最后要不要执行 sum(-1)
 
 
 ## 音频基础

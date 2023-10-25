@@ -20,3 +20,39 @@
  VQ-Diffusion 可能存在以下两个问题：
  1. 条件信息是直接注入到 $p_\theta(\boldsymbol{x}_{t-1}|\boldsymbol{x}_t,y)$，我们希望网络根据 $\boldsymbol{x}_t,y$ 来恢复 $\boldsymbol{x}_{t-1}$，但是网络可能忽略 $y$ 因为 $\boldsymbol{x}_t$ 已经包含了足够的信息，从而导致生成的图片和 $y$ 相关性不大
  2. 对于第 $t$ 个 time step，$\boldsymbol{x}_{t-1}$ 中的每个点都从 $\boldsymbol{x}_{t}$ 中独立采样，从而无法建模不同位置之间的相关性
+
+## 方法
+
+### Discrete Classifier-free Guidance
+
+因为文本合成图像任务中，生成的图像是理所当然要匹配文本条件的，VQ-Diffusion 只是简单地将这种条件信息注入到 denoising network，但是网络本身可能会忽略引入的条件而直接用带噪输入来预测原始图像，从而导致生成的图像和文本相关性不高。
+
+从优化的角度看，diffusion 模型优化的目标是最大化 $p(x|y)$，但是这并不能提高分类概率 $p(y|x)$，于是何不一起优化 $\log p(x|y)+s\log p(y|x)$，采用 $s$ 控制权重，此时最大化此式可以写为：
+$$\begin{aligned}
+&\operatorname*{argmax}_x[\log p(x|y)+s\log p(y|x)] \\
+&=\underset{x}{\operatorname*{argmax}}[(s+1)\log p(x|y)-s\log\frac{p(x|y)}{p(y|x)}] \\
+&=\underset{x}{\operatorname*{argmax}}[(s+1)\log p(x|y)-s\log\frac{p(x|y)p(y)}{p(y|x)}] \\
+&=\underset{x}{\operatorname*{argmax}}[(s+1)\log p(x|y)-s\log p(x)] \\
+&=\operatorname{argmax}[\log p(x)+(s+1)(\log p(x|y)-\log p(x))]
+\end{aligned}$$
+> 如果只看到倒数第二行，其实和 classifier free 的方法完全一致，这里的 $s$ 就是原论文的 $w$。
+
+在 classifier-free 中，通常使用 null 作为条件来计算 $p(x)$，但是这种固定的 text embedding 效果不太好，于是提出使用  learnable vector，然后推理的时候，使用的 denoising 方法为：
+$$\log p_\theta\left(x_{t-1} \mid x_t, y\right)=\log p_\theta\left(x_{t-1} \mid x_t\right)+(s+1)\left(\log p_\theta\left(x_{t-1} \mid x_t, y\right)-\log p_\theta\left(x_{t-1} \mid x_t\right)\right)$$
+虽然公式相同，但是和连续的情况下的 diffusion 还是有点不同的：
++ （没看懂）
++ 连续的 diffusion 不是直接预测概率 $p(x|y)$ 而是采用梯度来近似，而离散情况可以直接估计这个概率分布
++ 连续的 diffusion 的用的是 null，这里用的是一个可学习的 vector
+
+### High-quality Inference Strategy
+
+VQ-Difffusion 不同位置的 token 的采样都是独立的，提出两个方法：
+
+第一是每个 step 都采样更少的 token，这样就主要让 diffusion 过程来学习 token 之间的相关性而非通过采样实现。
+
+第二是，当 image token 的位置 $i$ 的 token 是 $[MASK]$ 即 $x_t^i=[MASK]$ 时，下式成立：
+$$\begin{aligned}q(x_{t-1}^i=[\text{MASK}]|x_t^i=[\text{MASK}],x_0^i)=\bar{\gamma}_t-1/\bar{\gamma}_t\end{aligned}$$
+这表明，每个位置都有相同的概率离开 $[MASK]$ 状态，也就是从 $[MASK]$ 状态转移到非 $[MASK]$ 状态是位置无关的，但是作者发现不同的位置有不同的  confidence，而且是 purity 越高， confidence 越高。于是可以基于 purity score 进行重要性采样而非是之前的随机采样，而位置 $t$ time step $t$ 的 purity 定义为：
+$$purity(i,t)=\max_{j=1...K}p(x_0^i=j|x_t^i)$$
+从而可以提升采样质量。
+

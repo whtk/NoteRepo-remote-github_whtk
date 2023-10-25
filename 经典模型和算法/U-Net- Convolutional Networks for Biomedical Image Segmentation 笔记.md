@@ -1,4 +1,4 @@
-# U-Net: Convolutional Networks for Biomedical Image Segmentation 笔记
+> 
 
 1. 提出一种网络和训练策略，采用数据增强更有效地利用可获得的带注释的样本
 2. 网络结构包括：用于捕获上下文的收缩路径和用于实现精确定位的对称的扩展路径

@@ -31,7 +31,7 @@ RawGAT-ST  结构如图：
 ![[Pasted image 20221208203244.png]]
 ### 前端特征表征
 
-RawGAT-ST 使用 sinc 滤波器进行前端特征提取（原理见 [[SincNet]]），但是不学习滤波器的截止频率，而是使用固定的截止频率来避免过拟合（？？？，那不就和传统的特征提取差不多了）。
+RawGAT-ST 使用 sinc 滤波器进行前端特征提取（原理见 [[../经典模型和算法/Speaker Recognition from Raw Waveform with SincNet 笔记]]），但是不学习滤波器的截止频率，而是使用固定的截止频率来避免过拟合（？？？，那不就和传统的特征提取差不多了）。
 
 sinc 层的输出加上一层 channel 维度然后进行转换到二维的时频表征，然后送到二维的 residual 网络中学习高层特征表征 $\mathbf{S} \in \mathbb{R}^{C \times F \times T}$ ，每个 residual 网络都包括 BN层、SeLU 激活、2D 卷积和 max-pooling（用于下采样） 。
 

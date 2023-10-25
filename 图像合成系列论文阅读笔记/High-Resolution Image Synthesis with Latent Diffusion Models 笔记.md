@@ -1,4 +1,4 @@
-> CVPR，2022
+> CVPR，2022，Ludwig Maximilian University
 
 1. 之前的 diffusion 都是 pixel-based（即输入输出都是图片），为了让 diffusion 模型可以在有限计算资源的场景下训练，把 diffusion 用在 latent space 中
 2. 在模型中引入 cross-attention layers，使得 diffusion 可以当成强大生成器，可以以输入为条件（如文本）生成高分辨率的合成图片

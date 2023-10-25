@@ -1,4 +1,4 @@
-> Speaker Recognition from Raw Waveform with SincNet 笔记，Bengio 大佬2019年的文章
+> Bengio，2019
 
 1. 提出一种新的 CNN 架构——SincNet，在第一层卷积中探索更有意义的滤波器
 2. SincNet 基于 parametrized sinc functions ，实现了 带通滤波器

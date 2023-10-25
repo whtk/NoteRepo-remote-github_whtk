@@ -7,7 +7,7 @@
 ## Introduction
 
 1. 大多数传统前端依赖于数字信号处理（DSP）算法来提取频谱、相位或其他声学特征，如 LFCC 和 CQCC
-	2. 也有论文使用可训练的 DNN 前端的，如 [[FastAudio- A Learnable Audio Front-End For Spoof Speech Detection 笔记]]、[[SincNet]] 等
+	2. 也有论文使用可训练的 DNN 前端的，如 [[FastAudio- A Learnable Audio Front-End For Spoof Speech Detection 笔记]]、[[../经典模型和算法/Speaker Recognition from Raw Waveform with SincNet 笔记]] 等
 2. 但是基于 DSP 的前端对不匹配域的鲁棒性有待改进，基于 DNN 的前端需要大量的真实和虚假语音数据来训练
 3. 所以使用自监督模型作为前端，以自监督的方式提取特征，可以在任何语音数据库中进行训练，本文的研究内容有：
 	1. 适合自监督前端的后端架构
