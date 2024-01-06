@@ -5,3 +5,5 @@
 3. MOS 在 LJSpeech 上超过了 ESPNet2-TTS 
 
 ## Introduction
+
+1. 两阶段的 TTS 通常会导致合成质量的降低，
