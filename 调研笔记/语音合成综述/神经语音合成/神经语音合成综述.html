@@ -1,0 +1,812 @@
+<!DOCTYPE html><html><head>
+      <title>&#x795E;&#x7ECF;&#x8BED;&#x97F3;&#x5408;&#x6210;&#x7EFC;&#x8FF0;</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////Users/guoyinlin/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.6.10/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <style>
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}
+
+/* highlight */
+pre[data-line] {
+  position: relative;
+  padding: 1em 0 1em 3em;
+}
+pre[data-line] .line-highlight-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+}
+
+pre[data-line] .line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  background: hsla(24, 20%, 50%,.08);
+  background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+
+pre[data-line] .line-highlight:before, 
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: .4em;
+  left: .6em;
+  min-width: 1em;
+  padding: 0 .5em;
+  background-color: hsla(24, 20%, 50%,.4);
+  color: hsl(24, 20%, 95%);
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: .3em;
+  border-radius: 999px;
+  text-shadow: none;
+  box-shadow: 0 1px white;
+}
+
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-end);
+  top: auto;
+  bottom: .4em;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p,html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div{display:inline}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  300px/2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <blockquote>
+<p>&#x8BBA;&#x6587; - A Survey on Neural Speech Synthesis</p>
+</blockquote>
+<blockquote>
+<p>TTS&#xFF1A;&#x8BED;&#x97F3;&#x5408;&#x6210;</p>
+</blockquote>
+<ol>
+<li>&#x7EFC;&#x8FF0;&#x795E;&#x7ECF;TTS&#xFF0C;&#x5305;&#x62EC;&#x6587;&#x672C;&#x5206;&#x6790;&#x3001;&#x58F0;&#x5B66;&#x6A21;&#x578B;&#x548C;&#x58F0;&#x7801;&#x5668;</li>
+<li>&#x7EFC;&#x8FF0;&#x9AD8;&#x9636;&#x4E3B;&#x9898;&#xFF0C;&#x5305;&#x62EC;&#x5FEB;&#x901F; TTS&#xFF0C;&#x4F4E;&#x8D44;&#x6E90; TTS&#x3001;&#x9C81;&#x68D2; TTS&#x3001;&#x8868;&#x8FBE;&#x6027; TTS &#x548C; &#x81EA;&#x9002;&#x5E94; TTS</li>
+</ol>
+<h2 class="mume-header" id="introduction">Introduction</h2>
+
+<h3 class="mume-header" id="tts-%E5%8E%86%E5%8F%B2">TTS &#x5386;&#x53F2;</h3>
+
+<ol>
+<li>&#x53D1;&#x97F3;&#x5408;&#x6210;&#xFF1A;&#x6A21;&#x62DF;&#x4EBA;&#x7C7B;&#x53D1;&#x97F3;&#x5668;&#x5B98;&#x7684;&#x884C;&#x4E3A;&#x6765;&#x4EA7;&#x751F;&#x8BED;&#x97F3;</li>
+<li>&#x5171;&#x632F;&#x5CF0;&#x5408;&#x6210;&#xFF1A;&#x901A;&#x8FC7;&#x63A7;&#x5236;&#x7B80;&#x5316;&#x7684;&#x6E90;&#x6EE4;&#x6CE2;&#x5668;&#x6A21;&#x578B;&#x7684;&#x4E00;&#x7EC4;&#x89C4;&#x5219;&#x6765;&#x751F;&#x6210;&#x8BED;&#x97F3;</li>
+<li>&#x62FC;&#x63A5;&#x5408;&#x6210;&#xFF1A;&#x4F9D;&#x8D56;&#x4E8E;&#x5B58;&#x50A8;&#x5728;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x7684;&#x8BED;&#x97F3;&#x7247;&#x6BB5;&#x7684;&#x62FC;&#x63A5;</li>
+<li>&#x7EDF;&#x8BA1;&#x53C2;&#x6570;&#x5408;&#x6210;&#xFF08;SPSS&#xFF09;&#xFF1A;&#x9996;&#x5148;&#x5F97;&#x5230;&#x5408;&#x6210;&#x8BED;&#x97F3;&#x6240;&#x9700;&#x7684;&#x58F0;&#x5B66;&#x53C2;&#x6570;&#xFF0C;&#x4F7F;&#x7528;&#x7B97;&#x6CD5;&#x4ECE;&#x53C2;&#x6570;&#x4E2D;&#x6062;&#x590D;&#x8BED;&#x97F3;&#xFF0C;&#x5305;&#x62EC;&#xFF1A;
+<ol>
+<li>&#x6587;&#x672C;&#x5206;&#x6790;</li>
+<li>&#x58F0;&#x5B66;&#x6A21;&#x578B;</li>
+<li>&#x58F0;&#x7801;&#x5668;</li>
+</ol>
+</li>
+<li>&#x795E;&#x7ECF;&#x8BED;&#x97F3;&#x5408;&#x6210;&#xFF1A;&#x4ECE; WaveNet &#x5F00;&#x59CB;&#xFF0C;&#x5B83;&#x91C7;&#x7528;&#xFF08;&#x6DF1;&#x5EA6;&#xFF09;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x4F5C;&#x4E3A;&#x8BED;&#x97F3;&#x5408;&#x6210;&#x7684;&#x6A21;&#x578B;&#x4E3B;&#x5E72;</li>
+</ol>
+<h2 class="mume-header" id="%E6%96%87%E7%AB%A0%E7%BB%84%E7%BB%87">&#x6587;&#x7AE0;&#x7EC4;&#x7EC7;</h2>
+
+<p>&#x5982;&#x56FE;&#xFF1A;<img src="image/Pasted%20image%2020230128114328.png" alt></p>
+<p>TTS &#x4E2D;&#x7684;&#x5173;&#x952E;&#x6280;&#x672F;&#x5305;&#x542B;&#xFF1A;</p>
+<ul>
+<li>&#x6587;&#x672C;&#x5206;&#x6790;</li>
+<li>&#x58F0;&#x5B66;&#x6A21;&#x578B;</li>
+<li>&#x58F0;&#x7801;&#x5668;<br>
+&#x8FD8;&#x4ECB;&#x7ECD;&#x4E86;&#x5168;&#x7AEF;&#x5230;&#x7AEF;&#x7684; TTS&#xFF0C;&#x4EE5;&#x53CA;&#x4E00;&#x4E9B;&#x5176;&#x4ED6;&#x7684;&#x5206;&#x7C7B;&#x65B9;&#x6CD5;&#x3002;</li>
+</ul>
+<p>TTS &#x7684;&#x8FDB;&#x9636;&#x95EE;&#x9898;&#x6709;&#xFF1A;</p>
+<ul>
+<li>&#x52A0;&#x5FEB;&#x751F;&#x6210;&#x901F;&#x7387;&#xFF08;&#x5FEB;&#x901F; TTS&#xFF09;&#xFF0C;&#x51CF;&#x5C0F;&#x6A21;&#x578B;&#x5927;&#x5C0F;</li>
+<li>&#x63D0;&#x9AD8;&#x5408;&#x6210;&#x8BED;&#x97F3;&#x7684;&#x53EF;&#x7406;&#x89E3;&#x6027;&#x548C;&#x81EA;&#x7136;&#x5EA6;</li>
+<li>&#x4F4E;&#x8D44;&#x6E90;&#x573A;&#x666F;&#x4E0B;&#x6784;&#x5EFA;&#x6570;&#x636E;&#x9AD8;&#x6548;&#x7684; TTS &#x6A21;&#x578B;</li>
+<li>&#x63D0;&#x9AD8;&#x8BED;&#x97F3;&#x5408;&#x6210;&#x7684;&#x9C81;&#x68D2;&#x6027;&#xFF0C;&#x907F;&#x514D;&#x751F;&#x6210;&#x7684;&#x8BED;&#x97F3;&#x5B58;&#x5728;&#x5355;&#x8BCD;&#x8DF3;&#x8FC7;&#x6216;&#x91CD;&#x590D;&#x7684;&#x73B0;&#x8C61;</li>
+<li>&#x751F;&#x6210;&#x5BCC;&#x6709;&#x8868;&#x73B0;&#x529B;&#x7684;&#x8BED;&#x97F3;&#xFF0C;&#x63A7;&#x5236;&#x8BED;&#x97F3;&#x7684;&#x98CE;&#x683C;&#x3001;&#x97F5;&#x5F8B;&#x7B49;</li>
+<li>&#x8C03;&#x6574;TTS&#x6A21;&#x578B;&#x4EE5;&#x652F;&#x6301;&#x4EFB;&#x4F55;&#x76EE;&#x6807;&#x8BF4;&#x8BDD;&#x8005;&#x7684;&#x8BED;&#x97F3;&#xFF08;&#x81EA;&#x9002;&#x5E94;&#x6570;&#x636E;&#x548C;&#x53C2;&#x6570;&#xFF09;</li>
+</ul>
+<h2 class="mume-header" id="tts-%E4%B8%AD%E7%9A%84%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF">TTS &#x4E2D;&#x7684;&#x5173;&#x952E;&#x6280;&#x672F;</h2>
+
+<p><img src="image/Pasted%20image%2020230128115036.png" alt></p>
+<h3 class="mume-header" id="%E4%B8%BB%E8%A6%81%E5%88%86%E7%B1%BB">&#x4E3B;&#x8981;&#x5206;&#x7C7B;</h3>
+
+<p>&#x5206;&#x79BB;&#x5F0F;&#xFF1A;</p>
+<ol>
+<li>&#x6587;&#x672C;&#x5206;&#x6790;&#x5C06;&#x5B57;&#x7B26;&#x8F6C;&#x6362;&#x4E3A;&#x97F3;&#x7D20;&#x6216;&#x8BED;&#x8A00;&#x7279;&#x5F81;</li>
+<li>&#x58F0;&#x5B66;&#x6A21;&#x578B;&#x4ECE;&#x8BED;&#x8A00;&#x7279;&#x5F81;&#x6216;&#x5B57;&#x7B26;/&#x97F3;&#x7D20;&#x751F;&#x6210;&#x58F0;&#x5B66;&#x7279;&#x5F81;</li>
+<li>&#x58F0;&#x7801;&#x5668;&#x6839;&#x636E;&#x8BED;&#x8A00;&#x7279;&#x5F81;&#x6216;&#x58F0;&#x5B66;&#x7279;&#x5F81;&#x751F;&#x6210;&#x6CE2;&#x5F62;</li>
+</ol>
+<p>&#x5168;&#x7AEF;&#x5230;&#x7AEF;&#x5F0F;&#xFF1A;&#x76F4;&#x63A5;&#x5C06;&#x5B57;&#x7B26;/&#x97F3;&#x7D20;&#x8F6C;&#x6362;&#x4E3A;&#x6CE2;&#x5F62;</p>
+<p>TTS &#x8FC7;&#x7A0B;&#x4E2D;&#x7684;&#x51E0;&#x79CD;&#x6570;&#x636E;&#x683C;&#x5F0F;&#xFF1A;</p>
+<ol>
+<li>&#x5B57;&#x7B26;&#xFF0C;&#x6587;&#x672C;&#x7684;&#x539F;&#x59CB;&#x683C;&#x5F0F;</li>
+<li>&#x8BED;&#x8A00;&#x7279;&#x5F81;&#xFF0C;&#x5206;&#x6790;&#x6587;&#x672C;&#x83B7;&#x5F97;&#xFF0C;&#x97F3;&#x7D20;&#x662F;&#x8BED;&#x8A00;&#x7279;&#x5F81;&#x4E2D;&#x6700;&#x91CD;&#x8981;&#x7684;&#x5143;&#x7D20;&#x4E4B;&#x4E00;&#xFF0C;&#x901A;&#x5E38;&#x5728;&#x57FA;&#x4E8E;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x7684; TTS &#x6A21;&#x578B;&#x4E2D;&#x5355;&#x72EC;&#x7528;&#x4E8E;&#x8868;&#x793A;&#x6587;&#x672C;</li>
+<li>&#x58F0;&#x5B66;&#x7279;&#x5F81;&#xFF0C;&#x5982; LSP&#x3001;MCC&#x3001;MGC&#x3001;F0&#x3001;BAP&#x7B49;&#xFF0C;&#x5728;&#x57FA;&#x4E8E;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x7684;&#x7AEF;&#x5230;&#x7AEF; TTS &#x6A21;&#x578B;&#x4E2D;&#xFF0C;mel&#x8C31;&#x56FE;&#x6216;&#x7EBF;&#x6027;&#x8C31;&#x56FE;&#x901A;&#x5E38;&#x7528;&#x4F5C;&#x58F0;&#x5B66;&#x7279;&#x5F81;</li>
+<li>&#x6CE2;&#x5F62;&#xFF1A;&#x8BED;&#x97F3;&#x7684;&#x6700;&#x7EC8;&#x683C;&#x5F0F;</li>
+</ol>
+<p>&#x51E0;&#x79CD;&#x4ECE;&#x6587;&#x672C;&#x5230;&#x6CE2;&#x5F62;&#x7684;&#x6570;&#x636E;&#x6D41;&#xFF1A;</p>
+<ul>
+<li>&#x5B57;&#x7B26;&#x2192; &#x8BED;&#x8A00;&#x7279;&#x5F81;&#x2192; &#x58F0;&#x5B66;&#x7279;&#x5F81;&#x2192; &#x6CE2;&#x5F62;</li>
+<li>&#x5B57;&#x7B26;&#x2192; &#x97F3;&#x7D20;&#x2192; &#x58F0;&#x5B66;&#x7279;&#x5F81;&#x2192; &#x6CE2;&#x5F62;</li>
+<li>&#x5B57;&#x7B26;&#x2192; &#x8BED;&#x8A00;&#x7279;&#x5F81;&#x2192; &#x6CE2;&#x5F62;</li>
+<li>&#x5B57;&#x7B26;&#x2192; &#x97F3;&#x7D20;&#x2192; &#x58F0;&#x5B66;&#x7279;&#x5F81;&#x2192; &#x6CE2;&#x5F62;</li>
+<li>&#x5B57;&#x7B26;&#x2192; &#x97F3;&#x7D20;&#x2192; &#x6CE2;&#x5F62;</li>
+<li>&#x5B57;&#x7B26;&#x2192; &#x6CE2;&#x5F62;</li>
+</ul>
+<h3 class="mume-header" id="%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90">&#x6587;&#x672C;&#x5206;&#x6790;</h3>
+
+<blockquote>
+<p>&#x5C06;&#x8F93;&#x5165;&#x6587;&#x672C;&#x8F6C;&#x6362;&#x4E3A;&#x5305;&#x542B;&#x4E30;&#x5BCC;&#x7684;&#x8BED;&#x97F3;&#x548C;&#x97F5;&#x5F8B;&#x4FE1;&#x606F;&#x7684;&#x8BED;&#x8A00;&#x7279;&#x5F81;</p>
+</blockquote>
+<p>&#x5728;&#x7AEF;&#x5230;&#x7AEF;&#x7684;&#x795E;&#x7ECF;TTS&#x4E2D;&#xFF0C;&#x7531;&#x4E8E;&#x57FA;&#x4E8E;&#x795E;&#x7ECF;&#x7684;&#x6A21;&#x578B;&#x7684;&#x5EFA;&#x6A21;&#x80FD;&#x529B;&#x5927;&#xFF0C;&#x5B57;&#x7B26;&#x6216;&#x97F3;&#x7D20;&#x5E8F;&#x5217;&#x88AB;&#x76F4;&#x63A5;&#x4F5C;&#x4E3A;&#x5408;&#x6210;&#x7684;&#x8F93;&#x5165;&#xFF0C;&#x56E0;&#x6B64;&#x6587;&#x672C;&#x5206;&#x6790;&#x6A21;&#x5757;&#x88AB;&#x5927;&#x5927;&#x7B80;&#x5316;&#xFF0C;&#x4F46;&#x4ECD;&#x7136;&#x9700;&#x8981;&#x6587;&#x672C;&#x89C4;&#x8303;&#x5316;&#x6765;&#x4ECE;&#x5B57;&#x7B26;&#x8F93;&#x5165;&#x4E2D;&#x83B7;&#x5F97;&#x6807;&#x51C6;&#x5355;&#x8BCD;&#x683C;&#x5F0F;&#xFF0C;&#x9700;&#x8981;&#x5B57;&#x5F62;&#x5230;&#x97F3;&#x7D20;&#x7684;&#x8F6C;&#x6362;&#x6765;&#x4ECE;&#x6807;&#x51C6;&#x5355;&#x8BCD;&#x683C;&#x5F0F;&#x4E2D;&#x83B7;&#x5F97;&#x97F3;&#x7D20;&#x3002;</p>
+<p>&#x6587;&#x672C;&#x5206;&#x6790;&#x7684;&#x5178;&#x578B;&#x4EFB;&#x52A1;&#xFF1A;<img src="image/Pasted%20image%2020230128152747.png" alt></p>
+<ul>
+<li>&#x6587;&#x672C;&#x89C4;&#x8303;&#x5316;&#xFF1A;&#x539F;&#x59CB;&#x4E66;&#x9762;&#x6587;&#x672C;&#xFF08;&#x975E;&#x6807;&#x51C6;&#x5355;&#x8BCD;&#xFF09;&#x901A;&#x8FC7;&#x6587;&#x672C;&#x89C4;&#x8303;&#x5316;&#x8F6C;&#x6362;&#x4E3A;&#x53EF;&#x4EE5;&#x53D1;&#x97F3;&#x7684;&#x5355;&#x8BCD;&#xFF0C;&#x5982; &#x201D;1989&#x201C; &#x8F6C;&#x6362;&#x4E3A; &#x201D;nineteen eighty nine&#x201C;</li>
+<li>&#x5206;&#x8BCD;&#xFF1A;&#x5BF9;&#x4E8E;&#x6C49;&#x8BED;&#x7B49;&#x8BED;&#x8A00;&#xFF0C;&#x9700;&#x8981;&#x4ECE;&#x6587;&#x672C;&#x4E2D;&#x68C0;&#x6D4B;&#x5355;&#x8BCD;&#x8FB9;&#x754C;</li>
+<li>&#x8BCD;&#x6027;&#x6807;&#x6CE8;&#xFF1A;&#x6807;&#x6CE8;&#x6BCF;&#x4E2A;&#x5355;&#x8BCD;&#x7684;&#x8BCD;&#x6027;</li>
+<li>&#x97F5;&#x5F8B;&#x9884;&#x6D4B;&#xFF1A;&#x97F5;&#x5F8B;&#x4FE1;&#x606F;&#xFF0C;&#x5982;&#x8BED;&#x97F3;&#x7684;&#x8282;&#x594F;&#x3001;&#x91CD;&#x97F3;&#x548C;&#x8BED;&#x8C03;&#xFF0C;&#x5BF9;&#x5E94;&#x4E8E;&#x97F3;&#x8282;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x3001;&#x54CD;&#x5EA6;&#x548C;&#x97F3;&#x9AD8;&#x7684;&#x53D8;&#x5316;&#xFF0C;&#x5728;&#x4EBA;&#x7C7B;&#x4EA4;&#x6D41;&#x4E2D;&#x8D77;&#x7740;&#x91CD;&#x8981;&#x7684;&#x611F;&#x77E5;&#x4F5C;&#x7528;</li>
+<li>&#x5B57;&#x7D20;&#x5230;&#x97F3;&#x7D20;&#x8F6C;&#x6362;&#xFF08;Grapheme-to-phoneme (G2P)&#xFF09;&#xFF1A;&#x5982;&#xFF0C;&#x5355;&#x8BCD;&#x201C;speech&#x201D;&#x88AB;&#x8F6C;&#x6362;&#x4E3A;&#x201C;s p iy ch&#x201D;</li>
+</ul>
+<h3 class="mume-header" id="%E5%A3%B0%E5%AD%A6%E6%A8%A1%E5%9E%8B">&#x58F0;&#x5B66;&#x6A21;&#x578B;</h3>
+
+<blockquote>
+<p>&#x4ECE;&#x8BED;&#x8A00;&#x7279;&#x5F81;&#x6216;&#x76F4;&#x63A5;&#x4ECE;&#x97F3;&#x7D20;&#x6216;&#x5B57;&#x7B26; &#x751F;&#x6210; &#x58F0;&#x5B66;&#x7279;&#x5F81;</p>
+</blockquote>
+<p>&#x53EF;&#x4EE5;&#x5206;&#x4E3A;&#xFF1A;</p>
+<ul>
+<li>SPSS&#x4E2D;&#x7684;&#x58F0;&#x5B66;&#x6A21;&#x578B;&#xFF0C;&#x901A;&#x5E38;&#x6839;&#x636E;&#x8BED;&#x8A00;&#x7279;&#x5F81;&#x9884;&#x6D4B;&#x5982;MGC&#x3001;BAP&#x548C;F0&#x7B49;&#x58F0;&#x5B66;&#x7279;&#x5F81;</li>
+<li>&#x57FA;&#x4E8E;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x7684;&#x7AEF;&#x5230;&#x7AEF; TTS &#x4E2D;&#x7684;&#x58F0;&#x5B66;&#x6A21;&#x578B;&#xFF0C;&#x6839;&#x636E;&#x97F3;&#x7D20;&#x6216;&#x5B57;&#x7B26;&#x9884;&#x6D4B;&#x5982;mel&#x8C31;&#x56FE;&#x7B49;&#x58F0;&#x5B66;&#x7279;&#x5F81;<br>
+<img src="image/Pasted%20image%2020230128154654.png" alt></li>
+</ul>
+<h4 class="mume-header" id="spss-%E4%B8%AD%E7%9A%84%E5%A3%B0%E5%AD%A6%E6%A8%A1%E5%9E%8B">SPSS &#x4E2D;&#x7684;&#x58F0;&#x5B66;&#x6A21;&#x578B;</h4>
+
+<p>&#x4E3B;&#x8981;&#x7684;&#x65B9;&#x6CD5;&#x6709;&#xFF1A;</p>
+<ul>
+<li>HMM&#xFF0C;&#x5728;&#x6539;&#x53D8;&#x8BF4;&#x8BDD;&#x8005;&#x8EAB;&#x4EFD;&#x3001;&#x60C5;&#x7EEA;&#x548C;&#x8BF4;&#x8BDD;&#x98CE;&#x683C;&#x65B9;&#x9762;&#x66F4;&#x4E3A;&#x7075;&#x6D3B;&#xFF0C;&#x4F46;&#x8D28;&#x91CF;&#x4E0D;&#x884C;</li>
+<li>DNN&#xFF0C;&#x63D0;&#x9AD8;&#x4E86; HMM &#x7684;&#x8D28;&#x91CF;</li>
+<li>LSTM&#xFF0C;&#x66F4;&#x597D;&#x5730;&#x5EFA;&#x6A21;&#x957F;&#x65F6;&#x95F4;&#x8DE8;&#x5EA6;&#x7684;&#x4E0A;&#x4E0B;&#x6587;</li>
+<li>CBHG&#x3001;VoiceLoop&#x3001;GAN &#x7B49;&#x7B49;</li>
+</ul>
+<h4 class="mume-header" id="%E7%AB%AF%E5%88%B0%E7%AB%AF-tts-%E4%B8%AD%E7%9A%84%E5%A3%B0%E5%AD%A6%E6%A8%A1%E5%9E%8B">&#x7AEF;&#x5230;&#x7AEF; TTS &#x4E2D;&#x7684;&#x58F0;&#x5B66;&#x6A21;&#x578B;</h4>
+
+<p>&#x76F8;&#x6BD4;&#x4E8E; SPSS&#xFF0C;&#x7AEF;&#x5230;&#x7AEF;&#x7684; TTS &#x4E2D;&#x7684;&#x58F0;&#x5B66;&#x6A21;&#x578B;&#x7684;&#x4F18;&#x70B9;&#x6709;&#xFF1A;</p>
+<ul>
+<li>&#x65E0;&#x9700;&#x8BED;&#x8A00;&#x548C;&#x58F0;&#x5B66;&#x7279;&#x5F81;&#x7684;&#x5BF9;&#x9F50;</li>
+<li>&#x5EFA;&#x6A21;&#x80FD;&#x529B;&#x66F4;&#x5F3A;</li>
+</ul>
+<h5 class="mume-header" id="%E5%9F%BA%E4%BA%8E-rnn-%E7%9A%84%E6%A8%A1%E5%9E%8B">&#x57FA;&#x4E8E; RNN &#x7684;&#x6A21;&#x578B;</h5>
+
+<p>Tacotron &#x7CFB;&#x5217;&#xFF1A;</p>
+<ul>
+<li>&#x7B2C;&#x4E00;&#x7248;&#xFF0C;&#x8F93;&#x5165;&#x5B57;&#x7B26;&#xFF0C;&#x8F93;&#x51FA;&#x7EBF;&#x6027;&#x8C31;&#xFF0C;encoder-attention-decoder &#x7ED3;&#x6784;&#xFF0C;GriffinLim &#x751F;&#x6210;&#x6CE2;&#x5F62;</li>
+<li>&#x7B2C;&#x4E8C;&#x7248;&#xFF0C;&#x751F;&#x6210; Mel &#x8C31;&#xFF0C;&#x4F7F;&#x7528;&#x989D;&#x5916;&#x7684; WaveNet &#x751F;&#x6210;&#x6CE2;&#x5F62;</li>
+<li>&#x6539;&#x8FDB;&#xFF1A;
+<ul>
+<li>GST Tacotron &#x548C; Ref-Tacotron&#xFF1A;&#x4F7F;&#x7528;&#x53C2;&#x8003;&#x7F16;&#x7801;&#x5668;&#x548C;&#x6837;&#x5F0F;&#x6807;&#x8BB0;&#x6765;&#x589E;&#x5F3A;&#x8BED;&#x97F3;&#x7684;&#x8868;&#x73B0;&#x529B;</li>
+<li>DurIAN &#x548C; &#x975E;&#x6CE8;&#x610F;&#x529B;Tacotron&#xFF1A;&#x53BB;&#x9664;&#x6CE8;&#x610F;&#x529B;&#x673A;&#x5236;&#xFF0C;&#x4F7F;&#x7528;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x9884;&#x6D4B;&#x56E0;&#x5B50;&#x8FDB;&#x884C;&#x81EA;&#x56DE;&#x5F52;&#x9884;&#x6D4B;</li>
+<li>Parallel Tacotron 1&#x3001;2&#xFF1A;&#x5C06;Tacotron&#x4E2D;&#x7684;&#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;&#x6539;&#x4E3A;&#x975E;&#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;</li>
+<li>Wave Tacotron&#xFF1A;&#x57FA;&#x4E8E;Tacotron&#x6784;&#x5EFA;&#x7AEF;&#x5230;&#x7AEF;&#x6587;&#x672C;&#x5230;&#x6CE2;&#x5F62;&#x6A21;&#x578B;</li>
+</ul>
+</li>
+</ul>
+<h5 class="mume-header" id="%E5%9F%BA%E4%BA%8E-cnn-%E7%9A%84%E6%A8%A1%E5%9E%8B">&#x57FA;&#x4E8E; CNN &#x7684;&#x6A21;&#x578B;</h5>
+
+<p>DeepVoice &#x7CFB;&#x5217;&#xFF1A;</p>
+<ul>
+<li>&#x7B2C;&#x4E00;&#x7248;&#xFF1A;&#x662F;&#x4E00;&#x4E2A;&#x7528;&#x5377;&#x79EF;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x589E;&#x5F3A;&#x7684;SPSS&#x7CFB;&#x7EDF;&#xFF0C;&#x901A;&#x8FC7;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x83B7;&#x5F97;&#x8BED;&#x8A00;&#x7279;&#x5F81;&#x540E;&#xFF0C;DeepVoice&#x5229;&#x7528;&#x57FA;&#x4E8E; WaveNet &#x7684;&#x58F0;&#x7801;&#x5668;&#x751F;&#x6210;&#x6CE2;&#x5F62;</li>
+<li>&#x7B2C;&#x4E8C;&#x7248;&#xFF1A;&#x901A;&#x8FC7;&#x6539;&#x8FDB;&#x7684;&#x7F51;&#x7EDC;&#x7ED3;&#x6784;&#x548C;&#x591A;&#x8BF4;&#x8BDD;&#x4EBA;&#x5EFA;&#x6A21;&#x6765;&#x589E;&#x5F3A; DeepVoice&#xFF0C;&#x91C7;&#x7528;       Tacotron+WaveNet&#xFF0C;&#x4F7F;&#x7528; Tacotron &#x751F;&#x6210;&#x7EBF;&#x6027;&#x9891;&#x8C31;&#x56FE;&#xFF0C;&#x7136;&#x540E;&#x4F7F;&#x7528;WaveNet&#x751F;&#x6210;&#x6CE2;&#x5F62;</li>
+<li>&#x7B2C;&#x4E09;&#x7248;&#xFF0C;&#x4F7F;&#x7528; &#x5168;&#x5377;&#x79EF;&#x7F51;&#x7EDC;&#x7ED3;&#x6784;&#x8FDB;&#x884C;&#x8BED;&#x97F3;&#x5408;&#x6210;&#xFF0C;&#x4ECE;&#x5B57;&#x7B26;&#x751F;&#x6210;mel&#x8C31;&#x56FE;&#xFF0C;&#x53EF;&#x62D3;&#x5C55;&#x5230;&#x591A;&#x8BF4;&#x8BDD;&#x4EBA;</li>
+</ul>
+<p>ClariNet&#xFF1A;&#x5168;&#x7AEF;&#x5230;&#x7AEF;&#x7684;&#x65B9;&#x5F0F;&#x4ECE;&#x6587;&#x672C;&#x751F;&#x6210;&#x6CE2;&#x5F62;<br>
+ParaNet&#xFF1A;&#x5168;&#x5377;&#x79EF;&#x975E;&#x81EA;&#x56DE;&#x5F52;&#x6A21;&#x578B;<br>
+DCTTS&#xFF1A;&#x5229;&#x7528;&#x57FA;&#x4E8E;&#x5377;&#x79EF;&#x7684; encoder-attention-decoder &#x7F51;&#x7EDC;&#x4ECE;&#x5B57;&#x7B26;&#x5E8F;&#x5217;&#x751F;&#x6210;mel&#x8C31;&#x3002;&#x4F7F;&#x7528;&#x8C31;&#x8D85;&#x5206;&#x8FA8;&#x7387;&#x7F51;&#x7EDC;&#x83B7;&#x5F97;&#x7EBF;&#x6027;&#x8C31;&#xFF0C;&#x4F7F;&#x7528; GriffinLim &#x5408;&#x6210;&#x6CE2;&#x5F62;</p>
+<h5 class="mume-header" id="%E5%9F%BA%E4%BA%8E-transformer-%E7%9A%84%E6%A8%A1%E5%9E%8B">&#x57FA;&#x4E8E; Transformer &#x7684;&#x6A21;&#x578B;</h5>
+
+<p>TransformerTTS&#xFF1A;&#x5229;&#x7528;&#x57FA;&#x4E8E; Transformer &#x7684; encoder-attention-decoder &#x67B6;&#x6784;&#x4ECE;&#x97F3;&#x7D20;&#x751F;&#x6210;mel&#x8C31;&#x56FE;<br>
+MultiSpeech&#xFF1A;&#x901A;&#x8FC7;&#x7F16;&#x7801;&#x5668;&#x5F52;&#x4E00;&#x5316;&#x3001;&#x89E3;&#x7801;&#x5668;&#x74F6;&#x9888;&#x548C;&#x5BF9;&#x89D2;&#x6CE8;&#x610F;&#x7EA6;&#x675F;&#x63D0;&#x9AD8;&#x6CE8;&#x610F;&#x673A;&#x5236;&#x7684;&#x9C81;&#x68D2;&#x6027;<br>
+RobuTrans&#xFF1A;&#x5229;&#x7528;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x9884;&#x6D4B;&#x6765;&#x589E;&#x5F3A;&#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;&#x4E2D;&#x7684;&#x9C81;&#x68D2;&#x6027;</p>
+<blockquote>
+<p>&#x4EE5;&#x524D;&#x7684;&#x57FA;&#x4E8E;&#x795E;&#x7ECF;&#x7684;&#x58F0;&#x5B66;&#x6A21;&#x578B;&#xFF0C;&#x5982;Tacotron 1/2&#x3001;DeepVoice 3&#x548C;TransformerTTS &#x90FD;&#x91C7;&#x7528;&#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;&#xFF0C;&#x8FD9;&#x5B58;&#x5728;&#x51E0;&#x4E2A;&#x95EE;&#x9898;&#xFF1A;1&#xFF09;&#x63A8;&#x7406;&#x901F;&#x5EA6;&#x6162;&#x3002;2&#xFF09; &#x9C81;&#x68D2;&#x6027;&#x95EE;&#x9898;&#x3002;&#x751F;&#x6210;&#x7684;&#x8BED;&#x97F3;&#x901A;&#x5E38;&#x5177;&#x6709;&#x5927;&#x91CF;&#x7684;&#x5355;&#x8BCD;&#x8DF3;&#x8FC7;&#x548C;&#x91CD;&#x590D;&#x4EE5;&#x53CA;&#x95EE;&#x9898;&#xFF0C;&#x8FD9;&#x4E3B;&#x8981;&#x662F;&#x7531;&#x4E8E;&#x57FA;&#x4E8E; encoder-attention-decoder &#x7684;&#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;&#x4E2D;&#x6587;&#x672C;&#x548C;mel&#x8C31;&#x4E4B;&#x95F4;&#x7684;&#x6CE8;&#x610F;&#x529B;&#x5BF9;&#x9F50;&#x4E0D;&#x51C6;&#x786E;&#x9020;&#x6210;&#x7684;&#x3002;<br>
+FastSpeech&#x53EF;&#x4EE5;&#x89E3;&#x51B3;&#x8FD9;&#x4E9B;&#x95EE;&#x9898;&#xFF1A;</p>
+<ol>
+<li>&#x91C7;&#x7528;&#x524D;&#x9988; Transformer &#x7F51;&#x7EDC;&#x5E76;&#x884C;&#x751F;&#x6210;mel&#x8C31;&#xFF0C;&#x8FD9;&#x53EF;&#x4EE5;&#x5927;&#x5927;&#x52A0;&#x5FEB;&#x63A8;&#x65AD;&#x901F;&#x5EA6;</li>
+<li>&#x53D6;&#x6D88;&#x6587;&#x672C;&#x548C;&#x8BED;&#x97F3;&#x4E4B;&#x95F4;&#x7684;&#x6CE8;&#x610F;&#x529B;&#x673A;&#x5236;&#xFF0C;&#x4EE5;&#x907F;&#x514D;&#x5355;&#x8BCD;&#x8DF3;&#x8FC7;&#x548C;&#x91CD;&#x590D;&#x95EE;&#x9898;&#xFF0C;&#x63D0;&#x9AD8;&#x4E86;&#x9C81;&#x68D2;&#x6027;</li>
+</ol>
+</blockquote>
+<p>FastSpeech &#x7CFB;&#x5217;&#xFF1A;</p>
+<ul>
+<li>&#x7B2C;&#x4E00;&#x7248;&#xFF1A;&#x5229;&#x7528;&#x663E;&#x5F0F;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x9884;&#x6D4B;&#x5668;&#x6765;&#x6269;&#x5C55;&#x97F3;&#x7D20;&#x9690;&#x85CF;&#x5E8F;&#x5217;&#xFF0C;&#x4EE5;&#x5339;&#x914D;mel&#x8C31;&#x7684;&#x957F;&#x5EA6;</li>
+<li>&#x7B2C;&#x4E8C;&#x7248;&#xFF1A;&#x4F7F;&#x7528; GT-mel&#x8C31; &#x4F5C;&#x4E3A;&#x8BAD;&#x7EC3;&#x76EE;&#x6807;&#x800C;&#x975E;&#x4ECE;&#x81EA;&#x56DE;&#x5F52;&#x6559;&#x5E08;&#x6A21;&#x578B;&#x4E2D;&#x63D0;&#x53D6;mel&#x8C31;&#xFF1B;&#x63D0;&#x4F9B;&#x66F4;&#x591A;&#x7684;&#x4FE1;&#x606F;&#xFF0C;&#x5982;&#x97F3;&#x8C03;&#x3001;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x548C;&#x80FD;&#x91CF;&#x4F5C;&#x4E3A;&#x89E3;&#x7801;&#x5668;&#x8F93;&#x5165;</li>
+<li>&#x6539;&#x8FDB;&#xFF1A;
+<ul>
+<li>FastPitch&#xFF1A;&#x4F7F;&#x7528;&#x97F3;&#x8C03;&#x4FE1;&#x606F;&#x4F5C;&#x4E3A;&#x89E3;&#x7801;&#x5668;&#x8F93;&#x5165;&#x6765;&#x6539;&#x8FDB;FastSpeech</li>
+</ul>
+</li>
+</ul>
+<h5 class="mume-header" id="%E5%85%B6%E4%BB%96%E6%A8%A1%E5%9E%8B">&#x5176;&#x4ED6;&#x6A21;&#x578B;</h5>
+
+<p>&#x57FA;&#x4E8E; flow &#x7684;&#x6A21;&#x578B;&#xFF0C;&#x5982;&#xFF1A;Flowtron&#x3001;flow TTS&#x3001;Glow TTS<br>
+&#x57FA;&#x4E8E; VAE &#x7684;&#x6A21;&#x578B;&#xFF1A;GMVAE Tacotron&#x3001;VAE-TTS&#x3001;BVAE-TTS<br>
+&#x57FA;&#x4E8E; GAN &#x7684;&#x6A21;&#x578B;&#xFF1A;GAN exposure&#x3001;TTS-Stylization&#x3001;Multi-SpectroGAN<br>
+&#x57FA;&#x4E8E; Diffusion &#x7684;&#x6A21;&#x578B;&#xFF1A;Diff-TTS&#x3001;Grad-TTS&#x3001;PriorGrad</p>
+<h3 class="mume-header" id="%E5%A3%B0%E7%A0%81%E5%99%A8">&#x58F0;&#x7801;&#x5668;</h3>
+
+<blockquote>
+<p>&#x58F0;&#x7801;&#x5668;&#x7684;&#x53D1;&#x5C55;&#x53EF;&#x4EE5;&#x5206;&#x4E3A;&#x4E24;&#x4E2A;&#x9636;&#x6BB5;&#xFF1A;SPSS&#x4E2D;&#x4F7F;&#x7528;&#x7684;&#x58F0;&#x7801;&#x5668;&#x548C;&#x57FA;&#x4E8E;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x7684;&#x58F0;&#x7801;&#x5668;<br>
+SPSS&#x4E2D;&#x4E00;&#x4E9B;&#x6D41;&#x884C;&#x7684;&#x58F0;&#x7801;&#x5668;&#x5305;&#x62EC; STRIGHT &#x548C; WORLD<br>
+&#x4E0B;&#x9762;&#x4E3B;&#x8981;&#x4ECB;&#x7ECD;&#x57FA;&#x4E8E;&#x795E;&#x7ECF;&#x7684;&#x58F0;&#x7801;&#x5668;</p>
+</blockquote>
+<p>&#x65E9;&#x671F;&#x7684;&#x795E;&#x7ECF;&#x58F0;&#x7801;&#x5668;&#x5982;WaveNet&#x3001;Char2Wav&#x3001;WaveRNN&#x76F4;&#x63A5;&#x5C06;&#x8BED;&#x8A00;&#x7279;&#x5F81;&#x4F5C;&#x4E3A;&#x8F93;&#x5165;&#x5E76;&#x751F;&#x6210;&#x6CE2;&#x5F62;&#x3002;</p>
+<p>&#x540E;&#x6765;&#x4F7F;&#x7528;&#x5404;&#x79CD;&#x751F;&#x6210;&#x6A21;&#x578B;&#x8FDB;&#x884C;&#x6CE2;&#x5F62;&#x751F;&#x6210;&#xFF0C;&#x53EF;&#x4EE5;&#x5206;&#x4E3A;&#xFF1A;</p>
+<ul>
+<li>&#x81EA;&#x56DE;&#x5F52;&#x58F0;&#x7801;&#x5668;</li>
+<li>&#x57FA;&#x4E8E; flow &#x7684;&#x58F0;&#x7801;&#x5668;</li>
+<li>&#x57FA;&#x4E8E; GAN &#x7684;&#x58F0;&#x7801;&#x5668;</li>
+<li>&#x57FA;&#x4E8E; VAE &#x7684;&#x58F0;&#x7801;&#x5668;</li>
+<li>&#x57FA;&#x4E8E; Diffusion &#x7684;&#x58F0;&#x7801;&#x5668;<br>
+<img src="image/Pasted%20image%2020230129102533.png" alt></li>
+</ul>
+<h4 class="mume-header" id="%E8%87%AA%E5%9B%9E%E5%BD%92%E5%A3%B0%E7%A0%81%E5%99%A8">&#x81EA;&#x56DE;&#x5F52;&#x58F0;&#x7801;&#x5668;</h4>
+
+<p>WaveNet &#x662F;&#x7B2C;&#x4E00;&#x4E2A;&#x57FA;&#x4E8E;&#x795E;&#x7ECF;&#x7684;&#x58F0;&#x7801;&#x5668;&#xFF0C;&#x5229;&#x7528; dilated convolution &#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;&#x6CE2;&#x5F62;&#xFF0C;&#x4E0D;&#x9700;&#x8981;&#x4EFB;&#x4F55;&#x5148;&#x9A8C;&#x77E5;&#x8BC6;&#xFF0C;&#x4F46;&#x662F;&#x5176;&#x751F;&#x6210;&#x901F;&#x5EA6;&#x6162;&#x3002;<br>
+SampleRNN &#x5229;&#x7528;&#x5206;&#x5C42;&#x9012;&#x5F52;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x8FDB;&#x884C;&#x6CE2;&#x5F62;&#x751F;&#x6210;&#x3002;<br>
+WaveRNN &#x4F7F;&#x7528;&#x9012;&#x5F52;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#xFF0C;&#x5E76;&#x5229;&#x7528; dual softmax&#x5C42;&#x3001;&#x6743;&#x91CD;&#x4FEE;&#x526A;&#x548C;subscaling &#x6280;&#x672F;&#x5728;&#x5185;&#x7684;&#x591A;&#x79CD;&#x8BBE;&#x8BA1;&#x6765;&#x51CF;&#x5C11;&#x8BA1;&#x7B97;&#x3002;<br>
+LPCNet &#x5C06;&#x4F20;&#x7EDF;&#x7684;&#x6570;&#x5B57;&#x4FE1;&#x53F7;&#x5904;&#x7406;&#x5F15;&#x5165;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#xFF0C;&#x4F7F;&#x7528;&#x7EBF;&#x6027;&#x9884;&#x6D4B;&#x7CFB;&#x6570;&#x6765;&#x8BA1;&#x7B97;&#x4E0B;&#x4E00;&#x4E2A;&#x6CE2;&#x5F62;&#x70B9;&#xFF0C;&#x540C;&#x65F6;&#x5229;&#x7528;&#x8F7B;&#x91CF;&#x7EA7;RNN&#x6765;&#x8BA1;&#x7B97;&#x6B8B;&#x5DEE;&#x3002;</p>
+<h4 class="mume-header" id="%E5%9F%BA%E4%BA%8E-flow-%E7%9A%84%E5%A3%B0%E7%A0%81%E5%99%A8">&#x57FA;&#x4E8E; flow &#x7684;&#x58F0;&#x7801;&#x5668;</h4>
+
+<p>&#x5F52;&#x4E00;&#x5316;&#x6D41;&#x662F;&#x4E00;&#x79CD;&#x751F;&#x6210;&#x6A21;&#x578B;&#xFF0C;&#x5229;&#x7528;&#x4E00;&#x7CFB;&#x5217;&#x53EF;&#x9006;&#x6620;&#x5C04;&#x53D8;&#x6362;&#x6982;&#x7387;&#x5BC6;&#x5EA6;&#x3002;&#x5728;&#x91C7;&#x6837;&#x671F;&#x95F4;&#xFF0C;&#x5B83;&#x901A;&#x8FC7;&#x8FD9;&#x4E9B;&#x53D8;&#x6362;&#x7684;&#x9006;&#x8FD0;&#x7B97;&#x4ECE;&#x6807;&#x51C6;&#x6982;&#x7387;&#x5206;&#x5E03;&#x751F;&#x6210;&#x6570;&#x636E;&#x3002;TTS &#x4E2D;&#x57FA;&#x4E8E;&#x6D41;&#x7684;&#x6A21;&#x578B;&#x53EF;&#x4EE5;&#x5206;&#x4E3A;&#xFF1A;</p>
+<ul>
+<li>&#x81EA;&#x56DE;&#x5F52;&#x53D8;&#x6362;&#xFF1A;Parallel Wavenet&#x3001;ClariNet&#xFF0C;&#x4F46;&#x662F;&#x4F9D;&#x8D56;&#x4E8E;&#x590D;&#x6742;&#x7684;&#x5E08;&#x751F;&#x8BAD;&#x7EC3;</li>
+<li>&#x4E8C;&#x5206;&#x53D8;&#x6362;&#xFF1A;WaveGlow&#x3001;FloWaveNet&#xFF0C;&#x5B9E;&#x73B0;&#x4E86;&#x9AD8;&#x8BED;&#x97F3;&#x8D28;&#x91CF;&#x548C;&#x5FEB;&#x901F;&#x751F;&#x6210;<br>
+<img src="image/Pasted%20image%2020230129103954.png" alt></li>
+</ul>
+<h4 class="mume-header" id="%E5%9F%BA%E4%BA%8E-gan-%E7%9A%84%E5%A3%B0%E7%A0%81%E5%99%A8">&#x57FA;&#x4E8E; GAN &#x7684;&#x58F0;&#x7801;&#x5668;</h4>
+
+<p>&#x5305;&#x62EC;&#xFF1A;<img src="image/Pasted%20image%2020230129104033.png" alt></p>
+<p>&#x4ECE;&#x751F;&#x6210;&#x5668;&#x89D2;&#x5EA6;&#xFF1A;&#x5927;&#x591A;&#x6570;&#x90FD;&#x4F7F;&#x7528; dilated convolution &#x6765;&#x589E;&#x52A0;&#x611F;&#x53D7;&#x91CE;&#x4EE5;&#x6A21;&#x62DF;&#x6CE2;&#x5F62;&#x5E8F;&#x5217;&#x4E2D;&#x7684;&#x957F;&#x671F;&#x4F9D;&#x8D56;&#xFF0C;&#x4F7F;&#x7528;&#x8F6C;&#x7F6E;&#x5377;&#x79EF;&#xFF08;&#x53CD;&#x5377;&#x79EF;&#xFF09;&#x5BF9; Mel &#x8C31;&#x8FDB;&#x884C;&#x4E0A;&#x91C7;&#x6837;&#x4EE5;&#x5339;&#x914D;&#x6CE2;&#x5F62;&#x5E8F;&#x5217;&#x957F;&#x5EA6;&#x3002;</p>
+<p>&#x5224;&#x522B;&#x5668;&#x89D2;&#x5EA6;&#xFF1A;&#x4E3B;&#x8981;&#x96C6;&#x4E2D;&#x4E8E;&#x5982;&#x4F55;&#x8BBE;&#x8BA1;&#x6A21;&#x578B;&#x6765;&#x6355;&#x83B7;&#x6CE2;&#x5F62;&#x7684;&#x7279;&#x5F81;&#xFF1A;</p>
+<ul>
+<li>GAN-TTS &#x4F7F;&#x7528;&#x968F;&#x673A;&#x7A97;&#x53E3;&#x5224;&#x522B;&#x5668;</li>
+<li>MelGAN &#x63D0;&#x51FA;&#x591A;&#x5C3A;&#x5EA6;&#x5224;&#x522B;&#x5668;&#xFF0C;&#x6BCF;&#x4E2A;&#x5C3A;&#x5EA6;&#x805A;&#x7126;&#x4E8E;&#x4E0D;&#x540C;&#x9891;&#x7387;&#x8303;&#x56F4;&#x7684;&#x7279;&#x5F81;</li>
+<li>HiFiGAN &#x63D0;&#x51FA;&#x591A;&#x5468;&#x671F;&#x5224;&#x522B;&#x5668;&#xFF0C;&#x901A;&#x8FC7;&#x89C2;&#x5BDF;&#x4E0D;&#x540C;&#x5468;&#x671F;&#x4E2D;&#x8F93;&#x5165;&#x97F3;&#x9891;&#x7684;&#x4E0D;&#x540C;&#x90E8;&#x5206;&#x6765;&#x6355;&#x83B7;&#x4E0D;&#x540C;&#x7684;&#x9690;&#x5F0F;&#x7ED3;&#x6784;</li>
+<li>VocGAN &#x4F7F;&#x7528;&#x5C42;&#x7EA7;&#x5224;&#x522B;&#x5668;&#xFF0C;&#x4EE5;&#x4ECE;&#x7C97;&#x7C92;&#x5EA6;&#x5230;&#x7EC6;&#x7C92;&#x5EA6;&#x7684;&#x4E0D;&#x540C;&#x5206;&#x8FA8;&#x7387;&#x5224;&#x65AD;&#x751F;&#x6210;&#x7684;&#x6CE2;&#x5F62;</li>
+</ul>
+<p>&#x4ECE;&#x635F;&#x5931;&#x51FD;&#x6570;&#x89D2;&#x5EA6;&#xFF1A;&#x9664;&#x4E86;&#x5E38;&#x89C4;&#x7684; GAN &#x635F;&#x5931;&#xFF0C;&#x4E5F;&#x4F7F;&#x7528;&#x4E86;&#x5982; STFT &#x635F;&#x5931;&#x3001;&#x7279;&#x5F81;&#x5339;&#x914D;&#x635F;&#x5931;&#x7B49;&#x6765;&#x63D0;&#x9AD8;&#x5BF9;&#x6297;&#x8BAD;&#x7EC3;&#x7684;&#x7A33;&#x5B9A;&#x6027;&#x548C;&#x8BAD;&#x7EC3;&#x6548;&#x7387;&#x3002;</p>
+<h4 class="mume-header" id="%E5%9F%BA%E4%BA%8E-diffusion-%E7%9A%84%E5%A3%B0%E7%A0%81%E5%99%A8">&#x57FA;&#x4E8E; Diffusion &#x7684;&#x58F0;&#x7801;&#x5668;</h4>
+
+<blockquote>
+<p>&#x6700;&#x8FD1;&#x5174;&#x8D77;&#x7684;&#x5DE5;&#x4F5C;&#xFF0C;&#x7528;&#x6269;&#x6563;&#x8FC7;&#x7A0B;&#x548C;&#x9006;&#x8FC7;&#x7A0B;&#x5EFA;&#x7ACB;&#x6570;&#x636E;&#x4E0E;&#x6F5C;&#x5728;&#x5206;&#x5E03;&#x4E4B;&#x95F4;&#x7684;&#x6620;&#x5C04;</p>
+</blockquote>
+<p>&#x4F18;&#x70B9;&#x5728;&#x4E8E;&#x53EF;&#x4EE5;&#x751F;&#x6210;&#x975E;&#x5E38;&#x9AD8;&#x8D28;&#x91CF;&#x7684;&#x8BED;&#x97F3;&#xFF0C;&#x4F46;&#x8FED;&#x4EE3;&#x8FC7;&#x7A0B;&#x6F2B;&#x957F;&#xFF0C;&#x751F;&#x6210;&#x901F;&#x5EA6;&#x6162;&#x3002;</p>
+<p>&#x5E38;&#x89C1;&#x7684;&#x6A21;&#x578B;&#x6709;&#xFF1A;DiffWave&#x3001;WaveGrad&#x3001;PriorGrad</p>
+<h4 class="mume-header" id="%E5%85%B6%E4%BB%96%E5%A3%B0%E7%A0%81%E5%99%A8">&#x5176;&#x4ED6;&#x58F0;&#x7801;&#x5668;</h4>
+
+<p>&#x4F7F;&#x7528;&#x57FA;&#x4E8E;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x7684; source-filter &#x6A21;&#x578B;&#x6765;&#x8FDB;&#x884C;&#x53EF;&#x63A7;&#x7684;&#x9AD8;&#x8D28;&#x91CF;&#x8BED;&#x97F3;&#x751F;&#x6210;&#x3002;</p>
+<h4 class="mume-header" id="%E6%80%BB%E7%BB%93">&#x603B;&#x7ED3;</h4>
+
+<p><img src="image/Pasted%20image%2020230129110024.png" alt></p>
+<ul>
+<li>&#x5728;&#x6570;&#x5B66;&#x7B80;&#x5355;&#x6027;&#x65B9;&#x9762;&#xFF0C;&#x57FA;&#x4E8E;&#x81EA;&#x56DE;&#x5F52;&#xFF08;AR&#xFF09;&#x7684;&#x6A21;&#x578B;&#x6BD4;&#x5176;&#x4ED6;&#x751F;&#x6210;&#x6A21;&#x578B;&#xFF08;&#x5982;VAE&#x3001;Flow&#x3001;Diffusion&#x548C;GAN&#xFF09;&#x66F4;&#x5BB9;&#x6613;</li>
+<li>&#x9664;AR&#x4E4B;&#x5916;&#x7684;&#x6240;&#x6709;&#x751F;&#x6210;&#x6A21;&#x578B;&#x90FD;&#x53EF;&#x4EE5;&#x652F;&#x6301;&#x5E76;&#x884C;&#x751F;&#x6210;</li>
+<li>&#x9664;AR&#x6A21;&#x578B;&#x5916;&#xFF0C;&#x6240;&#x6709;&#x751F;&#x6210;&#x6A21;&#x578B;&#x90FD;&#x53EF;&#x4EE5;&#x5728;&#x67D0;&#x79CD;&#x7A0B;&#x5EA6;&#x4E0A;&#x652F;&#x6301;&#x6F5C;&#x5728;&#x53D8;&#x91CF;</li>
+<li>&#x57FA;&#x4E8E;GAN&#x7684;&#x6A21;&#x578B;&#x65E0;&#x6CD5;&#x4F30;&#x8BA1;&#x6570;&#x636E;&#x6837;&#x672C;&#x7684;&#x4F3C;&#x7136;&#xFF0C;&#x800C;&#x5176;&#x4ED6;&#x6A21;&#x578B;&#x6709;&#x8FD9;&#x4F18;&#x52BF;</li>
+</ul>
+<h3 class="mume-header" id="%E5%85%A8%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84-tts">&#x5168;&#x7AEF;&#x5230;&#x7AEF;&#x7684; TTS</h3>
+
+<p>&#x76F4;&#x63A5;&#x4ECE;&#x5B57;&#x7B26;&#x6216;&#x8005;&#x97F3;&#x7D20;&#x5E8F;&#x5217;&#x751F;&#x6210;&#x8BED;&#x97F3;&#x6CE2;&#x5F62;&#xFF0C;&#x4F18;&#x70B9;&#x4E3A;&#xFF1A;</p>
+<ul>
+<li>&#x9700;&#x8981;&#x8F83;&#x5C11;&#x7684;&#x4EBA;&#x5DE5;&#x6CE8;&#x91CA;&#xFF08;&#x5982;&#x5BF9;&#x9F50;&#x4FE1;&#x606F;&#xFF09;&#x548C;&#x7279;&#x5F81;</li>
+<li>&#x8054;&#x5408;&#x4F18;&#x5316;&#x53EF;&#x4EE5;&#x907F;&#x514D;&#x4F20;&#x64AD;&#x8BEF;&#x5DEE;</li>
+<li>&#x964D;&#x4F4E;&#x8BAD;&#x7EC3;&#x3001;&#x5F00;&#x53D1;&#x548C;&#x90E8;&#x7F72;&#x6210;&#x672C;</li>
+</ul>
+<p>&#x7AEF;&#x5230;&#x7AEF; TTS &#x7684;&#x53D1;&#x5C55;&#xFF1A;<img src="image/Pasted%20image%2020230129113536.png" alt></p>
+<p>stage 0&#xFF1A;&#x7EDF;&#x8BA1;&#x53C2;&#x6570;&#x5408;&#x6210;&#x4F7F;&#x7528;&#x4E09;&#x4E2A;&#x57FA;&#x672C;&#x6A21;&#x5757;&#x8FDB;&#x884C;&#x8BED;&#x97F3;&#x5408;&#x6210;</p>
+<p>stage 1&#xFF1A;&#x5728;&#x7EDF;&#x8BA1;&#x53C2;&#x6570;&#x5408;&#x6210;&#x5C06;&#x6587;&#x672C;&#x5206;&#x6790;&#x548C;&#x58F0;&#x5B66;&#x6A21;&#x578B;&#x7ED3;&#x5408;&#x5230;&#x7AEF;&#x5230;&#x7AEF;&#x58F0;&#x5B66;&#x6A21;&#x578B;&#x4E2D;&#xFF0C;&#x8BE5;&#x6A21;&#x578B;&#x76F4;&#x63A5;&#x4ECE;&#x97F3;&#x7D20;&#x5E8F;&#x5217;&#x751F;&#x6210;&#x58F0;&#x5B66;&#x7279;&#x5F81;&#xFF0C;&#x7136;&#x540E;&#x4F7F;&#x7528;&#x58F0;&#x7801;&#x5668;&#x751F;&#x6210;&#x6CE2;&#x5F62;</p>
+<p>stage 2&#xFF1A;WaveNet &#x4ECE; &#x8BED;&#x8A00;&#x7279;&#x5F81;&#x76F4;&#x63A5;&#x751F;&#x6210;&#x8BED;&#x97F3;&#x6CE2;&#x5F62;&#xFF08;&#x4F46;&#x662F;&#x8F93;&#x5165;&#x4E3A; Mel &#x8C31;&#x554A;&#xFF1F;&#xFF1F;&#xFF09;&#xFF0C;&#x53EF;&#x4EE5;&#x88AB;&#x89C6;&#x4E3A;&#x58F0;&#x5B66;&#x6A21;&#x578B;&#x548C;&#x58F0;&#x7801;&#x5668;&#x7684;&#x7EC4;&#x5408;&#xFF0C;&#x4F46;&#x4ECD;&#x9700;&#x6587;&#x672C;&#x5206;&#x6790;&#x6A21;&#x5757;</p>
+<p>stage 3&#xFF1A;Tacotron &#x4F7F;&#x7528; encoder-attention-decoder &#x6A21;&#x578B;&#x76F4;&#x63A5;&#x9884;&#x6D4B;&#x5B57;&#x7B26;/&#x97F3;&#x7D20;&#x7684;&#x7EBF;&#x6027;&#x8C31;&#xFF0C;&#x5E76;&#x4F7F;&#x7528;Griffin Lim&#x5C06;&#x7EBF;&#x6027;&#x8C31;&#x8F6C;&#x6362;&#x4E3A;&#x6CE2;&#x5F62;&#xFF0C;&#x5176;&#x4ED6;&#x5982; DeepVoice 3&#x3001;Tacotron 2 &#x7B49;&#x5148;&#x4ECE;&#x5B57;&#x7B26;/&#x97F3;&#x7D20;&#x9884;&#x6D4B;Mel&#x8C31;&#xFF0C;&#x7136;&#x540E;&#x4F7F;&#x7528;&#x795E;&#x7ECF;&#x58F0;&#x7801;&#x5668;&#x751F;&#x6210;&#x6CE2;&#x5F62;</p>
+<p>stage 4&#xFF1A;&#x76F4;&#x63A5;&#x4ECE;&#x6587;&#x672C;&#x5230;&#x6CE2;&#x5F62;&#xFF1A;</p>
+<ul>
+<li>Char2Wav &#x5229;&#x7528;&#x57FA;&#x4E8E; RNN &#x7684; encoder-attention-decoder &#x6A21;&#x578B;&#x4ECE;&#x5B57;&#x7B26;&#x4E2D;&#x751F;&#x6210;&#x58F0;&#x5B66;&#x7279;&#x5F81;&#xFF0C;&#x7136;&#x540E;&#x4F7F;&#x7528; SampleRNN &#x751F;&#x6210;&#x6CE2;&#x5F62;&#xFF0C;&#x4E24;&#x4E2A;&#x6A21;&#x578B;&#x8054;&#x5408;&#x4F18;&#x5316;</li>
+<li>ClariNet &#x8054;&#x5408;&#x4F18;&#x5316; &#x81EA;&#x56DE;&#x5F52;&#x58F0;&#x5B66;&#x6A21;&#x578B;&#x548C;&#x975E;&#x81EA;&#x56DE;&#x5F52;&#x58F0;&#x7801;&#x5668;&#xFF0C;&#x4ECE;&#x800C;&#x76F4;&#x63A5;&#x751F;&#x6210;&#x6CE2;&#x5F62;</li>
+<li>FastSpeech 2s &#x76F4;&#x63A5;&#x4ECE;&#x5177;&#x6709;&#x5B8C;&#x5168;&#x5E76;&#x884C;&#x7ED3;&#x6784;&#x7684;&#x6587;&#x672C;&#x751F;&#x6210;&#x8BED;&#x97F3;</li>
+<li>EATS &#x76F4;&#x63A5;&#x4ECE;&#x5B57;&#x7B26;/&#x97F3;&#x7D20;&#x751F;&#x6210;&#x6CE2;&#x5F62;&#xFF0C;&#x5229;&#x7528;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x63D2;&#x503C;&#x548C;&#x8F6F;&#x52A8;&#x6001;&#x65F6;&#x95F4;&#x5305;&#x88F9;&#x635F;&#x5931;&#x8FDB;&#x884C;&#x7AEF;&#x5230;&#x7AEF;&#x5BF9;&#x9F50;&#x5B66;&#x4E60;</li>
+<li>Wave Tacotron &#x5728; Tacotron &#x4E0A;&#x6784;&#x5EFA;&#x4E86;&#x4E00;&#x4E2A;&#x57FA;&#x4E8E;&#x6D41;&#x7684;&#x89E3;&#x7801;&#x5668;&#xFF0C;&#x4EE5;&#x76F4;&#x63A5;&#x751F;&#x6210;&#x6CE2;&#x5F62;</li>
+</ul>
+<h3 class="mume-header" id="%E5%85%B6%E4%BB%96%E5%88%86%E7%B1%BB%E6%B3%95">&#x5176;&#x4ED6;&#x5206;&#x7C7B;&#x6CD5;</h3>
+
+<ol>
+<li>&#x81EA;&#x56DE;&#x5F52;&#x975E;&#x81EA;&#x56DE;&#x5F52;</li>
+<li>&#x4E0D;&#x540C;&#x7684;&#x751F;&#x6210;&#x6A21;&#x578B;</li>
+<li>&#x4E0D;&#x540C;&#x7684;&#x7F51;&#x7EDC;&#x7ED3;&#x6784;&#xFF0C;&#x5982; CNN&#x3001;RNN&#x3001;CNN+RNN&#x3001;self-attention &#x7B49;<br>
+&#x5177;&#x4F53;&#x5206;&#x7C7B;&#x89C1;&#x539F;&#x8BBA;&#x6587;&#x3002;</li>
+</ol>
+<p>&#x6574;&#x4E2A; TTS &#x7684;&#x53D1;&#x5C55;&#x6D41;&#x7A0B;&#x56FE;&#xFF08;&#x6309;&#x7167;arxiv&#x4E0A;&#x7684;&#x65F6;&#x95F4;&#xFF0C;&#x622A;&#x6B62;&#x5230; 2021&#xFF0C;&#x8BBA;&#x6587;&#x4E2D;&#x6709;&#x4E00;&#x4E2A;&#x66F4;&#x8BE6;&#x7EC6;&#x7684;&#x8868;&#x683C;&#xFF09;&#xFF1A;<img src="image/Pasted%20image%2020230129115144.png" alt></p>
+<h2 class="mume-header" id="tts-%E8%BF%9B%E9%98%B6">TTS &#x8FDB;&#x9636;</h2>
+
+<h3 class="mume-header" id="%E5%BF%AB%E9%80%9F-tts">&#x5FEB;&#x901F; TTS</h3>
+
+<p>&#x65E9;&#x671F; TTS &#x91C7;&#x7528;&#x81EA;&#x56DE;&#x5F52;&#x65B9;&#x6CD5;&#xFF0C;&#x4E00;&#x4E9B;&#x6539;&#x8FDB;&#x7684;&#x65B9;&#x6CD5;&#x6709;&#xFF1A;</p>
+<ul>
+<li>&#x91C7;&#x7528;&#x975E;&#x81EA;&#x56DE;&#x5F52;&#x65B9;&#x6CD5;&#x5E76;&#x884C;&#x751F;&#x6210; mel &#x8C31;&#x548C;&#x6CE2;&#x5F62;</li>
+<li>&#x8F7B;&#x91CF;&#x3001;&#x9AD8;&#x6548;&#x7684;&#x6A21;&#x578B;&#x67B6;&#x6784;</li>
+<li>&#x5229;&#x7528;&#x8BED;&#x97F3;&#x9886;&#x57DF;&#x77E5;&#x8BC6;&#x8FDB;&#x884C;&#x5FEB;&#x901F; TTS</li>
+</ul>
+<h4 class="mume-header" id="%E5%B9%B6%E8%A1%8C%E7%94%9F%E6%88%90">&#x5E76;&#x884C;&#x751F;&#x6210;</h4>
+
+<p><img src="image/Pasted%20image%2020230725193909.png" alt></p>
+<ul>
+<li>&#x57FA;&#x4E8E; RNN &#x7684;&#x6A21;&#x578B;&#x5728;&#x8BAD;&#x7EC3;&#x548C;&#x63A8;&#x7406;&#x65F6;&#x90FD;&#x5F88;&#x6162;&#xFF0C;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span> &#x4E3A;&#x5E8F;&#x5217;&#x957F;&#x5EA6;</li>
+<li>DeepVoice 3 &#x548C; TransformerTTS &#x91C7;&#x7528; CNN &#x548C; &#x81EA;&#x6CE8;&#x610F;&#x529B;&#x67B6;&#x6784;&#x5B9E;&#x73B0;&#x5E76;&#x884C;&#x8BAD;&#x7EC3;&#xFF0C;&#x4F46;&#x662F;&#x63A8;&#x7406;&#x7684;&#x65F6;&#x5019;&#x4ECD;&#x662F;&#x81EA;&#x56DE;&#x5F52;&#x7684;</li>
+<li>FastSpeech 1/2 &#x4F7F;&#x7528; feed-forward Transformer &#x540C;&#x65F6;&#x5B9E;&#x73B0;&#x4E86;&#x5E76;&#x884C;&#x8BAD;&#x7EC3;&#x548C;&#x63A8;&#x7406;</li>
+<li>&#x5927;&#x90E8;&#x5206;&#x57FA;&#x4E8E; GAN &#x7684;&#x6A21;&#x578B;&#x90FD;&#x662F;&#x975E;&#x81EA;&#x56DE;&#x5F52;&#x7684;</li>
+<li>Parallel WaveNet &#x548C; ClariNet &#x5229;&#x7528;&#x53CD;&#x5411;&#x81EA;&#x56DE;&#x5F52;&#x6D41;&#xFF0C;&#x5B9E;&#x73B0;&#x5E76;&#x884C;&#x63A8;&#x7406;&#x4F46;&#x662F;&#x9700;&#x8981; teacher distillation</li>
+<li>WaveGlow &#x548C;  FloWaveNet &#x4F7F;&#x7528; generative flow &#x8FDB;&#x884C;&#x5E76;&#x884C;&#x7684;&#x8BAD;&#x7EC3;&#x548C;&#x63A8;&#x7406;&#xFF0C;&#x4F46;&#x662F;&#x9700;&#x8981;&#x8FDB;&#x884C; <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span> &#x6B21;&#x8FED;&#x4EE3;&#x6765;&#x786E;&#x4FDD;&#x751F;&#x6210;&#x8D28;&#x91CF;</li>
+<li>&#x57FA;&#x4E8E; diffusion &#x7684;&#x6A21;&#x578B;&#x4E5F;&#x9700;&#x8981;&#x591A;&#x6B21;&#x8FED;&#x4EE3;</li>
+</ul>
+<h4 class="mume-header" id="%E8%BD%BB%E9%87%8F%E6%A8%A1%E5%9E%8B">&#x8F7B;&#x91CF;&#x6A21;&#x578B;</h4>
+
+<p>&#x4E00;&#x4E9B;&#x5E38;&#x7528;&#x7684;&#x6280;&#x672F;&#x5305;&#x62EC;&#xFF1A;&#x526A;&#x679D;&#x3001;&#x91CF;&#x5316;&#x3001;&#x77E5;&#x8BC6;&#x84B8;&#x998F;&#x3001;&#x795E;&#x7ECF;&#x67B6;&#x6784;&#x641C;&#x7D22;&#xFF08;NAS&#xFF09;</p>
+<ul>
+<li>WaveRNN &#x91C7;&#x7528; dual softmax&#x3001;weight pruning&#x3001;subscale predication &#x52A0;&#x901F;&#x63A8;&#x7406;</li>
+<li>LightSpeech &#x91C7;&#x7528; NAS &#x6765;&#x5BFB;&#x627E;&#x8F7B;&#x91CF;&#x7684;&#x67B6;&#x6784;&#x52A0;&#x901F; FastSpeech2 &#x7684;&#x63A8;&#x7406;</li>
+<li>SqueezeWave &#x5229;&#x7528; &#x6CE2;&#x5F62; reshaping &#x6765;&#x51CF;&#x5C11;&#x65F6;&#x95F4;&#x957F;&#x5EA6;&#xFF0C;&#x5E76;&#x4E14;&#x91C7;&#x7528; depthwise separable convolution &#x66FF;&#x6362; 1D &#x5377;&#x79EF;&#x6765;&#x51CF;&#x5C11;&#x8BA1;&#x7B97;&#x91CF;</li>
+<li>&#x4E5F;&#x6709;&#x91C7;&#x7528; tensor decomposition &#x6765;&#x538B;&#x7F29;&#x6A21;&#x578B;&#x7684;</li>
+<li>DeviceTTS &#x4F7F;&#x7528;  DFSMN &#x67B6;&#x6784;&#x548C; mix-resolution decoder &#x5728;&#x4E00;&#x4E2A; step &#x4E2D;&#x9884;&#x6D4B;&#x591A;&#x5E27;</li>
+<li>&#x8FD8;&#x6709;&#x4F7F;&#x7528; &#x534A;&#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;&#x7684;</li>
+</ul>
+<h4 class="mume-header" id="%E7%94%A8-domain-knowledge-%E5%8A%A0%E9%80%9F">&#x7528; Domain Knowledge &#x52A0;&#x901F;</h4>
+
+<p>Domain knowledge &#x53EF;&#x4EE5;&#x7528;&#x6765;&#x52A0;&#x901F;&#x63A8;&#x7406;&#xFF0C;&#x5982;&#xFF1A;&#x7EBF;&#x6027;&#x9884;&#x6D4B;&#x3001;&#x591A;&#x5B50;&#x5E26;&#x5EFA;&#x6A21;&#x3001;subscale predication&#x3001;multi-frame prediction&#x3001;streaming synthesis &#x7B49;</p>
+<ul>
+<li>LPCNet &#x628A; DSP &#x548C;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x7EC4;&#x5408;&#xFF0C;&#x91C7;&#x7528; LPC &#x8BA1;&#x7B97;&#x4E0B;&#x4E00;&#x4E2A;&#x6CE2;&#x5F62;&#xFF0C;&#x91C7;&#x7528; &#x8F7B;&#x91CF;&#x6A21;&#x578B;&#x8BA1;&#x7B97;&#x6B8B;&#x5DEE;</li>
+<li>&#x5B50;&#x5E26;&#x5EFA;&#x6A21;&#x5C06;&#x6CE2;&#x5F62;&#x5206;&#x6210;&#x591A;&#x4E2A;&#x5B50;&#x5E26;&#x6765;&#x52A0;&#x901F;&#x63A8;&#x7406;&#xFF0C;&#x5178;&#x578B;&#x7684;&#x6A21;&#x578B;&#x5305;&#x62EC;&#xFF1A;DurIAN&#x3001;multi-band Me-GAN&#x3001;subband WaveNet &#x548C; multi-band LPCNet</li>
+<li>Bunched LPCNet &#x91C7;&#x7528; sample bunching &#x548C; bit bunching &#x6765;&#x51CF;&#x5C11;&#x8BA1;&#x7B97;&#x590D;&#x6742;&#x5EA6;</li>
+<li>Streaming TTS &#x6D41;&#x5F0F;&#x5408;&#x6210;</li>
+<li>FFTNet &#x4F7F;&#x7528;&#x7F51;&#x7EDC;&#x67B6;&#x6784;&#x6765;&#x6A21;&#x62DF; FFT&#xFF0C;&#x53EF;&#x4EE5;&#x5B9E;&#x65F6;&#x751F;&#x6210;&#x97F3;&#x9891;</li>
+<li>&#x6709;&#x4EBA;&#x63D0;&#x51FA; frame splitting &#x548C; cross-fading &#x6765;&#x5408;&#x6210;&#x90E8;&#x5206;&#x6CE2;&#x5F62;&#xFF0C;&#x7136;&#x540E;&#x5C06;&#x5408;&#x6210;&#x7684;&#x6CE2;&#x5F62;&#x8FDB;&#x884C;&#x62FC;&#x63A5;</li>
+<li>&#x8FD8;&#x6709;&#x901A;&#x8FC7; network reduction &#x548C; fidelity improvement &#x6280;&#x672F;&#x6765;&#x52A0;&#x901F; DCTTS</li>
+</ul>
+<h3 class="mume-header" id="%E4%BD%8E%E8%B5%84%E6%BA%90-tts">&#x4F4E;&#x8D44;&#x6E90; TTS</h3>
+
+<p>&#x6784;&#x5EFA;&#x9AD8;&#x8D28;&#x91CF;&#x7684; TTS &#x9700;&#x8981;&#x5927;&#x91CF;&#x7684;&#x6210;&#x5BF9;&#x6587;&#x672C;&#x8BED;&#x97F3;&#x6570;&#x636E;&#xFF0C;&#x5927;&#x90E8;&#x5206;&#x7684;&#x8BED;&#x8A00;&#x90FD;&#x7F3A;&#x4E4F;&#x6570;&#x636E;&#x3002;&#x4E00;&#x4E9B;&#x5178;&#x578B;&#x7684;&#x4F4E;&#x8D44;&#x6E90; TTS &#x6280;&#x672F;&#x5982;&#x4E0B;&#xFF1A;</p>
+<ul>
+<li>&#x81EA;&#x76D1;&#x7763;&#x8BAD;&#x7EC3;&#xFF1A;&#x672A;&#x6210;&#x5BF9;&#x7684;&#x6570;&#x636E;&#x66F4;&#x5BB9;&#x6613;&#x83B7;&#x53D6;&#x3002;TTS &#x4E2D;&#x7684;&#x6587;&#x672C;&#x7F16;&#x7801;&#x5668;&#x53EF;&#x4EE5;&#x53EF;&#x4EE5;&#x7528; BERT &#x589E;&#x5F3A;&#xFF1B;&#x8BED;&#x97F3;&#x4E5F;&#x53EF;&#x4EE5;&#x88AB;&#x91CF;&#x5316;&#x4E3A;&#x79BB;&#x6563;&#x7684; token &#x5E8F;&#x5217;&#xFF0C;&#x4ECE;&#x800C;&#x53EF;&#x4EE5;&#x770B;&#x6210;&#x662F;&#x4F2A;&#x7684;&#x6210;&#x5BF9;&#x6570;&#x636E;</li>
+<li>&#x8DE8;&#x8BED;&#x8A00;&#x8FC1;&#x79FB;&#xFF1A;&#x4EBA;&#x7C7B;&#x8BED;&#x8A00;&#x6709;&#x76F8;&#x4F3C;&#x7684;&#x53D1;&#x58F0;&#x5668;&#x5B98;&#x3001;&#x53D1;&#x97F3;&#x7B49;&#x3002;&#x4F46;&#x662F;&#x9AD8;&#x8D44;&#x6E90;&#x548C;&#x4F4E;&#x8D44;&#x6E90;&#x8BED;&#x8A00;&#x6709;&#x4E0D;&#x540C;&#x7684; phoneme set&#xFF0C;&#x4E8E;&#x662F;&#x6709;&#x4EBA;&#x63D0;&#x51FA;&#x6620;&#x5C04;&#x4E0D;&#x540C;&#x8BED;&#x8A00;&#x7684; embedding&#xFF1B;&#x4E5F;&#x53EF;&#x4EE5;&#x91C7;&#x7528;&#x56FD;&#x9645;&#x97F3;&#x6807;&#x6216;&#x5B57;&#x8282;&#x8868;&#x5F81;&#x6765;&#x652F;&#x6301;&#x4EFB;&#x610F;&#x6587;&#x672C;&#x7684;&#x97F3;&#x7D20;</li>
+<li>&#x8DE8;&#x8BF4;&#x8BDD;&#x4EBA;&#x8FC1;&#x79FB;&#xFF1A;&#x5176;&#x4ED6;&#x8BF4;&#x8BDD;&#x4EBA;&#x7684;&#x6570;&#x636E;&#x53EF;&#x4EE5;&#x63D0;&#x9AD8;&#x67D0;&#x4E2A;&#x7279;&#x5B9A;&#x8BF4;&#x8BDD;&#x4EBA;&#x7684;&#x5408;&#x6210;&#x8D28;&#x91CF;&#xFF08;&#x5982;&#x901A;&#x8FC7; voice conversion &#x5B9E;&#x73B0;&#xFF09;&#xFF0C;&#x4ECE;&#x800C;&#x589E;&#x52A0;&#x6570;&#x636E;&#x91CF;&#x3002;</li>
+<li>Speech chain/Back transformation&#xFF1A;&#x7ED3;&#x5408; TTS &#x548C; ASR &#x6765;&#x83B7;&#x53D6;&#x6570;&#x636E;</li>
+<li>&#x6570;&#x636E;&#x6316;&#x6398;</li>
+</ul>
+<h3 class="mume-header" id="%E9%B2%81%E6%A3%92-tts">&#x9C81;&#x68D2; TTS</h3>
+
+<p>&#x597D;&#x7684; TTS &#x7CFB;&#x7EDF;&#x5E94;&#x8BE5;&#x786E;&#x4FDD;&#x751F;&#x6210;&#x6B63;&#x786E;&#x7684;&#x8BED;&#x8A00;&#xFF08;&#x548C;&#x6587;&#x672C;&#x76F8;&#x5BF9;&#x5E94;&#x7684;&#xFF09;&#xFF0C;&#x9C81;&#x68D2;&#x6027;&#x95EE;&#x9898;&#x5305;&#x62EC;&#xFF1A;word skipping, repeating &#x548C; attention collapse&#xFF0C;&#x9020;&#x6210;&#x8FD9;&#x4E9B;&#x95EE;&#x9898;&#x7684;&#x539F;&#x56E0;&#x53EF;&#x4EE5;&#x5206;&#x4E3A;&#x4E24;&#x7C7B;&#xFF1A;</p>
+<ul>
+<li>&#x5B57;&#x7B26;/&#x97F3;&#x7D20;&#x548C; mel &#x8C31; &#x4E4B;&#x95F4;&#x7684;&#x5BF9;&#x9F50;&#x56F0;&#x96BE;&#xFF08;&#x4E0D;&#x77E5;&#x9053;&#x4E00;&#x4E2A; &#x5B57;&#x7B26;&#x6216;&#x8005;&#x97F3;&#x7D20;&#x5E94;&#x8BE5;&#x5BF9;&#x5E94;&#x51E0;&#x5E27;&#xFF09;</li>
+<li>&#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;&#x65F6;&#x7684; exposure bias &#x548C; error propagation &#x95EE;&#x9898;</li>
+</ul>
+<p>&#x4F46;&#x662F;&#x58F0;&#x7801;&#x5668;&#x4E0D;&#x4F1A;&#x6709;&#x4E25;&#x91CD;&#x7684;&#x9C81;&#x68D2;&#x6027;&#x95EE;&#x9898;&#xFF0C;&#x56E0;&#x4E3A;&#x58F0;&#x5B66;&#x7279;&#x5F81;&#x548C;&#x6CE2;&#x5F62;&#x5DF2;&#x7ECF;&#x5728;&#x5E27;&#x7EA7;&#x5BF9;&#x9F50;&#xFF08;&#x4E00;&#x5E27;&#x5BF9;&#x5E94;&#x56FA;&#x5B9A;&#x957F;&#x5EA6;&#x7684;&#x6CE2;&#x5F62;&#x70B9;&#xFF09;&#x3002;</p>
+<p>&#x9488;&#x5BF9;&#x5BF9;&#x9F50;&#x95EE;&#x9898;&#x73B0;&#x6709;&#x5DE5;&#x4F5C;&#x5206;&#x4E3A;&#x4E24;&#x4E2A;&#x65B9;&#x9762;&#xFF1A;</p>
+<ul>
+<li>&#x589E;&#x5F3A;&#x6CE8;&#x610F;&#x529B;&#x673A;&#x5236;&#x7684;&#x9C81;&#x68D2;&#x6027;</li>
+<li>&#x4E0D;&#x7528;&#x6CE8;&#x610F;&#x529B;&#x673A;&#x5236;&#xFF0C;&#x800C;&#x662F;&#x9884;&#x6D4B;&#x6301;&#x7EED;&#x65F6;&#x95F4;</li>
+</ul>
+<p>&#x9488;&#x5BF9; exposure bias &#x548C; error propagation &#x95EE;&#x9898;&#xFF1A;</p>
+<ul>
+<li>&#x6539;&#x5584;&#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;</li>
+<li>&#x4E0D;&#x7528;&#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;&#xFF0C;&#x800C;&#x662F;&#x4F7F;&#x7528;&#x975E;&#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;</li>
+</ul>
+<p>&#x4E00;&#x4E9B;&#x5E38;&#x7528;&#x7684;&#x6280;&#x672F;&#x5982;&#x4E0B;&#xFF1A;<br>
+<img src="image/Pasted%20image%2020230728113207.png" alt></p>
+<h4 class="mume-header" id="%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%A2%9E%E5%BC%BA">&#x6CE8;&#x610F;&#x529B;&#x589E;&#x5F3A;</h4>
+
+<p>&#x81EA;&#x56DE;&#x5F52;&#x58F0;&#x5B66;&#x6A21;&#x578B;&#x4E2D;&#xFF0C;&#x5927;&#x90E8;&#x5206;&#x7684; word skipping/repeating &#x548C; attention collapse &#x95EE;&#x9898;&#x90FD;&#x6765;&#x81EA;&#x4E8E;&#x4E0D;&#x6B63;&#x786E;&#x7684;&#x6CE8;&#x610F;&#x529B;&#x5BF9;&#x9F50;&#x3002;&#x56E0;&#x6B64;&#x9700;&#x8981;&#x8003;&#x8651; &#x5B57;&#x7B26;/&#x97F3;&#x7D20;&#x5E8F;&#x5217;&#x548C; mel &#x8C31;&#x5E8F;&#x5217;&#x7684;&#x5BF9;&#x9F50;&#xFF1A;</p>
+<ul>
+<li>&#x4F4D;&#x7F6E;&#x6027;&#xFF1A;&#x4E00;&#x4E2A;&#x5B57;&#x7B26;/&#x97F3;&#x7D20; &#x53EF;&#x4EE5;&#x4E0E;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x8FDE;&#x7EED;&#x7684; mel &#x5E27;&#x5BF9;&#x9F50;&#xFF0C;&#x800C;&#x4E00;&#x4E2A; mel &#x5E27;&#x53EA;&#x80FD;&#x548C;&#x5355;&#x4E2A; &#x5B57;&#x7B26;/&#x97F3;&#x7D20; &#x5BF9;&#x9F50;</li>
+<li>&#x5355;&#x8C03;&#x6027;&#xFF1A;&#x5982;&#x679C; A &#x5728; B &#x540E;&#x9762;&#xFF0C;&#x5219; A &#x6240;&#x5BF9;&#x5E94;&#x7684; mel &#x8C31;&#x4E5F;&#x5728; B &#x6240;&#x5BF9;&#x5E94;&#x7684;&#x540E;&#x9762;</li>
+<li>&#x5B8C;&#x6574;&#x6027;&#xFF1A;&#x6BCF;&#x4E2A; &#x5B57;&#x7B26;/&#x97F3;&#x7D20; &#x5FC5;&#x987B;&#x81F3;&#x5C11;&#x8986;&#x76D6;&#x4E00;&#x4E2A; mel &#x8C31;&#x7684;&#x5E27;&#xFF0C;&#x4ECE;&#x800C;&#x907F;&#x514D; word skipping</li>
+</ul>
+<p>&#x4E00;&#x4E9B;&#x6280;&#x672F;&#x5982;&#x4E0B;&#xFF1A;<br>
+<img src="image/Pasted%20image%2020230728161044.png" alt></p>
+<ul>
+<li>&#x57FA;&#x4E8E;&#x5185;&#x5BB9;&#x7684;&#x6CE8;&#x610F;&#x529B;&#xFF1A;&#x65E9;&#x671F;&#x7684; TTS &#x7684;&#x6CE8;&#x610F;&#x529B;&#x90FD;&#x662F;&#x57FA;&#x4E8E;&#x5185;&#x5BB9;&#x7684;</li>
+<li>Location-based attention&#xFF1A;&#x5229;&#x7528;&#x4F4D;&#x7F6E;&#x4FE1;&#x606F;&#x8FDB;&#x884C;&#x5BF9;&#x9F50;&#xFF0C;&#x5982; Char2Wav&#x3001;VoiceLoop &#x548C; MelNet</li>
+<li>Content/Location-based hybrid attention&#xFF1A;&#x7ED3;&#x5408;&#x57FA;&#x4E8E;&#x5185;&#x5BB9;&#x548C;&#x4F4D;&#x7F6E;&#x7684;&#x6CE8;&#x610F;&#x529B;&#x7684;&#x4F18;&#x52BF;&#xFF0C;&#x63D0;&#x51FA;&#x4E86;&#x4F4D;&#x7F6E;&#x654F;&#x611F;&#x6CE8;&#x610F;&#x529B;&#xFF0C;&#x5728;&#x8BA1;&#x7B97;&#x5F53;&#x524D;&#x6CE8;&#x610F;&#x529B;&#x5BF9;&#x9F50;&#x65F6;&#xFF0C;&#x4F7F;&#x7528;&#x5148;&#x524D;&#x7684;&#x6CE8;&#x610F;&#x529B;&#x5BF9;&#x9F50;</li>
+<li>Monotonic attention&#xFF1A;&#x6CE8;&#x610F;&#x529B;&#x4F4D;&#x7F6E;&#x662F;&#x5355;&#x8C03;&#x589E;&#x52A0;&#x7684;</li>
+<li>Windowing or off-diagonal penalty</li>
+<li>Enhancing encoder-decoder connection</li>
+<li>Positional attention</li>
+</ul>
+<h4 class="mume-header" id="%E9%A2%84%E6%B5%8B%E6%8C%81%E7%BB%AD%E6%97%B6%E9%97%B4">&#x9884;&#x6D4B;&#x6301;&#x7EED;&#x65F6;&#x95F4;</h4>
+
+<p>&#x5B8C;&#x5168;&#x6D88;&#x9664;&#x7F16;&#x7801;&#x5668;-&#x89E3;&#x7801;&#x5668;&#x7684;&#x6CE8;&#x610F;&#x529B;&#xFF0C;&#x8F6C;&#x800C;&#x9884;&#x6D4B;&#x6BCF;&#x4E2A; &#x5B57;&#x7B26;/&#x97F3;&#x7D20; &#x7684;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#xFF0C;&#x5E76;&#x6839;&#x636E;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x6269;&#x5C55;&#x6587;&#x672C;&#x9690;&#x5E8F;&#x5217;&#x4EE5;&#x5339;&#x914D; mel &#x8C31;&#x5E8F;&#x5217;&#x7684;&#x957F;&#x5EA6;&#x3002;</p>
+<p>&#x6709;&#x4E24;&#x79CD;&#x65B9;&#x6CD5;&#xFF1A;</p>
+<ul>
+<li>&#x4F7F;&#x7528;&#x5916;&#x90E8;&#x7684;&#x5BF9;&#x9F50;&#x5DE5;&#x5177;&#x6216;&#x8005;&#x8054;&#x5408;&#x8BAD;&#x7EC3;&#x6765;&#x5F97;&#x5230;&#x6301;&#x7EED;&#x65F6;&#x95F4;</li>
+<li>&#x4EE5;&#x7AEF;&#x5230;&#x7AEF;&#x7684;&#x65B9;&#x5F0F;&#x4F18;&#x5316;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x7684;&#x9884;&#x6D4B;&#x5668;&#xFF0C;&#x6216;&#x5728;&#x8BAD;&#x7EC3;&#x65F6;&#x4F7F;&#x7528; GT &#x6301;&#x7EED;&#x65F6;&#x95F4;&#xFF0C;&#x5728;&#x63A8;&#x7406;&#x65F6;&#x9884;&#x6D4B;&#x6301;&#x7EED;&#x65F6;&#x95F4;</li>
+</ul>
+<p><img src="image/Pasted%20image%2020230728161826.png" alt></p>
+<ul>
+<li>&#x5916;&#x90E8;&#x5BF9;&#x9F50;&#xFF1A;&#x6839;&#x636E;&#x4F7F;&#x7528;&#x7684;&#x5916;&#x90E8;&#x5DE5;&#x5177;&#x4E0D;&#x540C;&#x53C8;&#x53EF;&#x4EE5;&#x5206;&#x6210;&#x51E0;&#x7C7B;&#xFF1A;
+<ul>
+<li>Encoder-decoder attention&#xFF1A;FastSpeech &#x4ECE;&#x81EA;&#x56DE;&#x5F52;&#x58F0;&#x5B66;&#x6A21;&#x578B;&#x7684;&#x6CE8;&#x610F;&#x529B;&#x5BF9;&#x9F50;&#x4E2D;&#x83B7;&#x5F97;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#xFF1B;SpeedySpeech &#x548C; FastSpeech &#x5DEE;&#x4E0D;&#x591A;&#xFF0C;&#x4F46;&#x662F;&#x4F7F;&#x7528;&#x7684;&#x662F; CNN &#x7F51;&#x7EDC;</li>
+<li>CTC &#x5BF9;&#x9F50;&#xFF1A;&#x91C7;&#x7528;&#x57FA;&#x4E8E; CTC &#x7684; ASR &#x6A21;&#x578B;&#x6765;&#x5BF9;&#x9F50; &#x97F3;&#x7D20;&#x548C; mel &#x8C31;&#x5E8F;&#x5217;</li>
+<li>HMM &#x5BF9;&#x9F50;&#xFF1A;FastSpeech 2 &#x5229;&#x7528;&#x57FA;&#x4E8E; HMM &#x7684; Montreal forced alignment &#x83B7;&#x5F97;&#x6301;&#x7EED;&#x65F6;&#x95F4;</li>
+<li>&#x5176;&#x4ED6;&#x5DE5;&#x4F5C;&#x5982;  DurIAN&#xFF0C; RobuTrans&#xFF0C; Parallel Tacotron&#xFF0C; and Non-Attentive Tacotron &#x4F7F;&#x7528;&#x5F3A;&#x5236;&#x5BF9;&#x9F50;&#x6216;&#x8005;&#x8BED;&#x97F3;&#x8BC6;&#x522B;&#x5DE5;&#x5177;</li>
+</ul>
+</li>
+<li>&#x5185;&#x90E8;&#x5BF9;&#x9F50;&#xFF1A;
+<ul>
+<li>AlignTTS &#x9075;&#x5FAA;FastSpeech&#x7684;&#x57FA;&#x672C;&#x6A21;&#x578B;&#x7ED3;&#x6784;&#xFF0C;&#x4F46;&#x5229;&#x7528;&#x57FA;&#x4E8E; dp &#x7684;&#x65B9;&#x6CD5;&#xFF0C;&#x901A;&#x8FC7;&#x591A;&#x9636;&#x6BB5;&#x8BAD;&#x7EC3;&#x6765;&#x5B66;&#x4E60;&#x6587;&#x672C;&#x548C; mel &#x8C31;&#x5E8F;&#x5217;&#x4E4B;&#x95F4;&#x7684;&#x5BF9;&#x9F50;</li>
+<li>JDI-T &#x9075;&#x5FAA;FastSpeech&#x4ECE;&#x81EA;&#x56DE;&#x5F52;&#x6559;&#x5E08;&#x6A21;&#x578B;&#x4E2D;&#x63D0;&#x53D6;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#xFF0C;&#x4F46;&#x8054;&#x5408;&#x8BAD;&#x7EC3;&#x81EA;&#x56DE;&#x5F52;&#x548C;&#x975E;&#x81EA;&#x56DE;&#x5F52;&#x6A21;&#x578B;&#xFF0C;&#x4E0D;&#x9700;&#x8981;&#x4E24;&#x9636;&#x6BB5;&#x8BAD;&#x7EC3;</li>
+<li>Glow-TTS &#x5229;&#x7528;&#x4E00;&#x79CD;&#x65B0;&#x9896;&#x7684;&#x5355;&#x8C03;&#x5BF9;&#x9F50;&#x641C;&#x7D22;&#x6765;&#x63D0;&#x53D6;&#x6301;&#x7EED;&#x65F6;&#x95F4;</li>
+<li>EATS &#x5229;&#x7528;&#x63D2;&#x503C;&#x548C; soft dynamic time warping &#x635F;&#x5931;&#x4EE5;&#x7AEF;&#x5230;&#x7AEF;&#x7684;&#x65B9;&#x5F0F;&#x4F18;&#x5316;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x9884;&#x6D4B;</li>
+</ul>
+</li>
+<li>&#x975E;&#x7AEF;&#x5230;&#x7AEF;&#x4F18;&#x5316;&#xFF1A;&#x5178;&#x578B;&#x7684;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x9884;&#x6D4B;&#x65B9;&#x6CD5;&#x901A;&#x5E38;&#x4F7F;&#x7528;&#x4ECE; &#x5916;&#x90E8;/&#x5185;&#x90E8;&#x5BF9;&#x9F50;&#x5DE5;&#x5177; &#x83B7;&#x5F97;&#x7684;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x8FDB;&#x884C;&#x8BAD;&#x7EC3;&#xFF0C;&#x5E76;&#x4F7F;&#x7528;&#x9884;&#x6D4B;&#x7684;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x6765;&#x8FDB;&#x884C;&#x63A8;&#x7406;&#x3002;&#x9884;&#x6D4B;&#x7684;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x4E0D;&#x662F;&#x901A;&#x8FC7;&#x63A5;&#x6536;&#x6765;&#x81EA;mel&#x8C31;&#x635F;&#x5931;&#x7684;&#x5F15;&#x5BFC;&#x4FE1;&#x53F7;&#xFF08;&#x68AF;&#x5EA6;&#xFF09;&#x6765;&#x7AEF;&#x5230;&#x7AEF;&#x4F18;&#x5316;&#x7684;&#xFF08;&#x6CA1;&#x770B;&#x61C2;&#xFF09;</li>
+<li>&#x7AEF;&#x5230;&#x7AEF;&#x4F18;&#x5316;&#xFF1A;
+<ul>
+<li>&#x4E3A;&#x4E86;&#x8054;&#x5408;&#x4F18;&#x5316;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x4EE5;&#x5B9E;&#x73B0;&#x66F4;&#x597D;&#x7684;&#x97F5;&#x5F8B;&#xFF0C;&#x5982;&#x524D;&#x9762;&#x8BF4;&#x7684; EATS</li>
+<li>Parallel Tacotron 2 &#x9075;&#x5FAA;EATS&#xFF0C;&#x4EE5;&#x786E;&#x4FDD;&#x53EF;&#x5FAE;&#x5206;&#x7684;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x9884;&#x6D4B;</li>
+<li>Non-Attentive Tacotron &#x63D0;&#x51FA;&#x4E86;&#x4E00;&#x79CD;&#x7528;&#x4E8E;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x9884;&#x6D4B;&#x7684;&#x534A;&#x76D1;&#x7763;&#x5B66;&#x4E60;&#xFF0C;&#x5176;&#x4E2D;&#xFF0C;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x53EF;&#x7528;&#x7684;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x6807;&#x7B7E;&#xFF0C;&#x5219;&#x9884;&#x6D4B;&#x7684;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x53EF;&#x4EE5;&#x7528;&#x4E8E;&#x4E0A;&#x91C7;&#x6837;</li>
+</ul>
+</li>
+</ul>
+<h4 class="mume-header" id="%E6%94%B9%E5%96%84%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90">&#x6539;&#x5584;&#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;</h4>
+
+<p>&#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;&#x901A;&#x5E38;&#x5B58;&#x5728; exposure bias &#x548C; error propagation &#x95EE;&#x9898;&#x3002;</p>
+<p>&#x4E00;&#x4E9B;&#x7F13;&#x89E3;&#x6B64;&#x95EE;&#x9898;&#x7684;&#x7814;&#x7A76;&#xFF1A;</p>
+<ul>
+<li>&#x4F7F;&#x7528; professor forcing &#x6765;&#x7F13;&#x89E3;&#x771F;&#x5B9E;&#x6570;&#x636E;&#x548C;&#x9884;&#x6D4B;&#x6570;&#x636E;&#x4E4B;&#x95F4;&#x7684;&#x4E0D;&#x5339;&#x914D;</li>
+<li>&#x4F7F;&#x7528; teacher-student distillation</li>
+</ul>
+<p>&#x800C;&#x7531;&#x4E8E; error propagation&#xFF0C;mel &#x8C31;&#x56FE;&#x53F3;&#x8FB9;&#x751F;&#x6210;&#x7684;&#x8D28;&#x91CF;&#x901A;&#x5E38;&#x6BD4;&#x5DE6;&#x8FB9;&#x66F4;&#x5DEE;&#xFF0C;&#x4E00;&#x4E9B;&#x5DE5;&#x4F5C;&#x5229;&#x7528;&#x4ECE;&#x5DE6;&#x5230;&#x53F3;&#x548C;&#x4ECE;&#x53F3;&#x5230;&#x5DE6;&#x7684;&#x751F;&#x6210;&#x6765;&#x8FDB;&#x884C;&#x6570;&#x636E;&#x589E;&#x5F3A;&#x548C;&#x6B63;&#x5219;&#x5316;&#x3002;</p>
+<h4 class="mume-header" id="%E7%94%A8%E9%9D%9E%E8%87%AA%E5%9B%9E%E5%BD%92%E6%9B%BF%E4%BB%A3%E8%87%AA%E5%9B%9E%E5%BD%92">&#x7528;&#x975E;&#x81EA;&#x56DE;&#x5F52;&#x66FF;&#x4EE3;&#x81EA;&#x56DE;&#x5F52;</h4>
+
+<p>&#x6839;&#x636E;&#x6CE8;&#x610F;&#x529B;&#x7684;&#x4F7F;&#x7528;&#x6216;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x9884;&#x6D4B;&#xFF0C;&#x975E;&#x81EA;&#x56DE;&#x5F52;&#x751F;&#x6210;&#x53EF;&#x4EE5;&#x5206;&#x4E3A;&#x4E24;&#x90E8;&#x5206;&#xFF1A;</p>
+<ul>
+<li>&#x5E76;&#x884C;&#x751F;&#x6210;&#x4E2D;&#x4F7F;&#x7528;&#x4F4D;&#x7F6E;&#x6CE8;&#x610F;&#x529B;&#x8FDB;&#x884C;&#x6587;&#x672C;&#x548C;&#x8BED;&#x97F3;&#x5BF9;&#x9F50;</li>
+<li>&#x7528;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x9884;&#x6D4B;&#x6765;&#x5F25;&#x8865;&#x6587;&#x672C;&#x548C;&#x8BED;&#x97F3;&#x5E8F;&#x5217;&#x4E4B;&#x95F4;&#x7684;&#x957F;&#x5EA6;&#x4E0D;&#x5339;&#x914D;</li>
+</ul>
+<p>&#x4E00;&#x79CD;&#x65B0;&#x7684;&#x5206;&#x7C7B;&#xFF1A;<img src="image/Pasted%20image%2020230729111329.png" alt></p>
+<h3 class="mume-header" id="%E8%A1%A8%E8%BE%BE%E6%80%A7-tts">&#x8868;&#x8FBE;&#x6027; TTS</h3>
+
+<p>&#x5408;&#x6210;&#x8BED;&#x97F3;&#x7684;&#x81EA;&#x7136;&#x5EA6;&#x5F88;&#x5927;&#x7A0B;&#x5EA6;&#x53D6;&#x51B3;&#x4E8E;&#x5408;&#x6210;&#x8BED;&#x97F3;&#x7684;&#x8868;&#x73B0;&#x529B;&#xFF0C;&#x5305;&#x542B;&#x5185;&#x5BB9;&#x3001;&#x97F3;&#x8272;&#x3001;&#x97F5;&#x5F8B;&#x3001;&#x60C5;&#x611F;&#x3001;&#x98CE;&#x683C;&#x7B49;&#x591A;&#x79CD;&#x7279;&#x5F81;&#x3002;</p>
+<p>&#x8868;&#x8FBE;&#x6027;&#x8BED;&#x97F3;&#x5408;&#x6210;&#x7684;&#x4E00;&#x4E2A;&#x5173;&#x952E;&#x662F;&#x5904;&#x7406;&#x4E00;&#x5BF9;&#x591A;&#x6620;&#x5C04;&#x95EE;&#x9898;&#xFF0C;&#x5373;&#x5728;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x3001;&#x97F3;&#x9AD8;&#x3001;&#x97F3;&#x91CF;&#x3001;&#x8BF4;&#x8BDD;&#x4EBA;&#x98CE;&#x683C;&#x3001;&#x60C5;&#x611F;&#x7B49;&#x65B9;&#x9762;&#xFF0C;&#x540C;&#x4E00;&#x6587;&#x672C;&#x5BF9;&#x5E94;&#x4E86;&#x591A;&#x4E2A;&#x8BED;&#x97F3;&#x3002;&#x5728;&#x6CA1;&#x6709;&#x8FD9;&#x4E9B;&#x989D;&#x5916;&#x4FE1;&#x606F;&#x65F6;&#xFF0C;&#x76F4;&#x63A5;&#x5EFA;&#x6A21;&#x4F1A;&#x5BFC;&#x81F4;&#x8FC7;&#x5EA6;&#x5E73;&#x6ED1;&#x7684; mel &#x8C31;&#xFF0C;&#x4ECE;&#x800C;&#x5BFC;&#x81F4;&#x4F4E;&#x8D28;&#x91CF;&#x548C;&#x4F4E;&#x8868;&#x73B0;&#x529B;&#x7684;&#x8BED;&#x97F3;&#x3002;&#x56E0;&#x6B64;&#x5C06;&#x8FD9;&#x4E9B;&#x4FE1;&#x606F;&#x4F5C;&#x4E3A;&#x8F93;&#x5165;&#x53EF;&#x4EE5;&#x63D0;&#x9AD8;&#x5408;&#x6210;&#x8BED;&#x97F3;&#x7684;&#x8868;&#x73B0;&#x529B;&#x3002;</p>
+<h4 class="mume-header" id="%E4%BF%A1%E6%81%AF%E5%88%86%E7%B1%BB">&#x4FE1;&#x606F;&#x5206;&#x7C7B;</h4>
+
+<p>&#x5408;&#x6210;&#x8BED;&#x97F3;&#x6240;&#x9700;&#x8981;&#x7684;&#x4FE1;&#x606F;&#x53EF;&#x4EE5;&#x5206;&#x4E3A;&#x56DB;&#x7C7B;&#xFF1A;</p>
+<ul>
+<li>&#x6587;&#x672C;&#x4FE1;&#x606F;&#xFF1A;&#x5C31;&#x662F;&#x5B57;&#x7B26;&#x6216;&#x8005;&#x97F3;&#x7D20;&#xFF0C;&#x5373;&#x8BED;&#x97F3;&#x7684;&#x5185;&#x5BB9;</li>
+<li>&#x8BF4;&#x8BDD;&#x4EBA;&#x6216;&#x97F3;&#x8272;&#x4FE1;&#x606F;&#xFF1A;&#x4E00;&#x4E9B;&#x591A;&#x8BF4;&#x8BDD;&#x4EBA;&#x7CFB;&#x7EDF;&#x4F1A;&#x663E;&#x793A;&#x5EFA;&#x6A21;&#x8BF4;&#x8BDD;&#x4EBA;&#x8868;&#x5F81;&#xFF08;speaker embedding&#xFF09;</li>
+<li>&#x97F5;&#x5F8B;&#x3001;&#x98CE;&#x683C;&#x548C;&#x60C5;&#x611F;&#x4FE1;&#x606F;&#xFF1A;&#x5305;&#x542B;&#x8BED;&#x8C03;&#x3001;&#x91CD;&#x97F3;&#x3001;&#x8282;&#x594F;&#x7B49;&#xFF0C; &#x662F;&#x63D0;&#x9AD8;&#x8BED;&#x97F3;&#x8868;&#x8FBE;&#x529B;&#x7684;&#x5173;&#x952E;&#x4FE1;&#x606F;&#xFF0C;&#x4E5F;&#x662F;&#x5927;&#x90E8;&#x5206;&#x7684;&#x7814;&#x7A76;&#x91CD;&#x70B9;</li>
+<li>&#x5F55;&#x97F3;&#x8BBE;&#x5907;&#x6216;&#x566A;&#x58F0;&#x73AF;&#x5883;&#xFF1A;&#x4F1A;&#x5F71;&#x54CD;&#x8BED;&#x97F3;&#x7684;&#x8D28;&#x91CF;&#xFF0C;&#x7814;&#x7A76;&#x4E3B;&#x8981;&#x6D89;&#x53CA;&#x89E3;&#x8026;&#x3001;&#x53EF;&#x63A7;&#x548C;&#x964D;&#x566A;</li>
+</ul>
+<h4 class="mume-header" id="%E4%BF%A1%E6%81%AF%E5%BB%BA%E6%A8%A1">&#x4FE1;&#x606F;&#x5EFA;&#x6A21;</h4>
+
+<p>&#x63D0;&#x51FA;&#x4E86;&#x8BB8;&#x591A;&#x65B9;&#x6CD5;&#x6765;&#x5BF9;&#x4E0D;&#x540C;&#x7C92;&#x5EA6;&#x7684;&#x4E0D;&#x540C;&#x7C7B;&#x578B;&#x7684;&#x4FE1;&#x606F;&#x8FDB;&#x884C;&#x5EFA;&#x6A21;&#xFF1A;<br>
+<img src="image/Pasted%20image%2020230729141713.png" alt></p>
+<p>&#x53EF;&#x4EE5;&#x5206;&#x4E3A;&#x663E;&#x793A;&#x4FE1;&#x606F;&#x548C;&#x9690;&#x5F0F;&#x4FE1;&#x606F;&#x3002;</p>
+<p>&#x5BF9;&#x4E8E;&#x663E;&#x793A;&#x4FE1;&#x606F;&#xFF0C;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x4F5C;&#x4E3A;&#x8F93;&#x5165;&#x6765;&#x63D0;&#x9AD8;&#x6A21;&#x578B;&#x751F;&#x6210;&#x8BED;&#x97F3;&#x7684;&#x8868;&#x8FBE;&#x529B;&#xFF0C;&#x5305;&#x62EC;&#x5982;&#x8BED;&#x8A00; ID&#x3001;&#x8BF4;&#x8BDD;&#x4EBA; ID&#x3001;&#x98CE;&#x683C;&#x3001;&#x97F5;&#x5F8B;&#x7B49;&#x3002;</p>
+<p>&#x5BF9;&#x4E8E;&#x9690;&#x5F0F;&#x4FE1;&#x606F;&#x5219;&#x9700;&#x8981;&#x8FDB;&#x884C;&#x5EFA;&#x6A21;&#xFF0C;&#x65B9;&#x6CD5;&#x6709;&#xFF1A;</p>
+<ul>
+<li>Reference encoder&#xFF1A;&#x5C06;&#x97F5;&#x5F8B;&#x5B9A;&#x4E49;&#x4E3A;&#x8BED;&#x97F3;&#x4FE1;&#x53F7;&#x4E2D;&#x7684;&#x53D8;&#x5316;&#x4FE1;&#x606F;&#xFF0C;&#x901A;&#x8FC7;&#x53C2;&#x8003;&#x7F16;&#x7801;&#x5668;&#x5BF9;&#x97F5;&#x5F8B;&#x8FDB;&#x884C;&#x5EFA;&#x6A21;</li>
+<li>VAE&#xFF1A;&#x5229;&#x7528;VAE&#x4EE5;&#x9AD8;&#x65AF;&#x5148;&#x9A8C;&#x4F5C;&#x4E3A;&#x6B63;&#x5219;&#x5316;&#x5BF9;&#x6F5C;&#x5728;&#x7A7A;&#x95F4;&#x4E2D;&#x7684;&#x65B9;&#x5DEE;&#x4FE1;&#x606F;&#x8FDB;&#x884C;&#x5EFA;&#x6A21;&#xFF0C;&#x8FD9;&#x53EF;&#x4EE5;&#x5B9E;&#x73B0;&#x5BF9;&#x5408;&#x6210;&#x98CE;&#x683C;&#x7684;&#x5EFA;&#x6A21;&#x548C;&#x63A7;&#x5236;</li>
+<li>Advanced generative models&#xFF1A;&#x4F7F;&#x7528; advanced generative models &#x6765;&#x9690;&#x5F0F;&#x5B66;&#x4E60;&#x53D8;&#x5316;&#x4FE1;&#x606F;&#xFF0C;&#x8FD9;&#x53EF;&#x4EE5;&#x66F4;&#x597D;&#x5730;&#x5BF9;&#x591A;&#x6A21;&#x6001;&#x5206;&#x5E03;&#x8FDB;&#x884C;&#x5EFA;&#x6A21;</li>
+<li>&#x6587;&#x672C;&#x9884;&#x8BAD;&#x7EC3;&#xFF1A;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x4F7F;&#x7528;&#x9884;&#x8BAD;&#x7EC3;&#x7684; word embedding &#x6216;&#x6A21;&#x578B;&#x53C2;&#x6570;&#x6765;&#x63D0;&#x4F9B;&#x66F4;&#x597D;&#x7684;&#x6587;&#x672C;&#x8868;&#x5F81;</li>
+</ul>
+<h4 class="mume-header" id="%E4%BF%A1%E6%81%AF%E7%B2%92%E5%BA%A6">&#x4FE1;&#x606F;&#x7C92;&#x5EA6;</h4>
+
+<p>&#x4FE1;&#x606F;&#x53EF;&#x4EE5;&#x4EE5;&#x4E0D;&#x540C;&#x7684;&#x7C92;&#x5EA6;&#x8FDB;&#x884C;&#x5EFA;&#x6A21;&#xFF1A;</p>
+<ul>
+<li>&#x8BED;&#x8A00;&#x7EA7;&#x522B;&#x548C;&#x8BF4;&#x8BDD;&#x4EBA;&#x7EA7;&#x522B;</li>
+<li>&#x6BB5;&#x843D;&#x7EA7;&#x522B;</li>
+<li>Utterance level&#xFF1A;&#x4ECE;&#x53C2;&#x8003;&#x8BED;&#x97F3;&#x4E2D;&#x63D0;&#x53D6;&#x5355;&#x4E2A;&#x9690;&#x5411;&#x91CF;&#xFF0C;&#x4EE5;&#x8868;&#x793A;&#x8BE5;&#x8BDD;&#x8BED;&#x7684;&#x97F3;&#x8C03;/&#x98CE;&#x683C;/&#x97F5;&#x5F8B;</li>
+<li>Word/syllable level&#xFF1A;&#x5BF9;&#x8BDD;&#x8BED;&#x7EA7;&#x522B;&#x4FE1;&#x606F;&#x65E0;&#x6CD5;&#x8986;&#x76D6;&#x7684;&#x7EC6;&#x7C92;&#x5EA6;&#x98CE;&#x683C;/&#x97F5;&#x5F8B;&#x4FE1;&#x606F;&#x8FDB;&#x884C;&#x5EFA;&#x6A21;</li>
+<li>Character/phoneme level&#xFF1A;&#x5982;&#x6301;&#x7EED;&#x65F6;&#x95F4;&#x3001;&#x97F3;&#x9AD8;&#x3001;&#x97F5;&#x5F8B;</li>
+<li>Frame level</li>
+</ul>
+<p>&#x8986;&#x76D6;&#x4E0D;&#x540C;&#x7C92;&#x5EA6;&#x7684;&#x5C42;&#x6B21;&#x7ED3;&#x6784;&#x6709;&#x52A9;&#x4E8E;&#x8868;&#x8FBE;&#x6027;&#x7684;&#x5408;&#x6210;&#x3002;</p>
+<h4 class="mume-header" id="%E8%A7%A3%E8%80%A6-%E6%8E%A7%E5%88%B6%E5%92%8C%E8%BF%81%E7%A7%BB">&#x89E3;&#x8026;&#x3001;&#x63A7;&#x5236;&#x548C;&#x8FC1;&#x79FB;</h4>
+
+<p><img src="image/Pasted%20image%2020230729143341.png" alt></p>
+<p>&#x4F7F;&#x7528;&#x5BF9;&#x6297;&#x8BAD;&#x7EC3;&#x8FDB;&#x884C;&#x89E3;&#x8026;&#xFF1A;&#x5F53;&#x591A;&#x79CD;&#x98CE;&#x683C;&#x6216;&#x97F5;&#x5F8B;&#x4FE1;&#x606F;&#x7EA0;&#x7F20;&#x5728;&#x4E00;&#x8D77;&#x65F6;&#xFF0C;&#x6709;&#x5FC5;&#x8981;&#x5728;&#x8BAD;&#x7EC3;&#x4E2D;&#x8FDB;&#x884C;&#x89E3;&#x8026;&#xFF1A;</p>
+<ul>
+<li>&#x6709;&#x901A;&#x8FC7; &#x5BF9;&#x6297;-&#x534F;&#x4F5C; &#x589E;&#x5F3A;&#x4E86;&#x5185;&#x5BB9;&#x98CE;&#x683C;&#x7684;&#x89E3;&#x8026;&#x529B;&#x548C;&#x53EF;&#x63A7;&#x6027;</li>
+<li>&#x4E5F;&#x6709;&#x5229;&#x7528;VAE&#x6846;&#x67B6;&#x548C;&#x5BF9;&#x6297;&#x8BAD;&#x7EC3;&#xFF0C;&#x5C06;&#x566A;&#x58F0;&#x4ECE;&#x8BF4;&#x8BDD;&#x4EBA;&#x4FE1;&#x606F;&#x4E2D;&#x5206;&#x79BB;&#x51FA;&#x6765;</li>
+<li>&#x8FD8;&#x6709;&#x4EBA;&#x63D0;&#x51FA;&#x4E86;&#x4F7F;&#x7528;&#x4E09;&#x79CD;&#x74F6;&#x9888;&#x91CD;&#x5EFA;&#x6765;&#x7406;&#x6E05;&#x8282;&#x594F;&#x3001;&#x97F3;&#x9AD8;&#x3001;&#x5185;&#x5BB9;&#x548C;&#x97F3;&#x8272;</li>
+<li>&#x8FD8;&#x6709;&#x63D0;&#x51FA;&#x901A;&#x8FC7;&#x5E27;&#x7EA7;&#x566A;&#x58F0;&#x5EFA;&#x6A21;&#x548C;&#x5BF9;&#x6297;&#x8BAD;&#x7EC3;&#x6765;&#x4ECE;&#x8BF4;&#x8BDD;&#x4EBA;&#x4E2D;&#x5206;&#x79BB;&#x566A;&#x58F0;</li>
+</ul>
+<p>&#x5FAA;&#x73AF;&#x4E00;&#x81F4;&#x6027;/&#x53CD;&#x9988;&#x635F;&#x5931;&#x6765;&#x5B9E;&#x73B0;&#x53EF;&#x63A7;&#xFF1A;</p>
+<ul>
+<li>&#x6709;&#x8FC7;&#x6DFB;&#x52A0;&#x5177;&#x6709; feedback cycle &#x7684;&#x60C5;&#x7EEA;&#x98CE;&#x683C;&#x5206;&#x7C7B;&#x5668;&#x6765;&#x8FDB;&#x884C;&#x53EF;&#x63A7;&#x7684;&#x60C5;&#x7EEA;&#x8FC1;&#x79FB;&#xFF0C;&#x5176;&#x4E2D;&#x5206;&#x7C7B;&#x5668;&#x4FC3;&#x4F7F; TTS &#x6A21;&#x578B;&#x5408;&#x6210;&#x5177;&#x6709;&#x7279;&#x5B9A;&#x60C5;&#x7EEA;&#x7684;&#x8BED;&#x97F3;</li>
+<li>&#x4E5F;&#x6709;&#x4F7F;&#x7528;&#x98CE;&#x683C;&#x5206;&#x7C7B;&#x5668;&#x83B7;&#x5F97; feedback loss&#xFF0C;&#x5B9E;&#x73B0;&#x7ED9;&#x5B9A;&#x98CE;&#x683C;&#x7684;&#x8BED;&#x97F3;&#x5408;&#x6210;&#x3002;&#x540C;&#x65F6;&#x7ED3;&#x5408;&#x4E86;&#x4E0D;&#x540C;&#x98CE;&#x683C;&#x5206;&#x7C7B;&#x5668;&#x4E4B;&#x95F4;&#x7684;&#x5BF9;&#x6297;&#x5B66;&#x4E60;&#xFF0C;&#x4EE5;&#x786E;&#x4FDD;&#x4ECE;&#x591A;&#x4E2A;&#x53C2;&#x8003;&#x97F3;&#x9891;&#x4E2D;&#x4FDD;&#x7559;&#x4E0D;&#x540C;&#x98CE;&#x683C;</li>
+<li>&#x8FD8;&#x6709;&#x4F7F;&#x7528; ASR &#x63D0;&#x4F9B; feedback loss &#x6765;&#x8BAD;&#x7EC3;&#x4E0D;&#x5339;&#x914D;&#x7684;&#x6587;&#x672C;&#x548C;&#x8BED;&#x97F3;&#xFF0C;&#x76EE;&#x7684;&#x662F;&#x51CF;&#x5C11;&#x8BAD;&#x7EC3;&#x548C;&#x63A8;&#x7406;&#x4E4B;&#x95F4;&#x7684;&#x4E0D;&#x5339;&#x914D;&#xFF0C;&#x56E0;&#x4E3A;&#x5728;&#x63A8;&#x7406;&#x4E2D;&#x4F7F;&#x7528;&#x968F;&#x673A;&#x9009;&#x62E9;&#x7684;&#x97F3;&#x9891;&#x4F5C;&#x4E3A;&#x53C2;&#x8003;</li>
+<li>&#x5176;&#x4ED6;&#x8BBA;&#x6587;&#x5229;&#x7528; feedback loss &#x6765;&#x786E;&#x4FDD;&#x98CE;&#x683C;&#x548C; speaker embedding &#x7B49;&#x65B9;&#x9762;&#x7684;&#x53EF;&#x63A7;&#x6027;</li>
+</ul>
+<p>&#x534A;&#x76D1;&#x7763;&#x5B66;&#x4E60;&#x5B9E;&#x73B0;&#x53EF;&#x63A7;&#xFF1A;&#x5982;&#x679C;&#x6709;&#x6BCF;&#x4E2A;&#x5C5E;&#x6027;&#x7684;&#x6807;&#x7B7E;&#xFF0C;&#x53EF;&#x4EE5;&#x5F88;&#x5BB9;&#x6613;&#x5730;&#x63A7;&#x5236;&#x5408;&#x6210;&#x8BED;&#x97F3;&#xFF0C;&#x7136;&#x800C;&#xFF0C;&#x5F53;&#x6CA1;&#x6709;&#x53EF;&#x7528;&#x7684;&#x6807;&#x8BB0;/&#x6807;&#x7B7E;&#x65F6;&#x5C31;&#x5F88;&#x56F0;&#x96BE;&#xFF0C;&#x800C;&#x5F53;&#x90E8;&#x5206;&#x6807;&#x7B7E;&#x53EF;&#x4EE5;&#x7528;&#x65F6;&#xFF1A;</p>
+<ul>
+<li>&#x6709;&#x4EBA;&#x63D0;&#x51FA;&#x534A;&#x76D1;&#x7763;&#x5B66;&#x4E60;&#x65B9;&#x6CD5;&#x6765;&#x5B66;&#x4E60;VAE&#x6A21;&#x578B;&#x7684;&#x6F5C;&#x5728;&#x8868;&#x5F81;&#xFF0C;&#x4EE5;&#x63A7;&#x5236;&#x60C5;&#x611F;&#x6216;&#x8BF4;&#x8BDD;&#x901F;&#x7387;&#x7B49;</li>
+<li>&#x5F53;&#x6CA1;&#x6709;&#x6807;&#x7B7E;&#x53EF;&#x7528;&#x65F6;&#xFF0C;&#x63D0;&#x51FA;&#x4E86;&#x9AD8;&#x65AF;&#x6DF7;&#x5408; VAE &#x6A21;&#x578B;&#x6765;&#x533A;&#x5206;&#x4E0D;&#x540C;&#x7684;&#x5C5E;&#x6027;&#xFF0C;&#x4E5F;&#x6709;&#x5229;&#x7528;&#x68AF;&#x5EA6;&#x53CD;&#x8F6C;&#x6216;&#x5BF9;&#x6297;&#x8BAD;&#x7EC3;&#x6765;&#x533A;&#x5206;&#x8BF4;&#x8BDD;&#x4EBA;&#x97F3;&#x8272;&#x548C;&#x566A;&#x58F0;&#xFF0C;&#x4ECE;&#x800C;&#x4E3A;&#x6709;&#x566A;&#x58F0;&#x7684;&#x8BF4;&#x8BDD;&#x4EBA; &#x5408;&#x6210;&#x5E72;&#x51C0;&#x7684;&#x8BED;&#x97F3;</li>
+</ul>
+<p>&#x6539;&#x53D8;&#x4FE1;&#x606F;&#x7528;&#x4E8E;&#x8FC1;&#x79FB;&#xFF1A;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x5C06;&#x4FE1;&#x606F;&#x8F6C;&#x6362;&#x4E3A;&#x4E0D;&#x540C;&#x7684;&#x98CE;&#x683C;&#x6765;&#x8FC1;&#x79FB;&#x5408;&#x6210;&#x8BED;&#x97F3;&#x7684;&#x98CE;&#x683C;&#xFF0C;&#x53EF;&#x4EE5;&#x4ECE;&#x4E00;&#x4E0B;&#x4E09;&#x79CD;&#x65B9;&#x5F0F;&#x83B7;&#x5F97;&#x4FE1;&#x606F;&#xFF1A;</p>
+<ul>
+<li>&#x4ECE;&#x53C2;&#x8003;&#x8BED;&#x97F3;&#x4E2D;&#x63D0;&#x53D6;</li>
+<li>&#x4ECE;&#x6587;&#x672C;&#x8FDB;&#x884C;&#x9884;&#x6D4B;</li>
+<li>&#x4ECE;&#x6F5C;&#x5728;&#x7A7A;&#x95F4;&#x8FDB;&#x884C;&#x91C7;&#x6837;</li>
+</ul>
+<h3 class="mume-header" id="%E8%87%AA%E9%80%82%E5%BA%94-tts">&#x81EA;&#x9002;&#x5E94; TTS</h3>
+
+<p>&#x81EA;&#x9002;&#x5E94; TTS &#x53EF;&#x4EE5;&#x5408;&#x6210;&#x4EFB;&#x610F;&#x8BF4;&#x8BDD;&#x4EBA;&#x7684;&#x8BED;&#x97F3;&#xFF0C;&#x4E5F;&#x88AB;&#x79F0;&#x4E3A; voice adaptation&#x3001;voice cloning&#x3001;custom voice &#x7B49;&#x3002;&#x6E90;TTS&#x6A21;&#x578B;&#xFF08;&#x901A;&#x5E38;&#x5728;&#x591A;&#x8BF4;&#x8BDD;&#x4EBA;&#x8BED;&#x97F3;&#x6570;&#x636E;&#x96C6;&#x4E0A;&#x8BAD;&#x7EC3;&#xFF09;&#x5BF9;&#x6BCF;&#x4E2A;&#x76EE;&#x6807;&#x8BED;&#x97F3;&#x8FDB;&#x884C;&#x81EA;&#x9002;&#x5E94;&#xFF0C;&#x800C;&#x81EA;&#x9002;&#x5E94;&#x6570;&#x636E;&#x5F88;&#x5C11;&#x3002;&#x4ECE;&#x4E24;&#x4E2A;&#x89D2;&#x5EA6;&#x5206;&#x6790;&#xFF1A;</p>
+<ul>
+<li>General Adaptation&#xFF1A;&#x6539;&#x8FDB;&#x6E90; TTS &#x6A21;&#x578B;&#x4F7F;&#x5176;&#x652F;&#x6301;&#x65B0;&#x7684;&#x8BF4;&#x8BDD;&#x4EBA;</li>
+<li>Efficient Adaptation&#xFF1A;&#x51CF;&#x5C11;&#x6BCF;&#x4E2A;&#x76EE;&#x6807;&#x8BF4;&#x8BDD;&#x4EBA;&#x7684;&#x9002;&#x5E94;&#x6570;&#x636E;&#x548C;&#x53C2;&#x6570;</li>
+</ul>
+<p><img src="image/Pasted%20image%2020230729153101.png" alt></p>
+<h4 class="mume-header" id="general-adaptation">General Adaptation</h4>
+
+<p>Source Model Generalization&#xFF1A;&#x63D0;&#x9AD8;&#x6E90;&#x6A21;&#x578B;&#x7684;&#x6CDB;&#x5316;&#x80FD;&#x529B;&#x3002;&#x7531;&#x4E8E;&#x8BAD;&#x7EC3;&#x6E90;&#x6A21;&#x578B;&#x65F6;&#x7684;&#x6570;&#x636E;&#x6709;&#x9650;&#xFF0C;TTS &#x6A21;&#x578B;&#x5F88;&#x5BB9;&#x6613;&#x5BF9;&#x8BAD;&#x7EC3;&#x6570;&#x636E;&#x8FC7;&#x62DF;&#x5408;&#xFF0C;&#x56E0;&#x800C;&#x5BF9;&#x65B0;&#x7684;&#x8BF4;&#x8BDD;&#x4EBA;&#x6CDB;&#x5316;&#x80FD;&#x529B;&#x8F83;&#x5DEE;&#xFF0C;&#x4E00;&#x4E9B;&#x89E3;&#x51B3;&#x65B9;&#x6CD5;&#x6709;&#xFF1A;</p>
+<ul>
+<li>&#x58F0;&#x5B66;&#x6761;&#x4EF6;&#x5EFA;&#x6A21;&#x4EE5;&#x63D0;&#x4F9B;&#x5FC5;&#x8981;&#x7684;&#x58F0;&#x5B66;&#x4FE1;&#x606F;&#x4F5C;&#x4E3A;&#x6A21;&#x578B;&#x8F93;&#x5165;&#xFF0C;&#x4ECE;&#x800C;&#x66F4;&#x597D;&#x5730;&#x5B66;&#x4E60;&#x6587;&#x672C;&#x5230;&#x8BED;&#x97F3;&#x7684;&#x6620;&#x5C04;</li>
+<li>&#x589E;&#x52A0;&#x8BAD;&#x7EC3;&#x6570;&#x636E;&#x7684;&#x6570;&#x91CF;&#x548C;&#x591A;&#x6837;&#x6027;</li>
+</ul>
+<p>Cross-Domain Adaptation&#xFF1A;&#x81EA;&#x9002;&#x5E94;&#x8BED;&#x97F3;&#x4E0E;&#x7528;&#x4E8E;&#x8BAD;&#x7EC3;&#x6E90;TTS&#x6A21;&#x578B;&#x7684;&#x8BED;&#x97F3;&#x6570;&#x636E;&#x5177;&#x6709;&#x4E0D;&#x540C;&#x7684;&#x58F0;&#x5B66;&#x6761;&#x4EF6;&#x6216;&#x98CE;&#x683C;&#xFF0C;&#x56E0;&#x6B64;&#x9700;&#x8981;&#x8003;&#x8651;&#x7279;&#x6B8A;&#x7684;&#x8BBE;&#x8BA1;&#x6765;&#x63D0;&#x9AD8;&#x6E90;TTS&#x6A21;&#x578B;&#x7684;&#x6CDB;&#x5316;&#x80FD;&#x529B;&#xFF0C;&#x652F;&#x6301;&#x76EE;&#x6807;&#x8BF4;&#x8BDD;&#x8005;&#x7684;&#x98CE;&#x683C;&#xFF1A;</p>
+<ul>
+<li>AdaSpeech &#x8FDB;&#x884C;&#x58F0;&#x5B66;&#x6761;&#x4EF6;&#x5EFA;&#x6A21;&#xFF0C;&#x4EE5;&#x66F4;&#x597D;&#x5730;&#x5EFA;&#x6A21;&#x58F0;&#x5B66;&#x6761;&#x4EF6;&#xFF0C;&#x5982;&#x5F55;&#x97F3;&#x8BBE;&#x5907;&#x3001;&#x73AF;&#x5883;&#x566A;&#x58F0;&#x3001;&#x53E3;&#x97F3;&#x3001;&#x8BF4;&#x8BDD;&#x4EBA;&#x8BED;&#x901F;&#x3001;&#x97F3;&#x8272;&#x7B49;&#x3002;&#x6A21;&#x578B;&#x503E;&#x5411;&#x4E8E;&#x6CDB;&#x5316;&#x800C;&#x4E0D;&#x662F;&#x8BB0;&#x5FC6;&#x58F0;&#x5B66;&#x6761;&#x4EF6;&#xFF0C;&#x53EF;&#x4EE5;&#x5F88;&#x597D;&#x5730;&#x9002;&#x5E94;&#x4E0D;&#x540C;&#x58F0;&#x5B66;&#x6761;&#x4EF6;&#x7684;&#x8BED;&#x97F3;&#x6570;&#x636E;</li>
+<li>AdaSpeech 3 &#x8BBE;&#x8BA1;&#x7279;&#x5B9A;&#x7684; filled pauses adaptation, rhythm adaptation, and timbre adaptation&#xFF0C;&#x4F7F;&#x9605;&#x8BFB;&#x98CE;&#x683C;&#x7684; TTS &#x6A21;&#x578B;&#x9002;&#x5E94;&#x81EA;&#x53D1;&#x98CE;&#x683C;</li>
+<li>&#x5176;&#x4ED6;&#x5DE5;&#x4F5C;&#x8003;&#x8651;&#x4E86;&#x8DE8;&#x8BF4;&#x8BDD;&#x98CE;&#x683C;&#x7684;&#x81EA;&#x9002;&#x5E94;&#xFF0C;&#x5982;&#x8DE8;&#x8BED;&#x8A00;</li>
+</ul>
+<h4 class="mume-header" id="efficient-adaptation">Efficient Adaptation</h4>
+
+<p>&#x66F4;&#x591A;&#x7684;&#x81EA;&#x9002;&#x5E94;&#x6570;&#x636E;&#x5C06;&#x5BFC;&#x81F4;&#x66F4;&#x597D;&#x7684;&#x8BED;&#x97F3;&#x8D28;&#x91CF;&#xFF0C;&#x4F46;&#x4F1A;&#x4EA7;&#x751F;&#x8F83;&#x9AD8;&#x7684;&#x6570;&#x636E;&#x6536;&#x96C6;&#x6210;&#x672C;&#x3002;</p>
+<p>&#x5BF9;&#x4E8E;&#x81EA;&#x9002;&#x5E94;&#x53C2;&#x6570;&#xFF0C;&#x53EF;&#x4EE5;&#x5BF9;&#x6574;&#x4E2A;TTS&#x6A21;&#x578B;&#x3001;&#x6216;&#x90E8;&#x5206;&#x6A21;&#x578B;&#xFF08;&#x4F8B;&#x5982;&#xFF0C;&#x89E3;&#x7801;&#x5668;&#xFF09;&#x3001;&#x6216;&#x4EC5; speaker embedding &#x8FDB;&#x884C;&#x5FAE;&#x8C03;&#x3002;&#x5FAE;&#x8C03;&#x7684;&#x53C2;&#x6570;&#x8D8A;&#x591A;&#xFF0C;&#x4EA7;&#x751F;&#x7684;&#x8BED;&#x97F3;&#x8D28;&#x91CF;&#x8D8A;&#x597D;&#xFF0C;&#x4F46;&#x4F1A;&#x589E;&#x52A0;&#x5185;&#x5B58;&#x548C;&#x90E8;&#x7F72;&#x6210;&#x672C;&#x3002;</p>
+<p>&#x76EE;&#x6807;&#x662F;&#x5C3D;&#x53EF;&#x80FD;&#x51CF;&#x5C11;&#x6570;&#x636E;&#x548C;&#x53C2;&#x6570;&#x4EE5;&#x5B9E;&#x73B0;&#x9AD8;&#x8D28;&#x91CF;&#x7684;&#x8BED;&#x97F3;&#xFF0C;&#x53EF;&#x4EE5;&#x5206;&#x4E3A;&#x4EE5;&#x4E0B;&#x51E0;&#x79CD;&#x65B9;&#x9762;&#x7684;&#x6280;&#x672F;&#xFF1A;</p>
+<ul>
+<li>few data adaption</li>
+<li>few parameter adaption</li>
+<li>untranscribed data adaptation</li>
+<li>zero-shot adaptation</li>
+</ul>
+<p>Few data adaptation&#xFF1A;&#x4EC5;&#x4F7F;&#x7528;&#x5C11;&#x91CF;&#x914D;&#x5BF9;&#x6587;&#x672C;&#x548C;&#x8BED;&#x97F3;&#x6570;&#x636E;&#x8FDB;&#x884C;&#x81EA;&#x9002;&#x5E94;&#xFF0C;&#x7814;&#x7A76;&#x53D1;&#x73B0;&#xFF0C;&#x5F53;&#x6570;&#x636E;&#x91CF;&#x8F83;&#x5C0F;&#xFF08;&#x5C11;&#x4E8E;20&#x53E5;&#xFF09;&#x65F6;&#xFF0C;&#x8BED;&#x97F3;&#x8D28;&#x91CF;&#x968F;&#x7740;&#x9002;&#x5E94;&#x6570;&#x636E;&#x7684;&#x589E;&#x52A0;&#x800C;&#x5FEB;&#x901F;&#x6539;&#x5584;&#xFF0C;&#x800C;&#x5F53;&#x9002;&#x5E94;&#x8BED;&#x53E5;&#x6570;&#x4E3A;&#x6570;&#x5341;&#x53E5;&#x65F6;&#xFF0C;&#x8BED;&#x97F3;&#x8D28;&#x91CF;&#x5219;&#x7F13;&#x6162;&#x6539;&#x5584;</p>
+<p>Few parameter adaptation&#xFF1A;&#x5728;&#x4FDD;&#x6301;&#x81EA;&#x9002;&#x5E94;&#x8D28;&#x91CF;&#x7684;&#x540C;&#x65F6;&#xFF0C;&#x5C3D;&#x53EF;&#x80FD;&#x5C11;&#x5730;&#x51CF;&#x5C11;&#x81EA;&#x9002;&#x5E94;&#x53C2;&#x6570;</p>
+<p>Untranscribed data adaptation.&#xFF1A;&#x5F88;&#x591A;&#x60C5;&#x51B5;&#x53EA;&#x6709;&#x8BED;&#x97F3;&#x6570;&#x636E;&#x800C;&#x6CA1;&#x6709;&#x914D;&#x5BF9;&#x7684;&#x6587;&#x672C;&#xFF1A;</p>
+<ul>
+<li>AdaSpeech 2 &#x5728;&#x8BED;&#x97F3;&#x91CD;&#x5EFA;&#x548C;&#x6F5C;&#x5728;&#x5BF9;&#x9F50;&#x7684;&#x5E2E;&#x52A9;&#x4E0B;&#x5229;&#x7528;&#x672A;&#x8BB0;&#x5F55;&#x7684;&#x8BED;&#x97F3;&#x6570;&#x636E;&#x8FDB;&#x884C;&#x8BED;&#x97F3;&#x81EA;&#x9002;&#x5E94;</li>
+<li>&#x4E5F;&#x6709;&#x4F7F;&#x7528;ASR&#x6A21;&#x578B;&#x6765;&#x8F6C;&#x5F55;&#x8BED;&#x97F3;&#x6570;&#x636E;&#xFF0C;&#x4F7F;&#x7528;&#x8F6C;&#x5F55;&#x7684;&#x914D;&#x5BF9;&#x6570;&#x636E;&#x8FDB;&#x884C;&#x8BED;&#x97F3;&#x81EA;&#x9002;&#x5E94;</li>
+</ul>
+<p>Zero-shot adaptation&#xFF1A;&#x5176;&#x5229;&#x7528; speaker encoder &#x6765;&#x63D0;&#x53D6;&#x7ED9;&#x5B9A;&#x53C2;&#x8003;&#x97F3;&#x9891;&#x7684; speaker embedding&#xFF0C;&#x4E0D;&#x9700;&#x8981;&#x989D;&#x5916;&#x7684;&#x6570;&#x636E;&#x548C;&#x53C2;&#x6570;&#x5C31;&#x53EF;&#x4EE5;&#x5B9E;&#x73B0;&#x81EA;&#x9002;&#x5E94;&#xFF0C;&#x4F46;&#x662F;&#x6548;&#x679C;&#x4E0D;&#x592A;&#x597D;</p>
+<h2 class="mume-header" id="%E6%9C%AA%E6%9D%A5%E7%A0%94%E7%A9%B6%E6%96%B9%E5%90%91">&#x672A;&#x6765;&#x7814;&#x7A76;&#x65B9;&#x5411;</h2>
+
+<p>&#x4E3B;&#x8981;&#x5206;&#x4E3A;&#x4E24;&#x7C7B;</p>
+<ol>
+<li>&#x9AD8;&#x8D28;&#x91CF;&#x8BED;&#x97F3;&#x5408;&#x6210;
+<ol>
+<li>&#x66F4;&#x5F3A;&#x5927;&#x7684;&#x751F;&#x6210;&#x6A21;&#x578B;</li>
+<li>&#x66F4;&#x597D;&#x7684;&#x8868;&#x5F81;&#x5B66;&#x4E60;&#xFF1A;&#x5982;&#x4E00;&#x4E9B;&#x6587;&#x672C;&#x9884;&#x8BAD;&#x7EC3;&#x6A21;&#x578B;</li>
+<li>&#x9C81;&#x68D2;&#x8BED;&#x97F3;&#x5408;&#x6210;&#xFF1A;&#x9488;&#x5BF9;&#x957F;&#x6587;&#x672C;&#x3001;&#x4E0D;&#x540C;&#x8BED;&#x8A00;&#x7684;&#x6587;&#x672C;&#x7B49;</li>
+<li>&#x8868;&#x8FBE;&#x6027;/&#x53EF;&#x63A7;/&#x53EF;&#x8FC1;&#x79FB;&#x8BED;&#x97F3;&#x5408;&#x6210;</li>
+<li>&#x66F4;&#x50CF;&#x4EBA;&#x7684;&#x8BED;&#x97F3;&#x5408;&#x6210;&#xFF1A;&#x968F;&#x610F;&#x6027;&#x3001;&#x6709;&#x611F;&#x60C5;&#x3001;&#x81EA;&#x53D1;&#x6027;&#xFF0C;&#x800C;&#x4E0D;&#x662F;&#x542C;&#x8D77;&#x6765;&#x5F88;&#x523B;&#x610F;&#x7684;&#x5BF9;&#x8BDD;</li>
+</ol>
+</li>
+<li>&#x9AD8;&#x6548;&#x8BED;&#x97F3;&#x5408;&#x6210;&#xFF0C;&#x964D;&#x4F4E;&#x5408;&#x6210;&#x6210;&#x672C;&#xFF0C;&#x5305;&#x62EC;&#xFF1A;&#x6570;&#x636E;&#x3001;&#x8BAD;&#x7EC3;&#x3001;&#x90E8;&#x7F72;&#x6210;&#x672C;&#x7B49;
+<ol>
+<li>&#x6570;&#x636E;&#x9AD8;&#x6548;</li>
+<li>&#x53C2;&#x6570;&#x9AD8;&#x6548;</li>
+<li>&#x80FD;&#x91CF;&#x9AD8;&#x6548;</li>
+</ol>
+</li>
+</ol>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    </body></html>

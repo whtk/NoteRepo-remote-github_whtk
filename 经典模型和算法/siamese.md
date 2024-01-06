@@ -1,0 +1,1 @@
+>  Signature Verification using a "Siamese" Time Delay Neural Network 笔记

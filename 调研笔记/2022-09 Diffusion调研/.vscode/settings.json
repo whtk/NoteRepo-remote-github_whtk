@@ -1,0 +1,24 @@
+{
+    "editor.fontFamily": "Fira Code Regular, Consolas, Microsoft YaHei",
+    "editor.fontSize": 12,
+    "editor.fontLigatures": true,
+    "local-history.daysLimit": 7,
+    "local-history.exclude": [
+        "**/.vscode/**",
+    ],
+    "local-history.saveDelay": 300, // seconds
+    "fileheader.customMade": { //此为头部注释
+        "Description": "",
+        // "Version": "2.0",
+        "Autor": "郭印林",
+        "Date": "Do not edit",
+        "LastEditors": "郭印林",
+        "LastEditTime": "Do not edit",
+    },
+    "fileheader.cursorMode": { //此为函数注释
+        "description": "",
+        "param": "",
+        "return": "",
+        "author": "郭印林"
+    },
+}
