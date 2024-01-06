@@ -1,7 +1,13 @@
-> MSRA，2022
+> MSRA，2022，Preprint
 
 1. 基于 statistical significance of subjective measure 定义了一个 human-level quality ，引入判断的方法（合成质量评判）
 2. 提出 NaturalSpeech，可以实现 human-level quality，主要采用 VAE，提出一些模块来增强先验的 capacity，降低后验的 complexity
+
+> 基本结构还是和 VITS 差不多的，也是主要用 CVAE 来做生成，然后做了一些改进和创新：
+> 1. 用 预训练的 phoneme encoder 提取 phoneme embedding
+> 2. 可微的 durator
+> 3. 双向的先验/后验，用于匹配文本先验和语音后验
+> 4. memory-based VAE，其实就是，不直接把 $z$ 作为 decoder 的输入，而是去 attend 一个 memory bank 中的向量，然后得到加权后的新向量作为 decoder 的输入
 
 ## Introduction
 
@@ -53,14 +59,20 @@ Definition 1. If there is no statistically significant difference between the qu
 由于语音中的后验分布比文本中的先验分布复杂，图 1 给出了一些模块来简化先验，增强后验：
 + 在大型文本数据集中 pre-train 一个 phoneme encoder 
 + 采用 differentiable durator 提升 duration 的建模
-+ 采用 bidirectional prior/posterior module 来增强先验，减少后验复杂度
++ 采用 bidirectional prior/posterior module 来增强先验表达能力，减少后验复杂度
 + 提出  memory based VAE 来减少重构波形的复杂度
 
 ![](image/Pasted%20image%2020230921160500.png)
 
 ### Phoneme Encoder
 
-phoneme encoder  $\theta_{\text{pho}}$ 输入为 phoneme $y$，输出 hidden sequence。图 2 c，采用 phoneme and sup-phoneme (adjacent phonemes merged together)  作为输入，采用 masked language modeling 训练。
+phoneme encoder  $\theta_{\text{pho}}$ 输入为 phoneme $y$，输出 hidden sequence。
+
+为了提高 phoneme encoder 的表达能力，采用大规模的 phoneme 进行预训练。之前的模型都是在 character/word level 进行预训练，然后把他们作为 phoneme encoder，从而导致了一些不一致性。
+
+图 2 c，采用 phoneme and sup-phoneme (adjacent phonemes merged together)  作为输入，采用 masked language modeling 训练。
+
+训练完成之后，用预训练好模型初始化的 phoneme encoder。
 
 ### Differentiable Durator
 
@@ -71,39 +83,64 @@ differentiable durator 包含：
 + 一个可学习的上采样层，利用预测的 duration 学习投影矩阵，以可微的方式将 phoneme hidden sequence 从 phoneme level 拓展到 frame level
 + 两个线性层计算 $p(z^{\prime}|y;\theta_{\mathrm{pri}})$ 的均值和方差
 
+具体来说，给定 phoneme hidden sequence $\boldsymbol{H}_{n\times h}$，differentiable durator 的作用是将其上采样到 $\boldsymbol{O}_{m\times h}$，这里的 $h$ 为 embedding 的维度，$n$ 为 phoneme 序列的长度，$n$ 为 frame 序列的长度，其中：
++ Duration Predictor 输入为 $\boldsymbol{H}_{n\times h}$，输出为 估计的 duration $\hat{\boldsymbol{d}}_{n\times1}$
++ 可学习的上采样层输入为 duration $\boldsymbol{d}$，然后将 $\boldsymbol{H}$ 采样到 $\boldsymbol{O}$。
+
+具体来说，首先计算 duration start and end matrices $\boldsymbol{S}_{m\times n},\boldsymbol{E}_{m\times n}$，其中：
+$$\boldsymbol{S}_{i, j}=i-\sum_{k=1}^{j-1} d_k, \quad \boldsymbol{E}_{i, j}=\sum_{k=1}^j d_k-i$$
+其中 $\boldsymbol{S}_{i,j}$ 为矩阵的第 $(i,j)$ 位置的元素。然后根据下式计算 primary attention matrix $\boldsymbol{W}_{m\times n \times q}$ 和 auxiliary context matrix $\boldsymbol{C}_{m\times n \times p}$：
+$$\begin{aligned}\boldsymbol{W}&=\mathrm{Softmax}(\mathrm{MLP}_{10\to q}([\boldsymbol{S},\boldsymbol{E},\mathrm{Expand}(\mathrm{Conv}1\mathrm{D}(\mathrm{Proj}(\boldsymbol{H})))])),\\\boldsymbol{C}&=\underset{10\to p}{\operatorname*{MLP}}([\boldsymbol{S},\boldsymbol{E},\mathrm{Expand}(\mathrm{Conv}1\mathrm{D}(\mathrm{Proj}(\boldsymbol{H})))]),\end{aligned}$$
+然后输出 $\boldsymbol{O}$ 计算为：
+$$\boldsymbol{O}=\operatorname*{Proj}_{qh\to h}(\boldsymbol{W}\boldsymbol{H})+\operatorname*{Proj}_{q\boldsymbol{p}\to h}(\operatorname{Einsum}(\boldsymbol{W},\boldsymbol{C}))$$
+
 ### Bidirectional Prior/Posterior
 
-如图 2 b，采用 flow model 作为此模块，记为 $\theta_{\text{bpp}}$，因为 flow model 方便优化且可逆。
+如图 2 b，设计 bidirectional prior/posterior 来增强先验分布 $p(z^{\prime}|y;\theta_{\mathrm{pri}})$ 的表达能力，降低后验分布 $q(z|x;\phi)$ 的复杂度。
 
-通过 backward mapping $f^{-1}$ 来 reduce 后验 $q(z|x;\phi)$ 。
-通过 forward mapping $f$ 来 enhance 先验 $p(z^{\prime}|y;\theta_{\mathrm{pri}})$。
+采用 flow 作为此模块，参数记为 $\theta_{\text{bpp}}$，因为 flow model 方便优化且可逆。
+
+通过 backward mapping $f^{-1}$ 来 reduce 后验分布 $q(z|x;\phi)$ ，简单来说，就是通过分布的转化，对于复杂分布 $z\sim q(z|x;\phi)$，采用 flow 中的逆变换公式 $z'=f^{-1}(z;\theta_{\mathbf{bpp}})\sim q(z'|x;\phi,\theta_{\mathbf{bpp}})$ 得到一个新的分布，然后目标函数就是，使得新分布 $q(z'|x;\phi,\theta_{\mathbf{bpp}})$ 和简单的先验分布 $p(z^{\prime}|y;\theta_{\mathrm{pri}})$ 之间的 KL 散度尽可能地小，此时损失可以写为：
+$$\begin{aligned}
+&\mathcal{L}_{\mathrm{bwd}}(\phi,\theta_{\mathrm{bpp}},\theta_{\mathrm{pi}})=KL[q(z^{\prime}|x;\phi,\theta_{\mathrm{bpp}})||p(z^{\prime}|y;\theta_{\mathrm{pr}}))]=\int q(z^{\prime}|x;\phi,\theta_{\mathrm{bpp}})\quad\log\frac{q(z^{\prime}|x;\phi,\theta_{\mathrm{bpp}})}{p(z^{\prime}|y;\theta_{\mathrm{pri}})}dz^{\prime} \\
+&=\int q(z|x;\phi)|\det\frac{\partial f^{-1}(z;\theta_{\mathbf{bpp}})}{\partial z}|^{-1}\cdot\log\frac{q(z|x;\phi)|\det\frac{\partial f^{-1}(z;\theta_{\mathbf{bpp}})}{\partial z}|^{-1}}{p(f^{-1}(z;\theta_{\mathbf{bpp}})|y;\theta_{\mathbf{pi}})}\cdot|\det\frac{\partial f^{-1}(z;\theta_{\mathbf{bpp}})}{\partial z}|dz \\
+&=\int q(z|x;\phi)\cdot\log\frac{q(z|x;\phi)}{p(f^{-1}(z;\theta_{\mathrm{bpp}})|y;\theta_{\mathrm{pri}})|\det\frac{\partial f^{-1}(z;\theta_{\mathrm{bpp}})}{\partial z}|}dz \\
+&=\mathbb{E}_{z\sim q(z|x;\phi)}(\log q(z|x;\phi)-\log(p(f^{-1}(z;\theta_{\mathrm{bpp}})|y;\theta_{\mathrm{pri}})|\det\frac{\partial f^{-1}(z;\theta_{\mathrm{bpp}})}{\partial z}|),
+\end{aligned}$$
+
+通过 forward mapping $f$ 来 enhance 先验分布 $p(z^{\prime}|y;\theta_{\mathrm{pri}})$，简单来说，就是通过分布的转换，对于简单分布 $z^{\prime}\sim p(z^{\prime}|y;\theta_{\text{pri}})$，采用 flow 中的正向变换公式 $z=f(z^{\prime};\theta_{\mathrm{bpp}})\sim p(z|y;\theta_{\mathrm{pri}},\theta_{\mathrm{bpp}})$ 得到一个新的分布，然后目标函数是，使得新分布 $p(z|y;\theta_{\mathrm{pri}},\theta_{\mathrm{bpp}})$ 和复杂的后验分布 $q(z|x;\phi)$ 之间的 KL 散度尽可能地小，此时损失可以写为：
+$$\begin{aligned}
+&\mathcal{L}_{\mathrm{fwd}}(\phi,\theta_{\mathrm{bpp}},\theta_{\mathrm{pri}})=KL[p(z|y;\theta_{\mathrm{pri}},\theta_{\mathrm{bpp}})||q(z|x;\phi)]=\int p(z|y;\theta_{\mathrm{pri}},\theta_{\mathrm{bpp}})\mathrm{~\cdot~}\log\frac{p(z|y;\theta_{\mathrm{pri}},\theta_{\mathrm{bpp}})}{q(z|x;\phi)}dz \\
+&=\int p(z^{\prime}|y;\theta_{\mathrm{pri}})|\det\frac{\partial f(z^{\prime};\theta_{\mathrm{bpp}})}{\partial z^{\prime}}|^{-1}\cdot\log\frac{p(z^{\prime}|y;\theta_{\mathrm{pri}})|\det\frac{\partial f(z^{\prime};\theta_{\mathrm{bpp}})}{\partial z^{\prime}}|^{-1}}{q(f(z^{\prime};\theta_{\mathrm{bpp}})|x;\phi)}\cdot|\det\frac{\partial f(z^{\prime};\theta_{\mathrm{bpp}})}{\partial z^{\prime}}|dz^{\prime} \\
+&=\mathbb{E}_{z^{\prime}\sim p(z^{\prime}|y;\theta_{\mathrm{pri}})}(\log p(z^{\prime}|y;\theta_{\mathrm{pri}})-\log q(f(z^{\prime};\theta_{\mathrm{bpp}})|x;\phi)|\det\frac{\partial f(z^{\prime};\theta_{\mathrm{bpp}})}{\partial z^{\prime}}|),
+\end{aligned}$$
+
 
 ### VAE with Memory
 
-在原始的 VAE 中，后验分布 $q(z|x;\phi)$ 用于重构语音波形，因此会很复杂。于是设计了一个 memory based VAE 来进一步简化后验。
+在原始的 VAE 中，后验分布 $q(z|x;\phi)$ 用于重构语音波形，因此比先验分布复杂。于是设计了一个 memory based VAE 来进一步简化后验。
 
-也就是，不直接使用 $z\sim q(z|x;\phi)$ 来重构波形，而是把 $z$ 作为 query 去 attend 一个 memory bank，然后用 attention 之后的结果进行波形重构。如图 2 d。此时 $z$ 仅用于决定 attention weight，从而被简化了（之前表征的是一个 latent 空间，现在只是几个权重值？），此时的重构损失为：
+也就是，不直接使用 $z\sim q(z|x;\phi)$ 来重构波形，而是把 $z$ 作为 query 去 attend 一个 memory bank，然后用 attention 之后的结果进行波形重构。如图 2 d。此时 $z$ 仅用于决定 attention weight，从而被简化了（之前表征的是一个 latent 空间，现在只是几个权重值？），此时 VAE 中的重构损失为：
 $$\begin{aligned}
 \mathcal{L}_{\mathrm{rec}}(\phi,\theta_{\mathrm{dec}})& =-\mathbb{E}_{z\sim q(z|x;\phi)}[\log p(x|\text{Attention}(z,M,M);\theta_{\mathsf{dec}})],  \\
 \operatorname{Attention}(Q,K,V)& =[\text{softmax}(\frac{QW_Q(KW_K)^T}{\sqrt{h}})VW_V]W_O, 
 \end{aligned}$$
-其中，$\theta_{\mathsf{dec}}$ 为  waveform decoder，$h$ 为 memory bank 中 hidden state 的维度。
+其中，$\theta_{\mathrm{dec}}$ 为  waveform decoder，$h$ 为 memory bank 中 hidden state 的维度。
 
 ### 训练和推理
 
-在损失中加了一个端到端的损失项，其实就是做一遍推理的过程，然后得到一个新的重构损失：
+除了 VAE 中原始的重构损失和 KL 损失（即之前的 bidirectional prior/posterior  损失），还加了一个额外的端到端的损失项，其实就是做一遍完整的推理的过程，然后得到一个新的重构损失：
 $$\mathcal{L}_\text{ele}(\theta_{\mathrm{pri}},\theta_{\mathrm{bpp}},\theta_{\mathrm{dec}})=-\mathbb{E}_{z^{\prime}\sim p(z^{\prime}|y;\theta_{\mathrm{pri}})}[\log p(x|\text{Attention}(f(z^{\prime};\theta_{\mathrm{bpp}}),M,M);\theta_{\mathrm{dec}})].$$
-> 注意 $z^\prime$ 的分布。
+> 注意是关于 $z^\prime$ 的分布，也就是从文本出发得到 $z^\prime$（所以说是推理过程），然后其他的和采购损失一致。
 
 此时总损失为：
 $$\mathcal{L}=\mathcal{L}_{\mathrm{bwd}}(\phi,\theta_{\mathrm{pri}},\theta_{\mathrm{bpp}})+\mathcal{L}_{\mathrm{fwd}}(\phi,\theta_{\mathrm{pri}},\theta_{\mathrm{bpp}})+\mathcal{L}_{\mathrm{rec}}(\phi,\theta_{\mathrm{dec}})+\mathcal{L}_{\mathrm{e2e}}(\theta_{\mathrm{pri}},\theta_{\mathrm{bpp}},\theta_{\mathrm{dec}}),$$
 梯度流如下：
 ![](image/Pasted%20image%2020230921165746.png)
+训练结束之后，丢掉 $\phi$ 只用 $\theta$ 部分进行推理即可。
 
-### 优点
+### NaturalSpeech 的优点
 
-1. Reduce training-inference mismatch
-2. Alleviate one-to-many mapping problem
-3. Increase representation capacity
-
-## 实验
+1. 减少了训练和推理之间的不匹配：采用 differentiable durator 来确保可以进行端到端的优化
+2. 减轻了 one-to-many 的映射问题：本文中的posterior encoder $\phi$ 已经类似于 reference encoder 的作用了，可以提取语音中的各种变化信息。同时 bidirectional prior/posterior 削强补弱也一定程度上缓解了这一问题
+3. 提高表征能力：采用大规模的 phoneme 预训练，采用 VAE、GAN、Flow 等生成模型来增强 TTS 模型的表达能力

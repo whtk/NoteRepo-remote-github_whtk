@@ -66,7 +66,7 @@ Product quantization 是从多个 codebooks 中选择量化表征并将它们串
 
 训练的时候，通过对比任务来学习表征，对应的损失为 $\mathcal{L}_m$ 。
 同时对于量化模块，还有 codebook diversity $\mathcal{L}_d$，总损失为：$$\mathcal{L}=\mathcal{L}_m+\alpha \mathcal{L}_d$$
-#### Contrastive Loss
+#### 对比损失
 
 给定以被 mask 的 time step $t$ 为中心的 context network 对应的输出 $\mathbf{c}_t$，模型需要在 $K+1$ 个候选的 quantized representations $\tilde{\mathbf{q}} \in \mathbf{Q}_t$ （$\mathbf{Q}_t$ 包含 $\mathbf{q}_t$ 和 $K$ 个噪声样本，且噪声样本是在其他被 mask 的 time step 中随机均匀采样的）中识别 true quantized representation $\mathbf{q}_t$ ，这个过程的损失为：$$\mathcal{L}_m=-\log \frac{\exp \left(\operatorname{sim}\left(\mathbf{c}_t, \mathbf{q}_t\right) / \kappa\right)}{\sum_{\tilde{\mathbf{q}} \sim \mathbf{Q}_t} \exp \left(\operatorname{sim}\left(\mathbf{c}_t, \tilde{\mathbf{q}}\right) / \kappa\right)}$$
 这里计算了 quantized representations 和 context representations 之间的 余弦相似度 $\operatorname{sim}(\mathbf{a}, \mathbf{b})=\mathbf{a}^T \mathbf{b} /\|\mathbf{a}\|\|\mathbf{b}\|$。

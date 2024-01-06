@@ -40,11 +40,11 @@ $$P(mel_{out}|T_s,P_s,S_t,R_s,Z_{query};\theta)$$
 
 ### 架构
 
-Mellotron 基于 speaker embeddings 和 pitch countour 拓展 Tacotron 2，采用 single speaker embedding that is channel-wise concatenated with the encoder outputs over every token，pitch contour 通过单层 CNN+ReLU。同样 pitch contour is channel-wise concatenated with the decoder inputs。
+Mellotron 基于 speaker embeddings 和 pitch countour 拓展 Tacotron 2，采用 单个 speaker embedding，然后在  channel 维度对每个 encoder 的输出进行拼接，pitch contour 通过单层 CNN+ReLU。同样也是在 channel 维度进行拼接。
 
 ### 训练
 
-只需要带有 speaker di 的 (text, audio) 对即可训练。采用 Yin 算法提取 pitch contours。
+只需要带有 speaker id 的 (text, audio) 对即可训练。采用 Yin 算法提取 pitch contours。
 
 采用 L2 损失进行训练。
 

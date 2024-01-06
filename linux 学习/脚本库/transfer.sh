@@ -2,8 +2,8 @@
 ###
  # @Author: 郭印林 1264514936@qq.com
  # @Date: 2023-06-10 17:45:09
- # @LastEditors: 郭印林 1264514936@qq.com
- # @LastEditTime: 2023-06-11 15:05:06
+ # @LastEditors: GuoYinlin-Mac 1264514936@qq.com
+ # @LastEditTime: 2023-12-13 22:01:25
  # @FilePath: \undefinede:\gyl\gyl的论文和笔记库\笔记库\linux 学习\脚本库\transfer.sh
  # @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 ### 
@@ -22,7 +22,7 @@ s4_addr="10.115.107.217"
 s4_port="10022"
 
 s5_addr="10.115.107.218"
-s5_port="22"
+s5_port="21822"
 
 # 获取参数
 src_file="$1"

@@ -5,7 +5,7 @@
 
 ## Introduction
 
-1. 预训练的 audio decoder 很强，但是由于是纯无监督的，需要 fine tune 才能用于下游任务；而且 fine tune 会导致学习到一些 dataset-specific 的特征，但是其实并没什么用
+1. 预训练的 audio decoder 很强，但是由于是纯无监督的，需要 fine tune 才能用于下游任务；而且 fine tune 会导致学习到一些没什么用的 dataset-specific 的特征
 2. 语音识别系统应该可以在 out of the box 下也能工作，而不需要每次部署都进行一次有监督的 fine tune
 3. 本文使用 680,000 小时的有标记数据集，提出 Whisper，同时还关注弱监督的预训练，在 680,000 小时中：
 	1. 117,000 包含 96 种语言

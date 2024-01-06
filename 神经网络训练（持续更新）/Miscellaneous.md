@@ -22,6 +22,7 @@
 	1. 对于 1.6.0 的版本，torch.stft 返回的维度是 $*\times N\times T \times 2$
 	2. 而对于 1.13 的版本，则通过 return_complex 这个参数来控制：![](image/Pasted%20image%2020231020120537.png)
 	3. 两种不同的返回维度影响 spectrogram 的计算，也就是最后要不要执行 sum(-1)
+10.  
 
 
 ## 音频基础

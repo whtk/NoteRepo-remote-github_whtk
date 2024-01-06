@@ -4,6 +4,8 @@
 2. Flowtron 可以学习从 数据到 latent space 的可逆变换，latent space 可以控制语音合成的多个方面（pitch、tone、speech rate、cadence、accent）
 3. MOS 可以匹配 SOTA 的 TTS 
 
+> 
+
 ## Introduction
 
 1. 像 [Hierarchical Generative Modeling for Controllable Speech Synthesis 笔记](Hierarchical%20Generative%20Modeling%20for%20Controllable%20Speech%20Synthesis%20笔记.md) 和 [Style Tokens- Unsupervised Style Modeling, Control and Transfer inEnd-to-End Speech Synthesis 笔记](Style%20Tokens-%20Unsupervised%20Style%20Modeling,%20Control%20and%20Transfer%20inEnd-to-End%20Speech%20Synthesis%20笔记.md) 都通过学习一组 embedding 来控制非文本的信息，但是这些方法需要对 embedding 的维度事先假定，且不能保证包含所有的非文本信息，并且关注的都是固定长度的 embedding，而且不能控制  degree of variability

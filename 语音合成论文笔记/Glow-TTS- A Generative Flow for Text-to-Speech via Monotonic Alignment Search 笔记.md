@@ -5,7 +5,7 @@
 3. 提出 Glow-TTS，基于 flow 的并行 TTS 模型，不需要任何外部对齐器，通过结合 flow 和 dynamic programming，模型可以搜索 文本 和 latent representation 之间最可能的  monotonic alignment，可以实现快速、多样性、可控的生成
 4. 合成质量和 Tacotron 2 差不多
 
-> 使用 flow 来建模生成过程，提出 monotonic alignment search 来进行强制对齐。
+> 使用 flow 来建模生成过程，提出 monotonic alignment search 来进行强制对齐。但是必须说明的是，在计算 MAS 的过程中实际上是不可微的，也就是 MAS 这个阶段模型的没有梯度的反向传播（本质是一个最大路径的搜索算法）。
 
 ## Introduction
 
@@ -31,7 +31,11 @@ $$\log P_X(x \mid c)=\log P_Z(z \mid c)+\log \left|\operatorname{det} \frac{\par
 
 此时先验分布可以表示为：
 $$\log P_Z(z \mid c ; \theta, A)=\sum_{j=1}^{T_{m e l}} \log \mathcal{N}\left(z_j ; \mu_{A(j)}, \sigma_{A(j)}\right)$$
-目标是找到参数 $\theta$ 和对齐函数  $A$ 最大化上述似然。但是其计算困难，于是分解成两个子问题：
+目标是找到参数 $\theta$ 和对齐函数 $A$ 最大化上述似然。
+> 最大化上述似然的意义在于，在某个对齐下，让音频帧 $j$ 对应的隐变量 $z_j$ 服从某个字符 $i$ 对应的高斯分布，如果求出的最终的似然越大，说明效果越好。但是这里存在两个问题，第一，最优对齐不知道，第二，神经网络的参数也不知道（也就是 log 值不知道，或者说一直在变化）。
+> 那其实这个问题就可以用 **EM 算法** 来求解，如下。
+
+但是其计算困难，于是分解成两个子问题：
 + 问题1：给定 $\theta$ 下找到最可能的对齐 $A^*$
 + 问题2：再通过最大化似然 $\log p_X\left(x \mid c ; \theta, A^*\right)$ 来更新参数 $\theta$
 
@@ -40,6 +44,8 @@ $$\begin{gathered}
 \max _{\theta, A} L(\theta, A)=\max _{\theta, A} \log P_X(x \mid c ; A, \theta) \\
 A^*=\underset{A}{\arg \max } \log P_X(x \mid c ; A, \theta)=\underset{A}{\arg \max } \sum_{j=1}^{T_{m e l}} \log \mathcal{N}\left(z_j ; \mu_{A(j)}, \sigma_{A(j)}\right)
 \end{gathered}$$
+> 这里又出现啦一个问题，假设我 EM 算法中固定了概率计算那部分的参数（即 $\theta$），也就是 $\mathcal{N}\left(z_j ; \mu_{A(j)}, \sigma_{A(j)}\right)$ 可以求出来了，那如何找到此时的最优对齐呢？
+
 为了解决问题1，引入  alignment  搜索算法，monotonic alignment search (MAS)。
 
 推理时为了估计 $A^*$，训练一个 duration predictor $f_{dur}$ 来匹配从 $A^*$ 中计算得到的 duration label。用的是 FastSpeech 的架构，将  duration predictor 放在 text encoder 的上面，在对数域采用 MSE 进行训练。还采用了 stop gradient 算子 $sg[\cdot]$，移除了backward pass 过程中输入的梯度。duration predictor 的损失为：

@@ -1,3 +1,8 @@
+
+https://pypi.tuna.tsinghua.edu.cn/simple
+
+
+
 1.  查看文件内容
     1.  cat {file} — 查看全部
     2.  cat -n {file} — 输出行号查看全部
@@ -12,6 +17,7 @@
     1.  wc -l — 列出行数
         1.  统计文件夹中**文件**的个数：ls -l | grep "^-" | wc -l
         2.  统计文件夹中**文件夹**的个数：ls -l | grep "^d" | wc -l
+        3. 统计特定后缀的文件个数：find . -type f -name "星.txt" | wc -l
     2.  wc -w — 列出英文单词数
     3.  wc -m — 列出字符数
 5.  磁盘相关
@@ -57,6 +63,9 @@
 	2. 重启网络
 18. linux 审计系统查看：sudo tail -f /var/log/audit/audit.log
 	1. 高级审计：ausearch
+19. 挂载和卸载：
+	1. 挂载：mount 分区 路径
+	2. 卸载：unmount 分区/路径
 
 
 
@@ -92,3 +101,32 @@ test 中的
 `~/.profile`，`~/.bashrc` 用户目录下的私有环境变量设定。
 三个文件的执行情况如下：
 ![](v2-ea0eb026fe5e9c7a9520a930f34e5125_720w.webp)
+
+
+
+服务器硬盘和目录映射：
+217 服务器：
+home5 : /dev/sdb1
+home2 : /dev/sdc1
+218 服务器：
+/dev/sdg1 /home6
+/dev/sdc1 /home3
+
+linux 源：
++ 系统的软件源位于 /etc/apt/sources.list 的文件中，所以如果需要新加系统软件源可以直接 vim 编辑这个文件
++ 其他自己加的软件源位于 /etc/apt/sources.list.d/ 的文件夹下
+
+临时使用系统代理：
+- export http_proxy=http://127.0.0.1:20171
+- export https_proxy=http://127.0.0.1:20171
+
+pip 安装包：
+
+1. 从 github 安装：
+	1. 先下载源文件，git clone 地址，然后cd进入到目录下：
+		1. python setup.py install 使用 Python 的 `setuptools` 模块来安装包，执行该目录下的 `setup.py` 脚本，根据 `setup.py` 中的配置信息，将包安装到 Python 解释器的默认路径中，使得你可以在任何地方导入该包的模块
+		2. pip install .：安装后的模块freeze在pip/conda依赖下，换句话说，再修改本地的原项目文件，不会导致对应模块发生变化
+		3. pip install -e .：-e 理解为 editable，修改本地文件，调用的模块以最新文件为准
+	2. 不下载源文件，pip install git+地址
+2. 安装 wheel 文件：
+	1. pip install xxx.whl

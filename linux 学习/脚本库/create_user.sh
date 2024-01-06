@@ -2,8 +2,8 @@
 ###
  # @Author: 郭印林 1264514936@qq.com
  # @Date: 2023-06-10 17:19:07
- # @LastEditors: 郭印林 1264514936@qq.com
- # @LastEditTime: 2023-06-10 17:19:49
+ # @LastEditors: GuoYinlin-Mac 1264514936@qq.com
+ # @LastEditTime: 2023-11-11 22:23:07
  # @FilePath: \undefinede:\gyl\gyl的论文和笔记库\笔记库\linux 学习\bash 脚本\create_user.sh
  # @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 ### 

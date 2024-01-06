@@ -9,7 +9,7 @@
 ## Introduction
 
 1. 之前的系统产生的音频听起来都 muffled and unnatural
-2. WaveNet 效果很好，但是输入需要很强的域知识来产生（包含lnguistic features, predicted log fundamental frequency (F0), and phoneme durations 等特征）
+2. WaveNet 效果很好，但是输入需要很强的域知识来产生（包含linguistic features, predicted log fundamental frequency (F0), and phoneme durations 等特征）
 3. Tacotron 可以只用一个神经网络就产生这些特征（如 mel 谱），但 Tacotron 用的是  Griffin-Lim 合成波形
 4. 本文提出了一个  统一的、全神经网络的 语音合成方案，将  Tacotron-style model 和 WaveNet vocoder 组合起来，可以合成人类无法区分的音频
 
@@ -33,7 +33,7 @@
 encoder 的输出送入到 attention network 中生成**一个**固定长度的 context vector。
 > attention network 采用的是 location-sensitive attention，这可以缓和一些 failure mode
 
-在将输入和 location feature 投影到 128 维的 hidden representation 后计算 Attention probabilities 。
+再将输入和 location feature 投影到 128 维的 hidden representation 后计算 Attention probabilities 。
 >  Location features 是通过 32 个 1-D 卷积滤波器计算的。
 
 decoder 是一个自回归的 RNN，从编码的输出中每次预测一帧。且前一个 time step 的预测输出会首先通过一个 pre-net。pre-net 作为 information bottleneck，对 attention 的学习很重要。

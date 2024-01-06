@@ -25,7 +25,7 @@
 如果通过采用若干个点就可以估计 $L_\theta$ ，同时还能保留梯度的信息那就最好。
 
 假定已知每个类别的概率为 $p_1,p_2,\cdots,p_k$，**Gumbel Max** 是一种依概率采样的方法：$$\underset{i}{\arg \max }\left(\log p_i-\log \left(-\log \varepsilon_i\right)\right)_{i=1}^k, \quad \varepsilon_i \sim U[0,1]$$
-就是先从 0-1 均匀分布中采样出 $k$ 个值，然后代入上式计算得到 $k$ 个数，然后选择最大的那个数对应的索引即可实现依不同类的概率进行采样。这个过程精确等于依照概率 $p_1,p_2,\cdots,p_k$ 采样每个类。
+就是先从 0-1 均匀分布中采样出 $k$ 个噪声值 $\epsilon_i$，然后代入上式计算得到 $k$ 个数，然后选择最大的那个数对应的索引即可实现依不同类的概率进行采样。这个过程精确等于依照概率 $p_1,p_2,\cdots,p_k$ 采样每个类。
 > 按：这里的均匀分布其实就和连续情况中的正太分布 $q(\epsilon)$ 相对应了。
 
 但是但是！argmax 的操作会丢失梯度信息（**因为在连续情况下，采样之后是通过函数 $f$ 来计算的，这里面包含了梯度，但是离散情况下使用 Gumbel Max 丢失了梯度信息**），于是我们可以把 argmax 转换为 softmax：$$\operatorname{softmax}\left(\left(\log p_i-\log \left(-\log \varepsilon_i\right)\right) / \tau\right)_{i=1}^k, \quad \varepsilon_i \sim U[0,1]$$

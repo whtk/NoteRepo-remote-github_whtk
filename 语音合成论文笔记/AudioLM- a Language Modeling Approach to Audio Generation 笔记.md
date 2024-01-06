@@ -42,29 +42,35 @@ tokenizer 和 detokenizer 是预训练的，只会训练 language model。
 > 作者发现，提取的 token 和从 HuBERT 中提取的 token 很相似？
 
 然后训练 SoundStream decoder 来重构波形，同时比较两种 token 的效果，指标是 ViSQOL。
+
 实验表明，acoustic tokens 有较好的  reconstruction quality，但是  phonetic discriminability 较差，而 w2v-BERT 中的第 7 层的 semantic tokens 可以极大地改善 phonetic discriminability。
 
-然后基于 acoustic tokens 训练 decoder-only Transformer，发现生成的语音可以保留 speaker identify，但是 linguistic content 不一致。
+然后基于 acoustic tokens 训练 decoder-only Transformer，发现生成的语音可以保留 speaker identify，但是 linguistic content 不一致，且倾向于 babble。
 
 ### Hierarchical modeling of semantic and acoustic tokens
 
-首先在整个序列中建模 semantic tokens，然后把这些 semantic tokens 当作 condition 来预测 acoustic tokens，然后接下来有三个 stage，在所有的 stage，都使用独立的 ecoder-only Transformer 来预测下一个 token：
+前面的观察表明，同时建模 semantic token 和 acoustic token 时，semantic token 可以保证 long-term consistency（也就是可以捕获语音中的 linguist content、melody、rhythm 等信息），而 acoustic token 可以确保高的合成质量（可以捕获声学细节）。
+
+于是 AudioLM 采用一种 hierarchical 的方，首先在整个序列中建模 semantic tokens，然后把这些 semantic tokens 当作 条件 来预测 acoustic tokens。
+
+然后接下来有三个 stage，在所有的 stage，都使用一个单独的 encoder-only Transformer 来预测下一个 token：
 ![](image/Pasted%20image%2020230927221221.png)
 
-Semantic modeling：第一个 stage 建模 $p(z_t|z_{<t})$，自回归预测下一个 semantic token
+stage-1，Semantic modeling：第一个 stage 建模 $p(z_t|z_{<t})$，自回归预测下一个 semantic token
 
-Coarse acoustic modeling：仅仅预测来自 coarse $Q^\prime$ SoundStream quantizers 的 acoustic tokens（也就是第 $Q^\prime$ 个 RVQ 的输出，这一部分的量化比较粗糙）
+stage-2，Coarse acoustic modeling：仅仅预测来自 SoundStream quantizers coarse $Q^\prime$ 位置的 acoustic tokens（也就是前 $Q^\prime$ 个 RVQ 的输出，这一部分的量化比较粗糙），即 $p(y_t^q|z,y_{<t}^{\leq Q^{\prime}},y_t^{<q})$，其中 $q\leq Q^\prime$，因为有不同的层，此时的预测顺序为：$(z_1,z_2,\ldots,z_{T_S},y_1^1,y_1^2,\ldots,y_1^{Q^{\prime}},y_2^1,y_2^2,\ldots,,y_2^{Q^{\prime}},\ldots,y_{T_A}^{Q^{\prime}})$。
+> SoundStream 中的 coarse quantizers 主要恢复的是类似于说话人身份和记录条件的声学特征；
 
-Fine acoustic modeling：用 coarse $Q^\prime$ SoundStream quantizers 得到的 coarse tokens 作为 condition 来预测  fine token。
+stage-3，Fine acoustic modeling：用前面 coarse $Q^\prime$ SoundStream quantizers 得到的 coarse tokens 作为 condition 来预测  fine token，即 $p(y_t^q|y^{\leq Q^{\prime}},y_{<t}^{>Q^{\prime}},y_t^{<q})$，其中 $q>Q^\prime$，也就是，条件包含：coarse $Q^\prime$ 的所有 token、前面所有 time step 下的 $Q-Q^\prime$ 的 token、当前 time step 下前面所有的 coarse token（不包括 coarse $Q^\prime$）。
 
 ### 推理
 
 基于不同的条件，有不同的生成方式。
 
-无条件生成：无条件采样所有的 semantic tokens $\hat{z}$，然后把它作为 acoustic modeling 的 condition
+无条件生成：无条件采样所有的 semantic tokens $\hat{z}$，然后把它作为 acoustic modeling 的 condition。
 
-Acoustic generation：使用从文本中生成的 semantic tokens $z$，其他的和无条件生成一样
+Acoustic generation：使用从文本中生成的 semantic tokens $z$，其他的和无条件生成一样。
 
-连续生成：从一个短的 prompt $x$ 中生成后续音频，首先将 prompt 映射到 semantic tokens $z_{\leq t_s}$，然后生成部分 coarse acoustic tokens ，第一个 stage 就正常自回归生成，第二个 stage 把 全部的 semantic tokens 和前面部分的 coarse acoustic tokens 作为条件生成剩余的 coarse acoustic tokens。In the third stage, we process the coarse acoustic tokens with the fine acoustic mode（？？？）最后把 prompt 和 acoustic token 输入 SoundStream decoder 生成波形。
+连续生成：从一个短的 prompt $x$ 中生成后续音频，首先将 prompt 映射到 semantic tokens $z_{\leq t_s}$，然后生成部分 coarse acoustic tokens ，第一个 stage 就正常自回归生成，第二个 stage 把 全部的 semantic tokens 和前面部分的 coarse acoustic tokens 作为条件生成剩余的 coarse acoustic tokens。第三个 stage 就基于 coarse acoustic tokens 生成 fine acoustic tokens，最后把 prompt 和 acoustic token 输入 SoundStream decoder 生成波形。
 
 ## 实验（略）

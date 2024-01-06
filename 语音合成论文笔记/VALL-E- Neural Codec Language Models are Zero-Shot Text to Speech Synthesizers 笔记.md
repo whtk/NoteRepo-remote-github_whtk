@@ -1,4 +1,4 @@
-> Microsoft，
+> Microsoft
 
 1. 训练 neural codec language model（VALL-E），把 TTS 作为一个条件语言建模任务而非之前的连续信号回归任务
 2. 预训练时，用 60K 小时的语音训练模型
