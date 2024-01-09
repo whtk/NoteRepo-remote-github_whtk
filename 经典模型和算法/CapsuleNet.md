@@ -1,4 +1,4 @@
-> Hinton 提出的
+> Hinton
 
 # Dynamic Routing Between Capsules
 capsule 是一组神经元，其激活向量表示特定类型的实体的实例化参数，对于一个向量，最重要的就是两个点：
