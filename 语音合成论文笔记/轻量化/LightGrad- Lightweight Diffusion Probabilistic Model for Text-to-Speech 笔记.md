@@ -1,4 +1,4 @@
-> ICASSP 2023，清华深研院、地平线、weNet、港中文
+> ICASSP 2023，清华深研院、地平线、WeNet、港中文
 
 1. 在边缘设备中运行 DPM 存在两个问题：
 	1. 当前的 DPM 并不足够轻量化
@@ -7,6 +7,8 @@
 	1. 采用 lightweight U-Net diffusion decoder + training-free 的快速采样，同时减少参数和 latency
 3. LightGrad 也可以实现流式推理
 4. 相比于 Grad-TTS，减少了 62.2% 的参数，减少了 65.7% 的 latency，在 4 个 step 下实现 comparable 的语音质量
+
+> 毫无创新点，DPM-solver-1 + 深度可分离卷积 直接套上去。
 
 ## Introduction
 
@@ -32,7 +34,24 @@ $$dX_t=\frac12\Big((\mu-X_t)-s_\theta(X_t,\mu,t)\Big)\beta_tdt$$
 $$dY_t=-\frac12\beta_tY_tdt-\frac12\beta_ts_\theta(Y_t+\mu,\mu,t)dt$$
 DPM-solver 表明，上式存在线性和非线性部分：$-\frac12\beta_tY_tdt$ 为线性部分，$-\frac12\beta_ts_\theta(Y_t+\mu,\mu,t)dt$ 为非线性部分。
 
-上式的解为：
+对于 $s\in(0,T),t\in[0,s]$，上式的解为：
 $$Y_t=\frac{\alpha_t}{\alpha_s}Y_s+\alpha_t\int_{\lambda_s}^{\lambda_t}e^{-\lambda}\sqrt{\Sigma_{\tau_\lambda}}s_\theta(Y_{\tau_\lambda}+\mu,\mu,\tau_\lambda)d\lambda $$
 其中，$\alpha_t=e^{\frac12\rho_t},\sigma_t=\sqrt{\Sigma_t},\lambda_t=\lambda(t)=\log\frac{\alpha_t}{\sigma_t},\tau_\lambda=\lambda^{-1}(\lambda)$。
 
+从而给定 $Y_s$，其近似解 $Y_t$ 等效于近似上述积分，从而避免了线性项的误差。将 $s_{\theta}$ 用一阶泰勒展开，从而 DPM-Solver-1 求解为：
+$$Y_t=\frac{\alpha_t}{\alpha_s}Y_s+\sigma_t(e^{\lambda_t-\lambda_s}-1)\sqrt{\Sigma_s}s_\theta(Y_s+\mu,\mu,s)$$
+
+### Lightweight U-Net
+
+Lightweight U-Net 和一般的 diffusion decoder 之间的差异就是替换普通卷积为 depthwise separable convolutions。结构包含  三个下采样模块，一个  middle block 两个上采样 blocks 和一个 final convolution block，结构如图：
+![](image/Pasted%20image%2020240109211550.png)
+
+且上下采样层都是用 separable resnet block（图b） 和 linear attention layer（图c） 构建的。
+
+具体模型细节见论文。
+
+### 流式推理
+
+decoder 的输入分为几个块，块的长度在预定义好的范围内。对每个块来生成音频。
+
+## 实验（略）
