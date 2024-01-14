@@ -2,7 +2,6 @@
 https://pypi.tuna.tsinghua.edu.cn/simple
 
 
-
 1.  查看文件内容
     1.  cat {file} — 查看全部
     2.  cat -n {file} — 输出行号查看全部
@@ -13,6 +12,7 @@ https://pypi.tuna.tsinghua.edu.cn/simple
     2.  tar -xvf {file} -C {dir} — 解压文件到{dir}目录
 3. zip 压缩
 	1. zip -r file.zip dir/
+	2. 跳过某个目录 -x '' （引号必须有，引号内部写相对目录位置）
 4.  统计文件数量
     1.  wc -l — 列出行数
         1.  统计文件夹中**文件**的个数：ls -l | grep "^-" | wc -l
@@ -66,6 +66,9 @@ https://pypi.tuna.tsinghua.edu.cn/simple
 19. 挂载和卸载：
 	1. 挂载：mount 分区 路径
 	2. 卸载：unmount 分区/路径
+20. nvidia 驱动 runfile 卸载和安装：
+	1. 卸载：cd /usr/local/cuda-xx.x/bin，然后 sudo ./cuda-uninstaller
+	2. 安装：下载对应的 runfile 文件（https://developer.nvidia.com/cuda-12-2-0-download-archive），sudo sh cuda_xxxx_linux.run
 
 
 
