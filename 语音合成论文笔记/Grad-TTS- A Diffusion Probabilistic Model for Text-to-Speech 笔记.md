@@ -137,4 +137,4 @@ decoder 网络用的是 U-Net 架构，但是用了更少的 channel 和 feature
 
 $\mu$ 通过和 $X_t$ 拼接得到一个额外的 channel 来引入。
 
-## 实验
+## 实验（略）
