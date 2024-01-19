@@ -21,7 +21,7 @@
 
 ### Teacher 网络——提取 duration
 
-teacher 网络基于[Deep Voice 3- Scaling Text-to-Speech with Convolutional Sequence Learning 笔记](../Deep%20Voice%203-%20Scaling%20Text-to-Speech%20with%20Convolutional%20Sequence%20Learning%20笔记.md) 和 [Efficiently Trainable Text-to-Speech System Based on Deep Convolutional Networks with Guided Attention 笔记](Efficiently%20Trainable%20Text-to-Speech%20System%20Based%20on%20Deep%20Convolutional%20Networks%20with%20Guided%20Attention%20笔记.md) ，包含四个部分：
+teacher 网络基于[Deep Voice 3- Scaling Text-to-Speech with Convolutional Sequence Learning 笔记](../Deep%20Voice%203-%20Scaling%20Text-to-Speech%20with%20Convolutional%20Sequence%20Learning%20笔记.md) 和 [DCTTS- Efficiently Trainable Text-to-Speech System Based on Deep Convolutional Networks with Guided Attention 笔记](DCTTS-%20Efficiently%20Trainable%20Text-to-Speech%20System%20Based%20on%20Deep%20Convolutional%20Networks%20with%20Guided%20Attention%20笔记.md) ，包含四个部分：
 +  phoneme encoder
 + spectrogram encoder
 + attention

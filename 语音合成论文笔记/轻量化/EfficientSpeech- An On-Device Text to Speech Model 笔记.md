@@ -8,7 +8,7 @@
 ## Introduction
 
 1. 提出 EfficientSpeech，可以用于边缘设备的 TTS 模型，包含：
-	1. 浅层的 Un-Net 金字塔 transformer 作为 phoneme encoder
+	1. 浅层的 U-Net 金字塔 transformer 作为 phoneme encoder
 	2. 浅层的转置卷积作为 mel 谱 decoder
 2. 只有 266k 的参数，如果包含 HiFiGAN vocoder，总参数约为 1.2M，可以在单个 GPU 上训练 12 小时
 

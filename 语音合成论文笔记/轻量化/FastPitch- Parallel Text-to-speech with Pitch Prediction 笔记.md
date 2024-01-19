@@ -1,4 +1,4 @@
-> ICASSP 2021，Nvidia
+> ICASSP 2021，NVIDIA
 
 1. 提出 FastPitch，基于 FastSpeech，完全并行的基于基频曲线的 TTS 模型，
 2. 在推理的时候预测 pitch contours 来生成更 expressive 的语音
