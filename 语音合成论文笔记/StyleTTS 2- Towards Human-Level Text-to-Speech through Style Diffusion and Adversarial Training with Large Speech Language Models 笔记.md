@@ -80,11 +80,12 @@ NaturalSpeech 用的是 attention-based upsampler，但是这种方法在对抗�
 Gaussian upsampling 是 non-parametric 的，可以使用高斯核，以超参数 $\sigma$ 将预测的 duration $d_{\mathrm{pred}}$ 转为 $a_\text{pred}{ [ n , i ]}$：
 $$\mathcal{N}_{c_i}(n,\sigma):=\exp\left(-\frac{(n-c_i)^2}{2\sigma^2}\right),\quad\ell_i:=\sum_{k=1}^id_{\mathrm{pred}}[k]$$
 其中心为 $c_i:=\ell_i-\frac12\boldsymbol{d}_{\text{pred}} [ i ]$，但是高斯核受限于其固定的宽度，从而无法正确地建模对齐。
+> 见论文 [End-to-End Adversarial Text-to-Speech 笔记](End-to-End%20Adversarial%20Text-to-Speech%20笔记.md)。
 
 于是提出一种新的 non-parametric differentiable upsampler，对于每个 phoneme $t_i$，将对齐建模为随机变量 $a_i\in\mathbb{N}$，用于表明 $t_i$ 对应的 语音帧 的索引，定义第 $i$ 个phoneme 的 duration为另一随机变量 $d_i\in\{1,\dots,L\},L=50$ 为最大的 duration。于是 $a_i=\sum_{k=1}^id_k$，$d_k$ 相互独立。
 
 但是，通过估计 $a_i=d_i+\ell_{i-1}$，此时 $a_i$ 的 PMF 为：
 $$f_{a_i}[n]=f_{d_i+\ell_{i-1}}[n]=f_{d_i}[n]*f_{\ell_{i-1}}[n]=\sum_kf_{d_i}[k]\cdot\delta_{\ell_{i-1}}[n-k]$$
-> 看不懂了。。。
+> 相当于直接估计加权的权重的离散分布。
 
 ## 实验（略）
