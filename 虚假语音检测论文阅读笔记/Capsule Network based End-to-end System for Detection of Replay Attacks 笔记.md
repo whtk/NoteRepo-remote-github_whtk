@@ -1,4 +1,4 @@
-> [ISCSLP](https://ieeexplore.ieee.org/xpl/conhome/9362048/proceeding) 2021 的文章
+> [ISCSLP](https://ieeexplore.ieee.org/xpl/conhome/9362048/proceeding) 2021，南洋理工大学
 > 
 
 1. capsule networks 使用向量来同时记录 spatial information 和 the probability of presence，对检测伪造图像和视频非常有效
@@ -7,13 +7,15 @@
 
 ## Introduction
 
-1. Capsule networks （[[CapsuleNet]]）可 通过同时使用 向量 和 存在概率 捕获 空间信息
+1. Capsule networks 可通过同时使用 向量 和 存在概率 捕获 空间信息
 2. Capsule networks 已被用于各种语音处理，也被用于检测伪造的图像和视频，其识别此类攻击方面优于其他最先进的系统
 3. 本文认为，capsule networks 捕获的空间信息可能有助于以与伪造图像和视频类似的方式描述用于检测重放语音的伪影
 
 ## 用于 重放检测的 Capsule Network
 
 ### Capsule Network 原理（略）
+
+见 [CapsuleNet 合集](../经典模型和算法/CapsuleNet%20合集.md)。
 
 ### 架构
 

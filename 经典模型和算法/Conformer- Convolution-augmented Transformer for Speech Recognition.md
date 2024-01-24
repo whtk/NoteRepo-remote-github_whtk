@@ -1,9 +1,11 @@
-> 论文 - Conformer: Convolution-augmented Transformer for Speech Recognition，2020 年
-> 评价：大部分的创新都来自于重组（很多模块都是来自于已经提出的论文的，稍微有修改），说明了精心设计模型对最终的效果影响很大。
+> InterSpeech 2020，Google
+
 
 1. 将CNN和Transformer结合起来，建模局部和全局依赖
 2. 提出 Conformer，在ASR上的效果优于Transformer和CNN（独立模型），实现了SOTA
 3. 在 LibriSpeech 中测试，不使用语言模型时，有 2.1%/4.3% 的WER，在test/test-other 上使用外部语言模型时实现了1.9%/3.9%的WER
+
+>第一个 CNN + Transformer，大部分的创新都来自于重组（很多模块都是来自于已经提出的论文的，稍微有修改），说明了精心设计模型对最终的效果影响很大。
 
 ## Introduction
 

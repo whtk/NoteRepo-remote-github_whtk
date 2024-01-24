@@ -5,12 +5,14 @@
 	2. 采样速度慢
 	3. 依赖于预训练的 codec 表征
 2. 提出 P-Flow，快速的、data- efficient zero-shot  TTS，采用 speech prompt 实现说话人自适应，然后用 flow matching generative decoder 实现高质量和快速的语音合成
-	1. speech-prompted text encoder 采用 speech prompts 和 text 来生成speaker- conditional 的 表征
+	1. speech-prompted text encoder 采用 speech prompts 和 text 来生成speaker- conditional 的表征
 	2. flow matching generative decoder 用这些表征来合成语音
+
+> 需要了解 flow matching。
 
 ## Introduction
 
-1. 用 codec 得到的表征，又复杂又耗计算，而且还没有可解释性；本文就采用的是标准的 mel 谱
+1. 用 codec 得到的表征，又复杂又耗计算，而且还没有可解释性；本文就采用标准的 mel 谱
 2. 同时为了提高推理速度，用最近的 ODE-based 生成模型，如  Flow Matching，和 diffusion 很相似，但是更简单也更直接
 3. 本文贡献：
 	1. 提出一种 speech prompt 方法，超过了 speaker  embedding，可以提供 in-context learning 的能力

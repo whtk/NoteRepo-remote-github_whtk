@@ -26,7 +26,7 @@
 
 ### capsule network
 
-[[CapsuleNet]] 里面介绍了一种 Siamese Capsule Networks，使用初级 capsule 提取特征，高级的capsule 通过动态路由自主构建部分和整体的关系，然后再转换为次级潜在空间，使用这些表征的非线性组合计算相似性得分。
+CapsuleNet 里面介绍了一种 Siamese Capsule Networks，使用初级 capsule 提取特征，高级的capsule 通过动态路由自主构建部分和整体的关系，然后再转换为次级潜在空间，使用这些表征的非线性组合计算相似性得分。
 
 然后就有论文使用这个模型+BGRU进行文本分类，本文则把它引入说话人验证。
 

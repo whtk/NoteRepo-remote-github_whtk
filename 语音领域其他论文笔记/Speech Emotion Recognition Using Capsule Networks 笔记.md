@@ -17,7 +17,7 @@
 
 ### Sequential Capsules (SeqCaps)
 
-SER 的输入为可变长度的特征，但是把整个序列作为输入是不现实的。于是提出  SeqCaps，如图：![](./image/Pasted%20image%2020230127210656.png)
+SER 的输入为可变长度的特征，但是把整个序列作为输入是不现实的。于是提出  SeqCaps，如图：![](image/Pasted%20image%2020230127210656.png)
 首先将输入分成重叠的窗口（多个 time step），然后应用 CapNet（共享参数，也就是一个网络）得到 window capsule，然后对这些 capsule 进行 routing 得到 window emo-capsule，最后转换成 window emo-vector $\boldsymbol{o}$，其包含一个窗口中所有 $N$ 个 emo-capsule 的方向和长度：$$\boldsymbol{o}=\left[\boldsymbol{v}_1^T, \ldots, \boldsymbol{v}_N^T,\left\|\boldsymbol{v}_1\right\|, \ldots,\left\|\boldsymbol{v}_N\right\|\right]$$
 所有的 emo-vector 再进行 routing 来激活 utterance capsule。
 
@@ -30,7 +30,7 @@ SER 的输入为可变长度的特征，但是把整个序列作为输入是不�
 ## 系统结构
 
 使用频谱图作为输入，使用两个CNN进行特征提取，如图：
-![](./image/Pasted%20image%2020230127210457.png)
+![](image/Pasted%20image%2020230127210457.png)
 
 
 前面的都是用 CNN 和 Max pooling 进行特征提取，右边下面是使用 CNN+GRU 的对照，上面是 SeqCap，其输出包含四个16维的向量，然后输入到 dense layer 进行分类，如果两个一起用就是 CNN-GRU-SeqCap
@@ -38,7 +38,7 @@ SER 的输入为可变长度的特征，但是把整个序列作为输入是不�
 ## 结论
 CapsNets在中性、愤怒和悲伤情绪方面的表现更好，而在快乐类别中的表现更差（快乐的情绪更难识别）。
 
-![](./image/Pasted%20image%2020230127213652.png)
+![](image/Pasted%20image%2020230127213652.png)
 
 数值越大越好。
 
