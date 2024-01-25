@@ -8,7 +8,6 @@
 > HiFi-GAN 相比于 MelGAN 的改进为：
 > 1. 改进了 generator，提出 MRF，提高波形的生成能力
 > 2. 改进了 discriminator，多用了一个 MDP 判别器
-> 3. 
 
 ## Introduction
 
