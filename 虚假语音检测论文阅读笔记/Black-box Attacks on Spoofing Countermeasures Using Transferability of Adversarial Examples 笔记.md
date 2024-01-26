@@ -24,7 +24,7 @@
 
 1. LCNN：[[STC Antispoofing Systems for the ASVspoof2019 Challenge 笔记]]
 2. AFN：[[Attentive Filtering Networks for Audio Replay Attack Detection 笔记]]
-3. SENet + ResNet：[[ASSERT Anti-Spoofing with Squeeze-Excitation and Residual neTworks 笔记]]
+3. SENet + ResNet：[[ASSERT- Anti-Spoofing with Squeeze-Excitation and Residual neTworks 笔记]]
 
 具体原理详见笔记啦。
 

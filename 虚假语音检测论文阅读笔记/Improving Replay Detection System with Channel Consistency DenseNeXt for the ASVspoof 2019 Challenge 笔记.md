@@ -23,7 +23,7 @@
 
 #### SEnet
 
-采用了 [[ASSERT Anti-Spoofing with Squeeze-Excitation and Residual neTworks 笔记]] 论文中的结构，squeeze-and-excitation 的原理见论文 [[SENet]]。
+采用了 [[ASSERT- Anti-Spoofing with Squeeze-Excitation and Residual neTworks 笔记]] 论文中的结构，squeeze-and-excitation 的原理见论文 [[SENet]]。
 
 #### DenseNet
 

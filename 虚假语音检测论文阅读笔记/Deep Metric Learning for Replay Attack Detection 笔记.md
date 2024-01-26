@@ -55,7 +55,7 @@ baseline：官方给的四个 baseline
 
 特征：logspec
 
-模型结构：SE-ResNet34（[[ASSERT Anti-Spoofing with Squeeze-Excitation and Residual neTworks 笔记]]），具体结构如图：![[Pasted image 20221213223406.png]]
+模型结构：SE-ResNet34（[[ASSERT- Anti-Spoofing with Squeeze-Excitation and Residual neTworks 笔记]]），具体结构如图：![[Pasted image 20221213223406.png]]
 
 ## 结果
 

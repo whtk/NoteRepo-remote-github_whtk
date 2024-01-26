@@ -7,7 +7,7 @@
 
 ## Introduction
 1. 本文发现，VAD  会加剧过拟合现象，并基于此提出了更鲁棒的算法
-2. [[Audio replay attack detection with deep learning frameworks 笔记]] 和 [[STC Antispoofing Systems for the ASVspoof2019 Challenge 笔记]] 使用 LCNN 进行欺诈检测，[[ASSERT Anti-Spoofing with Squeeze-Excitation and Residual neTworks 笔记]] 和 [[The DKU Replay Detection System for the ASVspoof 2019 Challenge- On Data Augmentation, Feature Representation, Classification, and Fusion 笔记]] 使用 ResNet 进行欺诈检测，[[Siamese Convolutional Neural Network Using Gaussian Probability Feature for Spoofing Speech Detection 笔记]]使用孪生卷积网络进行欺诈检测
+2. [[Audio replay attack detection with deep learning frameworks 笔记]] 和 [[STC Antispoofing Systems for the ASVspoof2019 Challenge 笔记]] 使用 LCNN 进行欺诈检测，[[ASSERT- Anti-Spoofing with Squeeze-Excitation and Residual neTworks 笔记]] 和 [[The DKU Replay Detection System for the ASVspoof 2019 Challenge- On Data Augmentation, Feature Representation, Classification, and Fusion 笔记]] 使用 ResNet 进行欺诈检测，[[Siamese Convolutional Neural Network Using Gaussian Probability Feature for Spoofing Speech Detection 笔记]]使用孪生卷积网络进行欺诈检测
 3. 但是用神经网络的一个问题就是过拟合，且很少用到子带信息，因此本文研究了在不同频率的子带中基于 ResNet 的反欺诈性能
 4. 将频谱分成高频和低频，作为特征输入到 [[SENet]] 中，实验发现过拟合主要是由高频部分引起的，因此提出了基于 SENet 的低频反欺骗算法，并在此基础上提出了计算量小、鲁棒性好的双频融合反欺骗算法。
 

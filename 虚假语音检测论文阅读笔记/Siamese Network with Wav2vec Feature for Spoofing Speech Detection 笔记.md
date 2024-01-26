@@ -7,7 +7,7 @@
 1. 本文目标，研究针对语音转换和合成的欺骗攻击对策
 2. 检测性能高度依赖于特征，[[CQCC]] 优于传统的 MFCC，LFCC、GD、对数谱 和 [[x-vector、i-vector]] 、MGD 等也取得了改进的性能；在后端分类器中，GMM 用作 baseline；
 3. [[Improving Replay Detection System with Channel Consistency DenseNeXt for the ASVspoof 2019 Challenge 笔记]] 提出了一种模型信道一致性 DenseNeXt，在不损失性能的情况下减少了参数数量和计算能力；
-4. [[ASSERT Anti-Spoofing with Squeeze-Excitation and Residual neTworks 笔记]] 提出一种基于 [[SENet]] 和 ResNet 的模型，相比于之前的模型有很大的改进。
+4. [[ASSERT- Anti-Spoofing with Squeeze-Excitation and Residual neTworks 笔记]] 提出一种基于 [[SENet]] 和 ResNet 的模型，相比于之前的模型有很大的改进。
 5. 语音处理中，无监督预训练模型wav2vec在语音识别方面优于最佳的基于特征的模型。研究表明，从大规模数据集上预训练的模型中提取的特征可以用于可能没有足够标记数据或不可能从每个可能的领域收集训练数据的任务。因此，本文使用wav2vec特征代替传统的声学特征来提高模型对未知攻击的泛化能力。
 6. 孪生网络已经称为表征学习方法中的基本结构，本文使用它来学习用于欺诈语音检测任务中的相似性度量
 7. 本文贡献：提出了基于孪生网络的 embedding 提取器 - 从wav2vec特征中提取表示向量。在表征学习阶段，孪生网络被训练来区分两种类型的语音属于同一类别的正样本和两种类型语音属于不同类别的负样本。在分类器训练阶段，使用从孪生网络获得的表征对两层全连接层进行训练，以最小化欺骗语音检测的交叉熵损失。

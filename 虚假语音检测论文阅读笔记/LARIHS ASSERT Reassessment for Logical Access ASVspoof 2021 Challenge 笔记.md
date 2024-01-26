@@ -7,7 +7,7 @@
 ## Introduction
 
 1. 已有研究表明，使用 A-softmax 和 LMLC 损失可以获得较高的性能
-2. 本文基于先前的研究 [[ASSERT Anti-Spoofing with Squeeze-Excitation and Residual neTworks 笔记]]，提出不同的 版本：
+2. 本文基于先前的研究 [[ASSERT- Anti-Spoofing with Squeeze-Excitation and Residual neTworks 笔记]]，提出不同的 版本：
 	1. 不同的输入特征
 	2. 引入 MFM、A-softmax、LMLC，修改 SENet backbone 模型
 3. 最终提交的模型是 MFM-ASSERT18
