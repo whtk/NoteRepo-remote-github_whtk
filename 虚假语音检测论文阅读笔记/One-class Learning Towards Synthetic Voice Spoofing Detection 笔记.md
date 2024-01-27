@@ -1,4 +1,4 @@
-> [IEEE Signal Processing Letters](https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=97)
+> [IEEE Signal Processing Letters](https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=97)，2021
 
 1. 提出使用 one class 学习来检测 未知的合成语音的欺诈攻击
 2. 关键思想是 compact 真实语音表征，并在 embedding 空间中 加入 angular margin 来分离欺骗攻击
