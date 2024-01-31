@@ -108,6 +108,8 @@ $$\begin{aligned}\mathcal{L}_{TOCS}&=\frac{1}{N}\sum_{i=1}^{N}\gamma_{i}\log\lef
 
 其中 $\gamma_i = 1 - \mathbb{I}({y_i = 1, \hat{w}_0^T\hat{x}_i < m_1})$ 是样本权重，$\mathbb{I}(\cdot)$ 是 indicator function。如果第 $i$ 个样本的 classification score $w_0^Tx_i$ 小于 $m_1$ 且该样本属于 spoofing 类（$y_i = 1$），则样本权重 $\gamma_i$ 将变为 $0$，这意味着第 $i$ 个样本在训练过程中不参与梯度更新。否则，如果 classification score $w_0^Tx_i$ 大于或等于 $m_1$，或者该样本不属于 spoofing 类，则其权重 $\gamma_i$ 将设置为 $1$。如上图中的 c。对于那些远离 $w_0$ 超过阈值 $m_1$ 的 spoofing 样本（没有箭头），它们不再对网络更新起作用。从而可以在训练阶段优化 bonafide 样本。
 
+> 也就是本来已经分类正确的虚假样本不需要再迫使他们的类间距离收缩，而重点关注那些分类错误的样本。
+
 > 当 $m_1 = 1$ 时，模型在训练过程中忽略所有 spoofing 样本。这会导致模型无法有效地学习 spoofing 样本的特征，从而难以区分两类样本。
 
 总之，TOC-Softmax 中的 thresholding 过程将网络的重点从将 spoofing 样本从 $w_0$ 推开 转移 到尽可能将 bonafide 类推向 $w_0$。这最终导致 bonafide 类的特征分布更准确。
