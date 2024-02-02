@@ -1,6 +1,6 @@
-> [IEEE Signal Processing Letters](https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=97)，2021
+> [IEEE Signal Processing Letters](https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=97)，2021，University of Rochester
 
-1. 提出使用 one class 学习来检测 未知的合成语音的欺诈攻击
+1. 提出使用 one class learning 来检测 未知的合成语音的欺诈攻击
 2. 关键思想是 compact 真实语音表征，并在 embedding 空间中 加入 angular margin 来分离欺骗攻击
 3. 不使用数据增强时，在 ASV spoof 2019 LA 中优于所有的单系统
 
@@ -37,6 +37,7 @@ AM-softmax 通过引入 angular margin 来使得两个类的 分布更为紧凑�
 其中，$m$ 为 margin，$\hat{\boldsymbol{w}}, \hat{\boldsymbol{x}}$ 为归一化的向量。
 
 ### one class 损失
+
 AM-softmax 使用相同的 margin，$m$ 越大，embedding 越紧凑（夹角越小）。
 
 对于真实语音，当然是紧凑一点好，但是对于 虚假的语音，如果 embedding 过于紧凑，可能会过拟合已知攻击从而无法泛化到未知攻击。因此提出了两个 margin ，定义 one-class softmax 如下：$$\mathcal{L}_{O C S}=\frac{1}{N} \sum_{i=1}^N \log \left(1+e^{\alpha\left(m_{y_i}-\hat{\boldsymbol{w}}_0 \hat{\boldsymbol{x}}_i\right)(-1)^{y_i}}\right)$$
