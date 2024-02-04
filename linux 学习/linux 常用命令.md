@@ -121,7 +121,7 @@ linux 源：
 
 临时使用系统代理：
 - export http_proxy=http://127.0.0.1:20171
-- export https_proxy=http://127.0.0.1:20171
+- export https_proxy=http://127.0.0.1:7890
 
 pip 安装包：
 
