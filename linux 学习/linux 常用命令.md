@@ -69,6 +69,9 @@ https://pypi.tuna.tsinghua.edu.cn/simple
 20. nvidia 驱动 runfile 卸载和安装：
 	1. 卸载：cd /usr/local/cuda-xx.x/bin，然后 sudo ./cuda-uninstaller
 	2. 安装：下载对应的 runfile 文件（https://developer.nvidia.com/cuda-12-2-0-download-archive），sudo sh cuda_xxxx_linux.run
+21. vscode 代理下，服务器登录和文件传输（以 4001 为例）：
+	1. ssh 登录：ssh -o "ProxyCommand=nc -X connect -x 127.0.0.1:1081 %h %p" guoyinlin@10.13.71.37 -p 4001
+	2. scp 传输：scp -o "ProxyCommand=nc -X connect -x 127.0.0.1:1081 %h %p" -P 4001 /path/to/local/file guoyinlin@10.13.71.37:/path/to/remote/directory
 
 
 
