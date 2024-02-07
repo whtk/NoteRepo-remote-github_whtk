@@ -1,27 +1,22 @@
 > ICASSP 2022，西工大、ASLP
-<!-- 翻译+总结+理解 -->
-<!-- In this paper, we propose VISinger, a complete end-to-end high- quality singing voice synthesis (SVS) system that directly generates singing audio from lyrics and musical score. Our approach is in- spired by VITS [1], an end-to-end speech generation model which adopts VAE-based posterior encoder augmented with normalizing flow based prior encoder and adversarial decoder. VISinger fol- lows the main architecture of VITS, but makes substantial improve- ments to the prior encoder according to the characteristics of singing. First, instead of using phoneme-level mean and variance of acous- tic features, we introduce a length regulator and a frame prior net- work to get the frame-level mean and variance on acoustic features, modeling the rich acoustic variation in singing. Second, we further introduce an F0 predictor to guide the frame prior network, lead- ing to stabler singing performance. Finally, to improve the singing rhythm, we modify the duration predictor to specifically predict the phoneme to note duration ratio, helped with singing note normal- ization. Experiments on a professional Mandarin singing corpus show that VISinger significantly outperforms FastSpeech+Neural- Vocoder two-stage approach and the oracle VITS; ablation study demonstrates the effectiveness of different contributions. -->
+
 1. 提出 VISinger，端到端高质量歌声合成，可以直接从歌词和乐谱中合成歌声
 2. 基于 VITS，但对 prior encoder 进行了改进
     1. 引入 length regulator 和 frame prior network，得到 frame-level 声学特征的均值和方差
     2. 引入 F0 predictor，引导 frame prior network，提高稳定性
-    3. 修改 duration predictor，预测 phoneme 到 note 的 duration ratio，辅助歌声 note normalization
+    3. 修改 duration predictor，预测 phoneme 到 note（音符） 的 duration ratio，辅助歌声 note normalization
 3. 在中文数据集上实验，效果优于 FastSpeech + Neural Vocoder 和 oracle VITS
 
 ## Introduction
-<!-- Automatic human voice generation has been significantly advanced by deep learning. Aiming to mimic human speaking, text to speech (TTS) has witnessed tremendous progress with near human-parity performance. On the other hand, singing voice synthesis (SVS), which aims to generate singing voice from lyrics and music scores, has also been advanced with similar neural modeling framework in speech generation. Compared with speech synthesis, synthetic singing should not only be pronounced correctly according to the lyrics, but also conform to the labels of the music score. As the varia- tion of acoustic features including fundamental frequency in singing is more abundant, and there are subtle pronunciation skills such as vibrato, modeling of singing voice is more challenging. -->
+
 1. 相比于 TTS，SVS 需要更多的声学特征，如 F0，更多的发音技巧，如颤音，更难建模
-<!-- A typical deep learning based two-stage singing synthesis sys- tem generally consists of an acoustic model and a vocoder [2, 3, 4, 5]. The acoustic model generates intermediate acoustic features from lyrics and music scores while the vocoder converts these acoustic features into waveform. For example, in [6, 7], the neural acoustic model generates spectrum, excitation and aperiodicity parameters and then singing voice is synthesized using the World [8] vocoder. FastSpeech [9], as a non-AR (auto-aggressive) model, was first used for speech generation and recently adopted in singing synthesis [6] with state-of-the-art performance. As neural vocoders, e.g., Wav- eRNN [10] and HiFiGAN [11] have achieved high-fidelity speech generation, they have become the mainstream in current singing voice synthesis systems to reconstruct singing waveform from inter- mediate acoustic representation like mel-spectrum [12, 13, 14]. -->
-<!-- Although these two-stage human voice generation systems made huge progress, the independent training of the two stages, i.e., the neural acoustic model and the neural vocoder, also leads to a mis- match between the training and inference stages, resulting in de- graded performance. Specifically, the neural vocoder is trained us- ing the ground truth intermediate acoustic representation, e.g., mel- spectrum, but the predicted representation from the acoustic model is adopted during inference, resulting in distributional difference be- tween the real and predicted intermediate representations. There are some tricks to alleviate this mismatch problem, including adopting the predicted acoustic features in neural vocoder fine-tuning and ad- versarial training [15]. -->
-<!-- A straightforward solution is to plug the two stages to become a unified model trained in an end-to-end manner. In text-to-speech synthesis, this kind of solutions have been recently explored, in- cluding FastSpeech2s [16], EATS [17], Glow-WaveGAN [18] and VITS [1]. In general, these works merge acoustic model and neural vocoder into one model enabling end-to-end learning or adopt a new latent representation instead of mel-spectrum to more easily confine the two parts work on the same distribution. Theoretically, end-to- end training can achieve better sound quality and simpler training and inference process. Among the end-to-end models, VITS uses a variational autoencoder (VAE) [19] to connect the acoustic model and the vocoder, which adopts variational inference augmented with normalizing flows and an adversarial training process, generating more natural-sounding than current two-stage models. -->
-<!-- In this paper, we build upon VITS and propose VISinger, an end- to-end singing voice synthesis system based on variational inference (VI). To the best of our knowledge, VISinger is the first end-to-end solution in solving the two-stage mismatch problem in singing gen- eration. It is non-trivial to adopt VITS in singing voice synthesis, be- cause singing has substantial difference with speaking, although they both evolve from the same human vocal system. First, phoneme- level mean and variance of acoustic features are adopted in the flow- based prior encoder of VITS. In the singing task, we introduce a length regulator and a frame prior network to obtain the frame-level mean and variance instead, modeling the rich acoustic variation in singing and leading to more natural singing performance. As an ablation study, we find that simply increasing the number of layers of flow without adding the frame prior network can not achieve the same performance gain. Second, as intonational rendering is vital in singing, we particularly model the intonational aspects by introduc- ing an F0 predictor to further guide the frame prior network, leading to more stable singing with natural intonation. Finally, to improve the rhythm delivery in singing, we modify the duration predictor to specifically predict the phoneme to note duration ratio, helped with singing note normalization. Experiments on a professional Mandarin singing corpus show that the proposed VISinger significantly outper- forms the FastSpeech+Neural-Vocoder two-stage approach and the oracle VITS. -->
 2. 本文基于 VITS，提出 VISinger，第一个解决两阶段 mismatch 问题的端到端歌声合成系统，相比于语音，歌声合成又一些难点：
     1. VITS 中用的是 phoneme-level 的均值和方差，这里引入 length regulator 和 frame prior network，得到 frame-level 均值和方差
     2. 引入 F0 predictor，引导 frame prior network，提高稳定性
     3. 修改 duration predictor，预测 phoneme to note 的 duration ratio，辅助歌声 note normalization
 
 ## 方法
-<!-- As illustrated in Figure 1, inspired by VITS [1], we formulate the proposed model as a conditional variational autoencoder (CVAE), which mainly includes three parts: a posterior encoder, a prior en- coder and a decoder. The posterior encoder extracts the latent rep- resentation z from the waveform y, and the decoder reconstructs the waveform yˆ according to z: -->
+
 如图：
 ![](image/Pasted%20image%2020240205171550.png)
 包含三个部分：
@@ -31,12 +26,52 @@
 
 公式表述为：
 $$\begin{aligned}z&=Enc(y)\sim q(z|y)\\\hat{y}&=Dec(z)\sim p(y|z)\end{aligned}$$
-<!-- In addition, we use a prior encoder to get a prior distribution p(z|c) of the latent variables z given music score condition c. CVAE adopts a reconstruction objective Lrecon and a prior regularization term as: -->
+
 然后用 prior encoder 得到给定音乐乐谱条件下的潜变量 $z$ 的先验分布 $p(z|c)$。CVAE 采用重构目标 $L_{\text{recon}}$ 和先验正则项：
 $$L_{cvae}=L_{recon}+D_{KL}(q(z|y)||p(z|c))+L_{ctc},$$
-<!-- where DKL is the Kullback-Leibler divergence and Lctc is the connectionist temporal classification (CTC) loss [20]. For the re- construction loss, we use L1 distance of mel-spectrum between the ground truth and the generated waveform. In the following, we will introduce the details of the three modules. -->
 其中 $D_{KL}$ 是 KL 散度，$L_{ctc}$ 是 CTC 损失。重构损失用 mel-spectrum 的 L1 距离。
 
 ### Posterior Encoder
-<!-- The posterior encoder encodes the waveform y into a latent repre- sentation z. To keep the original viewpoint in autoencoder, we treat the Liner Spectrum extractor as a fixed signal processing layer in the encoder. The encoder firstly transforms raw waveform to liner- spectrum with the signal processing layer. Similar with VITS, taking the linear spectrum as input, we use several WaveNet [21] residual blocks to extract a sequence of hidden vector and then produces the mean and variance of the posterior distribution p(z|y) by a linear projection. Then we can get the latent z sampled from p(z|y) using the reparametrization trick. -->
-posterior encoder 将波形 $y$ 编码为潜变量 $z$。首先用线性谱提取器将原始波形转换为线性谱，然后用几个 WaveNet 残差块提取一系列隐藏向量，最后用线性投影得到后验分布 $p(z|y)$ 的均值和方差。最后用重参数化技巧得到从 $p(z|y)$ 中采样的潜变量 $z$。
+
+posterior encoder 将波形 $y$ 编码为潜变量 $z$。首先得到线性谱，然后用几个 WaveNet 残差块提取 hidden vector，通过线性投影得到后验分布 $p(z|y)$ 的均值和方差。最后用重参数化技巧从 $p(z|y)$ 中采样得到潜变量 $z$。
+
+### Decoder
+
+decoder 根据中间表征 $z$ 生成音频波形。用 GAN 训练提高重构语音的质量。判别器 $D$ 采用 HiFiGAN 的 Multi-Period Discriminator (MPD) 和 Multi-Scale Discriminator (MSD)。生成器 $G$ 和判别器 $D$ 的 GAN 损失定义为：
+$$\begin{gathered}L_{adv}(G)=\mathbb{E}_{(z)}\left[(D(G(z))-1)^2\right]\\L_{adv}(D)=\mathbb{E}_{(y,z)}\left[\left(D(y)-1\right)^2+\left(D(G(z))\right)^2\right]\end{gathered}$$
+此外，用特征匹配损失 $L_{fm}$ 作为额外损失，减小每个判别器中间层的特征图的 L1 距离。
+
+### Prior Encoder
+
+给定乐谱 $c$，prior encoder 提供建模先验分布 $p(z|c)$。
+
+text encoder 输入为乐谱，产生 phoneme-level 表征。然后用 [FastSpeech 2- Fast and High-Quality End-to-End Text to Speech 笔记](../FastSpeech%202-%20Fast%20and%20High-Quality%20End-to-End%20Text%20to%20Speech%20笔记.md) 中的 Length Regulator 将 phoneme-level 表征扩展到 frame-level 表征 $h_{\text{text}}$。由于歌声中声学变化更明显，不同帧可能服从不同分布，加入 frame prior network 生成细粒度的先验正态分布，均值为 $\mu_{\theta}$，方差为 $\sigma_{\theta}$。为了提高先验分布的表现力，引入 normalizing flow $f_{\theta}$ 和 phoneme predictor。phoneme predictor 由两层 FFT 组成，其输出计算 CTC 损失：
+$$p(z|c)=N(f_\theta(z);\mu_\theta(c),\sigma_\theta(c)))|det\frac{\partial f_\theta(z)}{\partial_z}|$$
+
+歌曲的乐谱主要包括歌词、音符（note）持续时间和音符音高。首先将歌词转换为 phoneme 序列。音符持续时间是每个音符对应的帧数，音符音高按照 MIDI 标准转换为 Pitch ID。音符持续时间序列和音符音高序列扩展到 phoneme 序列的长度。text encoder 由多个 FFT 块组成，输入为上述三个序列，输出乐谱的 phoneme-level 表征。
+
+由于歌声中每个 phoneme 的发音比较复杂，加入 Length Regulator (LR) 模块将 phoneme-level 表征扩展到 frame-level 表征 $h_{\text{text}}$。训练时，用每个 phoneme 对应的真实持续时间 $d$ 进行扩展，预测持续时间 $\hat{d}$ 用于合成。
+> 注意：歌声合成中的 note duration 通常是已知的标签（但不知道 phoneme duration），而语音合成中通常没有 duration 标签。
+
+duration predictor 由多个一维卷积层组成。因为乐谱中的持续时间定义了歌声的整体节奏和速度，所以不使用随机持续时间预测器。
+
+音符持续时间（注意不是 phoneme duration）包含了 duration prediction 的先验，所以基于音符持续时间进行 duration prediction。phoneme duration 与对应的  note duration 的比值定义为 $r$。此时 duration loss 为：
+$$\begin{aligned}L_{dur}&=\left\|r\times d_N-d\right\|_2\\\hat{d}&=r\times d_N\end{aligned}$$
+$r$ 与 $d_N$ 的乘积是预测的帧数 $d$。
+
+在 VITS 模型的训练过程中，text encoder 提取 phoneme-level 文本信息，作为潜变量 z 的先验知识。但是在歌声合成任务中，每个 phoneme 的声学序列变化非常丰富，所以仅用 phoneme 的均值和方差来表示对应的帧序列是不够的。于是向模型中添加 frame prior network，包含多个一维卷积层。
+> 而且发现简单地增加 flow model 的层数不能实现和添加 frame prior network 模块相同的效果。
+
+frame prior network 对 frame-level 序列进行后处理，得到 frame-level 均值 $\mu_{\theta}$ 和方差 $\sigma_{\theta}$。
+
+还引入 F0 信息来进一步引导 frame prior network。F0 由 F0 predictor 得到，包含多个 FFT 块。LF0 损失为：
+$$\begin{aligned}L_{LF0}=\left\|L\hat{F}0-LF0\right\|_2\end{aligned}$$
+
+flow decoder 用的就是 VITS 中的。
+
+最后总损失为：
+$$\begin{aligned}L=&L_{adv}(G)+L_{fm}(G)+L_{cvae}+\lambda L_{dur}+\beta L_{LF0}\\&L(D)=L_{adv}(D)\end{aligned}$$
+
+其中 $L_{adv}(G)$ 和 $L_{adv}(D)$ 分别是 G 和 D 的 GAN 损失，feature matching loss $L_{fm}$ 用于提高训练的稳定性。CVAE 损失 $L_{cvae}$ 包含重构损失、KL 损失和 CTC 损失。
+
+## 实验（略）
