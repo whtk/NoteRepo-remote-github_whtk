@@ -33,7 +33,7 @@ PPG prenet 输入为  PPG input 层，本质就是简单的 FC 层。Log-F0 feat
 $$[\sin(10^{\frac{0\times4}{63}}t),...,\sin(10^{\frac{63\times4}{63}}t),\cos(10^{\frac{0\times4}{63}}t),...,\cos(10^{\frac{63\times4}{63}}t)]$$
 然后如果两个 FC 层+Swish activation。
 
-decoder 的输入为 $e,t_{emb},y_t$，预测 噪声 $\epsilon$，和 [DiffWave- A Versatile Diffusion Model for Audio Synthesis](../../语音合成论文笔记/DiffWave-%20A%20Versatile%20Diffusion%20Model%20for%20Audio%20Synthesis.md) 一样，结构为 bidirectional residual convolutional，但是由于输入是 mel 谱，所以不用太大的 dilation，用的是 1。
+decoder 的输入为 $e,t_{emb},y_t$，预测 噪声 $\epsilon$，和 [DiffWave- A Versatile Diffusion Model for Audio Synthesis 笔记](../../语音合成论文笔记/DiffWave-%20A%20Versatile%20Diffusion%20Model%20for%20Audio%20Synthesis%20笔记.md) 一样，结构为 bidirectional residual convolutional，但是由于输入是 mel 谱，所以不用太大的 dilation，用的是 1。
 
 每个 residual block  都有 $e$ 作为输入，通过 1x1 卷积和输入做 element-wise 的加法。
 

@@ -72,6 +72,7 @@ https://pypi.tuna.tsinghua.edu.cn/simple
 21. vscode 代理下，服务器登录和文件传输（以 4001 为例）：
 	1. ssh 登录：ssh -o "ProxyCommand=nc -X connect -x 127.0.0.1:1081 %h %p" guoyinlin@10.13.71.37 -p 4001
 	2. scp 传输：scp -o "ProxyCommand=nc -X connect -x 127.0.0.1:1081 %h %p" -P 4001 /path/to/local/file guoyinlin@10.13.71.37:/path/to/remote/directory
+22. 深度查看 cpu 占用情况：sudo sysdig -c topprocs_cpu
 
 
 

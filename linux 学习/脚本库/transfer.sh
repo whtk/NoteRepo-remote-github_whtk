@@ -1,12 +1,22 @@
 #!/bin/bash
 ###
- # @Author: 郭印林 1264514936@qq.com
- # @Date: 2023-06-10 17:45:09
- # @LastEditors: GuoYinlin-Mac 1264514936@qq.com
- # @LastEditTime: 2023-12-13 22:01:25
- # @FilePath: \undefinede:\gyl\gyl的论文和笔记库\笔记库\linux 学习\脚本库\transfer.sh
- # @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ # @Description: scp 跨服务器传输文件及文件夹
+ # @Autor: 郭印林
+ # @Date: 2023-06-11 15:06:44
+ # @LastEditors: 郭印林
+ # @LastEditTime: 2024-02-14 14:56:49
+ # @Email: 22231138@zju.edu.cn
 ### 
+
+# 更新说明：
+# 1. 避免了对于未连接过的主机，需要输入yes进行确认
+# 2. 添加了传输文件细节和进度条显示
+
+# 使用示例：
+# bash transfer.sh 源文件 目标路径 目标服务器 用户名 密码
+# e.g.
+# bash transfer.sh scr_file tgt_path s_218 guoyinlin gyl123
+
 
 # 定义服务器信息
 s1_addr="10.13.71.37"
@@ -28,14 +38,16 @@ s5_port="21822"
 src_file="$1"
 dst_path="$2"
 dst_server="$3"
+username="$4"
+password="$5"
 
 # 判断源文件是否存在
 if [ -e "$src_file" ]; then
     if [ -f "$src_file" ]; then
-        echo "File detected."
+        echo "检测到文件"
         scp_command="scp"
     elif [ -d "$src_file" ]; then
-        echo "Directory detected."
+        echo "检测到目录"
         scp_command="scp -r"
     else
         echo "Error: Invalid source file or directory."
@@ -54,10 +66,16 @@ case "$dst_server" in
   *) echo "Error: Invalid destination server name."; exit 1;;
 esac
 
-# 使用 sshpass 判断目标路径是否合法
-sshpass -p "gyl123" ssh -P "$dst_port" guoyinlin@"$dst_addr" "[ -d $dst_path ]"
 
-# 执行传输命令
-sshpass -p "gyl123" $scp_command -P "$dst_port" "$src_file" guoyinlin@"$dst_addr":"$dst_path"
 
-echo "Successully transfered file(s) to $dst_path."
+ssh_options="-o StrictHostKeyChecking=no"
+
+sshpass -p "$password" ssh -p "$dst_port" $ssh_options "$username@$dst_addr" "[ -d $dst_path ]"
+echo "开始传输"
+
+scp_command="scp -r"
+# sshpass -p "$password" $scp_command -P "$dst_port" "$src_file" "$username@$dst_addr:$dst_path" 
+rsync -avz --progress -e "sshpass -p '$password' ssh -p $dst_port $ssh_options" "$src_file" "$username@$dst_addr:$dst_path"
+
+echo "Successfully transferred file(s) to $dst_path."
+
