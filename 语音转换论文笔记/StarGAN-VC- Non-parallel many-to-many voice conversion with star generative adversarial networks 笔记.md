@@ -6,8 +6,10 @@
 
 
 StarGAN可以看成是CycGAN的改进，因此先介绍CycGAN的基本原理。
+
 ### CycleGAN-VC 原理
-定义 $\mathbf{x} \in \mathbb{R} ^{ Q \times N}$ 和 $\mathbf{y} \in \mathbb{R} ^ {Q \times M}$ 为输入输出的声学特征域（如Mel谱）$X,Y$，其中 $Q$ 为特征维度，$N,M$ 为输入输出序列长度。则CycGAN的目标为，学习从输入 $\mathbf{x}$ 到域 $\mathbf{y}$ 的映射 $G$ 和逆映射 $F$，定义判别器 $D_X,D_Y$ 用来判别其输入的特征是否 属于域 $X,Y$ 的 真实语音 的声学特征。同时定义：
+
+定义 $\mathbf{x} \in \mathbb{R} ^{ Q \times N}$ 和 $\mathbf{y} \in \mathbb{R} ^ {Q \times M}$ 为输入输出的声学特征域（如Mel谱）$X,Y$，其中 $Q$ 为特征维度，$N,M$ 为输入输出序列长度。则 CycGAN 的目标为，学习从输入 $\mathbf{x}$ 到域 $\mathbf{y}$ 的映射 $G$ 和逆映射 $F$，定义判别器 $D_X,D_Y$ 用来判别其输入的特征是否 属于域 $X,Y$ 的 真实语音 的声学特征。同时定义：
 $$
 \begin{aligned}
 \mathcal{L}_{\mathrm{adv}}^{D_{Y}}\left(D_{Y}\right)=&-\mathbb{E}_{\mathbf{y} \sim p_{Y}(\mathbf{y})}\left[\log D_{Y}(\mathbf{y})\right] \\
