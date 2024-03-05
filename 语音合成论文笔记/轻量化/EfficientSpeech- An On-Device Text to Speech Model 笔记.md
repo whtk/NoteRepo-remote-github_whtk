@@ -26,8 +26,7 @@ Acoustic Features and Decoders 模块用的是 FastSpeech 2 中的方法，迫�
 
 然后再进行特征融合和上采样，最终得到 $M\times d$ 的特征。
 
-最后 Mel Spectrogram Decoder 包含两层线性层+两层的 depth-wise sep-
-arable convolution，用的是 Tanh 激活 + LN。
+最后 Mel Spectrogram Decoder 包含两层线性层+两层的 depth-wise sep-arable convolution，用的是 Tanh 激活 + LN。
 
 ### 模型训练
 

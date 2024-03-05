@@ -60,7 +60,7 @@ https://pypi.tuna.tsinghua.edu.cn/simple
 16. 重启网络：service networking restart
 17. 解决 gitee 无法使用 ssh 连接：
 	1. 设置 网卡的 mtu 为 1200（一般默认都是 1500）
-	2. 重启网络
+	2. 重启网络：service networking restart
 18. linux 审计系统查看：sudo tail -f /var/log/audit/audit.log
 	1. 高级审计：ausearch
 19. 挂载和卸载：
