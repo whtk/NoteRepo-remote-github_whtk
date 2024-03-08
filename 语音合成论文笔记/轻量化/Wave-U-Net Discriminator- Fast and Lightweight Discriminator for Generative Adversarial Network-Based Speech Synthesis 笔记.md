@@ -48,7 +48,7 @@ normalization 和 residual 连接可以缓解这个问题。
 $$b=a\left/\sqrt{\frac1N\sum_{i=1}^N(a^i)^2+\epsilon}\right.$$
 其中 $\epsilon=10^{-8}$， $N$ 为总的特征数， $a,b$ 分别代表原始的和归一化的特征向量。 这种规划可以防止 discriminator 学习某一特定的特征。
 
-也可以使用 layer normalization， 但是同用的是 Globol normalization。
+也可以使用 layer normalization， 但是同用的是 Global normalization。
 
 在训练完成后，adversarial losses 在训练完成之后还是会饱和，可能是因为网络过深的原因。因此引入残差连接来避免梯度消失。残差连接的输出乘以了缩放因子 $0.4$。
 
