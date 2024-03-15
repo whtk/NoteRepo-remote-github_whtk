@@ -2,7 +2,7 @@
 
 1. 提出 Voicebox，文本引导的大规模语音生成模型
 2. 本质为自回归的 flow-matching 模型，给定音频上下文和文本来做填空题
-3. 可以通过 in-context learning 实现多种任务，可以用于单语言或者跨语言的 zero shot TTS，效果超过 VALLE，且速度快 20 倍
+3. 可以通过 in-context learning 实现多种任务，可以用于单语言或者跨语言的 zero shot TTS，效果超过 VALL-E，且速度快 20 倍
 
 ## Introduction
 
@@ -45,7 +45,7 @@ $$\mathcal{L}_{CFM}(\theta)=\mathbb{E}_{t,q(x_1),p_t(x|x_1)}||u_t(x\mid x_1)-v_t
 
 ### 问题定义
 
-给定 文本-语音 数据集 $(x, y)$，其中 $x$ 和 $y$ 分别表示音频样本和其文本，目标是构建一个模型，可以通过 in-context learning 执行多种文本引导的语音生成任务。提出在文本引导的语音填充任务上训练这样的生成模型，给定其周围音频和完整文本，预测语音段。设 $m$ 为二值时间掩码，与 $x$ 长度相同，$x_{\text{mis}} = m \odot x$ 和 $x_{\text{ctx}} = (1 - m) \odot x$ 为 $x$ 的互补掩码。模型学习 $p(x_{\text{mis}} | y, x_\text{ctx})$。换句话说，$y$ 和 $x_{\text{ctx}}$ 是上下文，$x_{\text{mis}}$ 是缺失数据。
+给定 文本-语音 数据集 $(x, y)$，其中 $x$ 和 $y$ 分别表示音频样本和其文本，目标是构建一个模型，可以通过 in-context learning 执行多种文本引导的语音生成任务。提出在文本引导的语音填充任务上训练这样的生成模型，给定其周围音频和完整的对应的文本，预测语音段。设 $m$ 为二值时间掩码，与 $x$ 长度相同，$x_{\text{mis}} = m \odot x$ 和 $x_{\text{ctx}} = (1 - m) \odot x$ 为 $x$ 的互补掩码。模型学习 $p(x_{\text{mis}} | y, x_\text{ctx})$。换句话说，$y$ 和 $x_{\text{ctx}}$ 是上下文，$x_{\text{mis}}$ 是缺失数据。
 
 ### 模型和训练
 
@@ -54,6 +54,9 @@ $$\mathcal{L}_{CFM}(\theta)=\mathbb{E}_{t,q(x_1),p_t(x|x_1)}||u_t(x\mid x_1)-v_t
 设 $x = (x_1, x_2, \cdots, x_N)$ 为 $N$ 帧的音频，$y = (y_1, y_2, \cdots, y_M)$ 为 $M$ 个音素的文本序列，$l = (l_1, l_2, \cdots, l_M)$ 为每个音素的持续时间，$l_j$ 表示 $y_j$ 对应多少音频帧，且 $\sum_{j=1}^M l_j = N$。定义 $z = \text{rep}(y, l) = (z_1, z_2, \cdots, z_N)$ 为每帧对应的音素，即将 $y_j$ 重复 $l_j$ 次（$z_i$ 其实就是音频帧 $x_i$ 的音素标签）。对于一对 $(x, y)$，$l$ 和 $z$ 可以使用语音识别模型估计。$q(x_{\text{mis}} | y, x_{\text{ctx}})$ 的估计分解为音频模型 $q(x_{\text{mis}} | z, x_{\text{ctx}})$ 和时长模型 $q(l_{\text{mis}} | y, l_{\text{ctx}})$，其中 $l_{\text{mis}}$ 和 $l_{\text{ctx}}$ 表示 $l$ 被 $m'$ 和 $1 - m'$ 掩码，$m'$ 是从 $m$ 中基于 $l$ 下采样的，其中$m = \text{rep}(m', l)$。
 
 #### 音频模型
+
+ 如图：
+ ![](image/Pasted%20image%2020240307103520.png)
 
 给定长度为 $N$ 的上下文 $z$ 和 $x_{\text{ctx}}$，$x_{\text{mis}}$ 的分布是随机的。
 
@@ -73,12 +76,9 @@ $$\mathcal{L}_{\text{audio-CFM-m}}(\theta)=\mathbb{E}_{t,m,q(x,z),p_0(x_0)}||m\o
 
 #### 时长模型
 
- 如图：
- ![](image/Pasted%20image%2020240307103520.png)
- 
 时长模型有两种解决方案。一种和音频模型一样，通过条件向量场建模 $q(l | y, l_{\text{ctx}})$，将 $(x, x_{\text{ctx}}, z)$ 简单替换为 $(l, l_{\text{ctx}}, y)$，其中 $l, l_{\text{ctx}} \in \mathbb{R}^{M \times 1}$，$y \in [K]^M$。训练时使用 mask 版本的 CFM 损失。
 
-第二种是，给定上下文时长 $l_{\text{ctx}}$ 和音素转录 $y$，回归掩码时长 $l_{\text{mis}}$。使用相同的 Transformer 模型，只有两个输入序列，不使用时间嵌入。模型使用掩码音素的 L1 回归损失训练：
+第二种是，给定上下文时长 $l_{\text{ctx}}$ 和音素转录 $y$，回归预测掩码时长 $l_{\text{mis}}$。使用相同的 Transformer 模型，只有两个输入序列，不使用时间嵌入。模型使用掩码音素的 L1 回归损失训练：
 $$\mathcal{L}_{\text{dur-regr-m}}(\theta)=\mathbb{E}_{m,q(l,y)}||m^{\prime}\odot(l_{mis}-g(l_{ctx},y;\theta))||_1,$$
 
 其中 $g$ 表示基于回归的时长模型。
@@ -96,7 +96,7 @@ ODE solver 通过在多个 $t$ 处评估 $v_t$ 来计算 $\phi_1(x_0)$ 从 $t=0$
 
 ### Classifier-Free Guidance
 
-Classifier guidance（CG）用于 diffusion 模型在 mode coverage 和 sample fidelity 之间进行 trade-off。主要通过修改对数似然梯度来实现。CG 近似于从 $p(x | c)p(c | x)^\alpha$ 中采样，其中 $c$ 是条件。此过程可以通过混合条件模型和无条件模型的得分估计来模拟。而无条件模型可以通过以一定概率丢弃 $c$ 联合训练。
+Classifier guidance（CG）是 diffusion 模型在 mode coverage 和 sample fidelity 之间进行 trade-off 的一种方法。主要通过修改对数似然梯度来实现。CG 近似于从 $p(x | c)p(c | x)^\alpha$ 中采样，其中 $c$ 是条件。此过程可以通过混合条件模型和无条件模型的得分估计来模拟。而无条件模型可以通过以一定概率丢弃 $c$ 联合训练。
 
 将 CFG 扩展到 flow-matching 模型。音频模型的条件 $c$ 就是 $(z, x_{\text{ctx}})$，对于时长模型是 $(y, l_{\text{ctx}})$，在训练时以概率 $p_{\text{uncond}}$ 丢弃。推理时，修改后的音频模型向量场 $v_t$ 变为：
 $$\tilde{v}_t(w,x_{mis},z;\theta)=(1+\alpha)\cdot v_t(w,x_{ctx},z;\theta)-\alpha\cdot v_t(w;\theta),$$
@@ -113,12 +113,12 @@ $$\tilde{v}_t(w,x_{mis},z;\theta)=(1+\alpha)\cdot v_t(w,x_{ctx},z;\theta)-\alpha
 
 #### Transient noise removal & content editing
 
-Voicebox 可以通过重新生成受噪音污染的段落来进行噪音去除，给定原始帧级转录和周围的干净音频。具体来说，给定带噪音的音频 $(x, y)$ 的帧级转录 $z$，用户创建一个 mask $m$ 来指示有噪音的段落。然后在给定 $z$ 和 $x_{\text{ctx}} = (1 - m) \odot x$ 下采样 $x_{\text{mis}}$。音频模型可能会生成干净的语音，因为在训练时，干净音频上下文大部分时间与干净目标音频同时出现。新的音频 $\hat{x} = x_{\text{mis}} + x_{\text{ctx}}$。
+Voicebox 可以通过重新生成受噪音污染的段落来进行噪音去除，给定原始帧级转录和周围的干净音频。具体来说，给定带噪音的音频 $(x, y)$ 的帧级 phoneme $z$，创建一个 mask $m$ 来指示有噪音的段。然后在给定 $z$ 和 $x_{\text{ctx}} = (1 - m) \odot x$ 下采样 $x_{\text{mis}}$。音频模型可能会生成干净的语音，因为在训练时，干净音频上下文大部分时间与干净目标音频同时出现。新的音频 $\hat{x} = x_{\text{mis}} + x_{\text{ctx}}$。
 
-对于内容编辑，设 $\hat{y}$ 为新的文本，其中一些单词替换了原始 $y$ 的单词，$l$ 为原始的持续时间。用户首先通过从 $l$ 复制未替换的音素的长度构造 $l_{\text{ctx}}$（与 $\hat{y}$ 长度相同），并将新音素的长度设置为 0。给定 $l_{\text{ctx}}$ 和 $\hat{y}$，采样新音素的持续时间 $\hat{l}_{\text{mis}}$，新持续时间 $\hat{l} = \hat{l}_{\text{mis}} + l_{\text{ctx}}$。新的帧级转录为 $\hat{z}= \text{rep}(\hat{y}, \hat{l})$。同样，音频上下文 $x_{\text{ctx}}$ 与 $\hat{z}$ 长度相同，通过将未替换的音素映射到 $x$ 中的对应帧，新音素的帧设置为 0。给定 $\hat{z}$ 和 $x_{\text{ctx}}$，采样新音素 $x_{\text{mis}}$。编辑后的语音为 $\hat{x} = x_{\text{mis}} + x_{\text{ctx}}$。
+对于内容编辑，设 $\hat{y}$ 为新的文本，其中一些单词替换了原始 $y$ 的单词，$l$ 为原始的持续时间。用户首先通过从 $l$ 复制未替换的音素的长度构造 $l_{\text{ctx}}$（与 $\hat{y}$ 长度相同），并将新音素的长度设置为 0。给定 $l_{\text{ctx}}$ 和 $\hat{y}$，采样新音素的持续时间 $\hat{l}_{\text{mis}}$，新持续时间 $\hat{l} = \hat{l}_{\text{mis}} + l_{\text{ctx}}$。新的帧级 phoneme 为 $\hat{z}= \text{rep}(\hat{y}, \hat{l})$。同样，音频上下文 $x_{\text{ctx}}$ 与 $\hat{z}$ 长度相同，通过将未替换的音素映射到 $x$ 中的对应帧，新音素的帧设置为 0。给定 $\hat{z}$ 和 $x_{\text{ctx}}$，采样新音素 $x_{\text{mis}}$。编辑后的语音为 $\hat{x} = x_{\text{mis}} + x_{\text{ctx}}$。
 
 #### Diverse speech sampling & alignment-preserved style shuffling
 
-Voicebox 可以通过填充整个 utterance 生成多样的语音样本。首先使用时长模型在给定音素转录 $\hat{y}$ 下采样 $\hat{l}$。然后使用音频模型在给定 $\hat{z} = \text{rep}(\hat{y}, \hat{l})$ 下采样 $\hat{x}$。
+Voicebox 可以通过填充整个 utterance 生成多样的语音样本。首先使用时长模型在给定音素phoneme  $\hat{y}$ 下采样 $\hat{l}$。然后使用音频模型在给定 $\hat{z} = \text{rep}(\hat{y}, \hat{l})$ 下采样 $\hat{x}$。
 
 类似于风格转移，Voicebox 通过在给定目标音频片段 $\bar{x}$ 的帧级转录 $\bar{z}$ 下采样 $\hat{x}$，在保持对齐的同时对音频风格进行 shuffle。
