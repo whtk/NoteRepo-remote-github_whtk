@@ -62,7 +62,7 @@ $$\mathcal{L}(\theta)=\mathbb{E}_{t,q(\boldsymbol{x}_1),p_0(\boldsymbol{x}_0)}\|
 Matcha-TTS 是一个非自回归的 encoder-decoder 架构。如图：
 ![](image/Pasted%20image%2020240319110228.png)
 
-text encoder 和 duration predictor 用的是 [Glow-TTS- A Generative Flow for Text-to-Speech via Monotonic Alignment Search 笔记](../Glow-TTS-%20A%20Generative%20Flow%20for%20Text-to-Speech%20via%20Monotonic%20Alignment%20Search%20笔记.md) 中的，但是采用 rotational position embeddings 而非相对位置编码。alignment 和 duration model 的训练采用 MAS，预测的 durations 向上取整，用于上采样（复制）encoder 输出的向量，得到 $\boldsymbol{\mu}$（即给定文本和 durations 的预测平均声学特征（例如 mel-spectrogram））。这个均值用于 decoder 的 condition，用于预测向量场 $\boldsymbol{v}_t(\phi^\mathrm{OT}_t(\boldsymbol{x}_0)|\boldsymbol{\mu};\theta)$，但不用作初始噪声样本 $\boldsymbol{x}_0$ 的均值（与 Grad-TTS 不同）。
+text encoder 和 duration predictor 用的是 [Glow-TTS- A Generative Flow for Text-to-Speech via Monotonic Alignment Search 笔记](../Glow-TTS-%20A%20Generative%20Flow%20for%20Text-to-Speech%20via%20Monotonic%20Alignment%20Search%20笔记.md) 中的，但是采用 rotational position embeddings 而非相对位置编码。alignment 和 duration model 的训练采用 MAS，预测的 durations 向上取整，用于上采样（复制）encoder 输出的向量，得到 $\boldsymbol{\mu}$。这个均值用于 decoder 的 condition，用于预测向量场 $\boldsymbol{v}_t(\phi^\mathrm{OT}_t(\boldsymbol{x}_0)|\boldsymbol{\mu};\theta)$，但不用作初始噪声样本 $\boldsymbol{x}_0$ 的均值（与 Grad-TTS 不同）。
 
 decoder 的架构如下：
 ![](image/Pasted%20image%2020240319110843.png)
