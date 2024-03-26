@@ -75,3 +75,7 @@ $$\left.f(q,m)=\left(\begin{array}{rr}\cos m\theta&-\sin m\theta\\\sin m\theta&\
 $$(\mathcal{R}_mq)^\top(\mathcal{R}_nk)=q^\top\mathcal{R}_m^\top\mathcal{R}_nk=q^\top\mathcal{R}_{n-m}k$$
 > 注意，这里的 $\mathcal{R}_{m}$ 是一个单位正交矩阵，因此不会改变向量的模长。
 
+可以看到，RoPE形式上和Sinusoidal位置编码有点相似，只不过Sinusoidal位置编码是加性的，而RoPE可以视为乘性的。对于 $\theta_i$ 的选择，沿用了 Sinusoidal 位置编码的方案，即 $\theta_i=10000^{−2i/d}$ ，它可以带来一定的远程衰减性。
+
+最终画出的图像如下：
+![RoPE的远程衰减性（d=128）](https://kexue.fm/usr/uploads/2021/03/1347893165.png)

@@ -31,7 +31,7 @@ L_{adv}(D)& =\mathbb{E}_{(d,z_d,h_{text})}\left[(D(d,h_{text})-1)^2\right.  \\
 L_{adv}(G)& =\mathbb{E}_{(z_d,h_{text})}\bigg[(D(G(z_d,h_{text}))-1)^2\bigg],  \\
 L_{mse}& =MSE(G(z_d,h_{text}),d) 
 \end{aligned}$$
-> 真实的 duration通过判别器是1，模型预测的 duration 糖果判别器是 0。
+> 真实的 duration通过判别器是1，模型预测的 duration 通过判别器是 0。
 
 ### 基于高斯噪声的 MAS
 
