@@ -18,7 +18,7 @@
 
 ## YourTTS
 
-![](image/Pasted%20image%2020230927095536.png)
+![](image/Pasted%20image%**2020230927095536**.png)
 
 基于 VITS，但是有一些修改以实现 zero-shot multi-speaker 和 multilingual training。
 
