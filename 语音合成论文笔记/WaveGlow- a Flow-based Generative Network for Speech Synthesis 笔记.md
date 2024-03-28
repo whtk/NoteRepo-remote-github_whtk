@@ -38,6 +38,8 @@ $$\begin{gathered}
 ![](image/Pasted%20image%2020230826162500.png)
 在 forward 过程中，把一组 8 个音频样本作为向量，称为 ”squeeze” 操作，然后将这些向量通过 steps of flow，即 invertible 1 × 1 convolution + affine coupling layer。
 
+> 所以输入输出都是波形（或者说 squeeze 后的波形），mel 谱只是条件。
+
 ### Affine Coupling Layer
 
 可逆神经网络通常使用 coupling layer 来构造，采用的是 RealNVP 中的 affine coupling layer，使用一半的 channel 对应的数据作为输入，通过模型产生 scale  和 shift 项来转换另一半的 channel 对应的数据：
