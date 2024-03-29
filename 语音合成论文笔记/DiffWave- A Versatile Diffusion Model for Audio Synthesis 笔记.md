@@ -1,4 +1,4 @@
-> ICLR2021，UCSD、NVIDIA、BaiDu
+> ICLR2021，UCSD、NVIDIA、百度
 
 1. 提出 DiffWave，一种用于有条件和无条件的普适的波形生成 DPM
 2. 模型是非自回归模型，通过马尔可夫链将白噪声转换为语音波形
