@@ -1,1 +1,10 @@
-> 
+> ICLR 2024，CUHK，上海人工智能实验室，斯坦福
+<!-- 翻译&理解 -->
+<!-- With the advance of text-to-image (T2I) diffusion models (e.g., Stable Diffusion) and corresponding personalization techniques such as DreamBooth and LoRA, everyone can manifest their imagination into high-quality images at an afford- able cost. However, adding motion dynamics to existing high-quality personal- ized T2Is and enabling them to generate animations remains an open challenge. In this paper, we present AnimateDiff, a practical framework for animating per- sonalized T2I models without requiring model-specific tuning. At the core of our framework is a plug-and-play motion module that can be trained once and seamlessly integrated into any personalized T2Is originating from the same base T2I. Through our proposed training strategy, the motion module effectively learns transferable motion priors from real-world videos. Once trained, the motion mod- ule can be inserted into a personalized T2I model to form a personalized animation generator. We further propose MotionLoRA, a lightweight fine-tuning technique for AnimateDiff that enables a pre-trained motion module to adapt to new motion patterns, such as different shot types, at a low training and data collection cost. We evaluate AnimateDiff and MotionLoRA on several public representative personal- ized T2I models collected from the community. The results demonstrate that our approaches help these models generate temporally smooth animation clips while preserving the visual quality and motion diversity. Codes and pre-trained weights are available at https://github.com/guoyww/AnimateDiff. -->
+1. 将 motion dynamics 添加到现有的高质量个性化 T2I 使其能够生成动画仍是一个的挑战
+2. 提出 AnimateDiff，可以在不需要特定调整的情况下为个性化 T2I 模型添加动画
+    1. 核心是一个 plug-and-play 的 motion module，可以训练一次并无缝集成到任何 T2I 中
+    2. 通过提出的训练策略，motion module 有效地从真实世界视频中学习可迁移的 motion priors
+    3. 训练完成后，motion module 可以插入到个性化 T2I 模型中，形成个性化动画生成器
+3. 提出 MotionLoRA，一种轻量级的微调技术，可以在低的训练和数据成本下使预训练的 motion module 可以适应新的 motion pattern，如不同的 shot types
+4. 在几个公共代表性的个性化 T2I 模型上评估 AnimateDiff 和 MotionLoRA，提出的方法可以帮助这些模型生成时间上平滑的动画片段，同时保持视觉质量和运动多样性  
