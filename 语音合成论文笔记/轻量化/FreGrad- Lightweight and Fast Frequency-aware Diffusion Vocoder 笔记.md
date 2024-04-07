@@ -31,8 +31,6 @@ FreGrad 网络架构基于 [DiffWave- A Versatile Diffusion Model for Audio Synt
 
 ### Wavelet 特征去噪
 
-lhL intotwowaveletfeatures{x0,x0}⊂R2 ,eachofwhichrepresents
-low- and high-frequency components. As demonstrated in the pre- vious works [26, 28], the function can deconstruct a non-stationary signal without information loss due to its biorthogonal property. -->
 在进行前向过程之前使用 DWT。DWT 将目标维度的音频 $x_0 \in \mathbb{R}^L$ 下采样为两个小波特征 $x_0^l,x_0^h \subset \mathbb{R}^\frac{L}{2}$，分别表示低频和高频成分。
 > DWT 可以将非平稳信号分解为两个小波特征，且不会丢失信息
 
@@ -52,7 +50,6 @@ $${y}_{hidden}=\mathbf{f}(\mathsf{cat}({y}_l,{y}_h)),$$
 其中 $\mathsf{cat}$ 表示拼接操作。提取的特征 $y_{\text{hidden}}$ 沿着通道维度分为 $y_l^\prime,y_h^\prime \subset \mathbb{R}^{\frac{L}{4}\times D}$，最后 iDWT 将这两个特征转换为单个表征，其长度与输入特征 $y$ 相同：
 $$y^{\prime}=\Phi^{-1}({y}_l^{\prime},{y}_h^{\prime}),$$
 
-depicted in Fig. 2, we embed the Freq-DConv into every ResBlock. -->
 其中 $y^\prime \in \mathbb{R}^{\frac{L}{2}\times D}$ 为 Freq-DConv 的输出。
 > Freq-DConv 会嵌入到每个 ResBlock 中。
 
