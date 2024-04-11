@@ -6,7 +6,7 @@
     1. emotion 信息的强度通过 distance-based intensity quantization 实现，无需人工标注
     2. 也可以通过手动设置 intensity labels 来控制合成语音的情感
 
-> 学习解耦的 emotion 信息
+> 采用 GRL 来学习解耦的 emotion 信息，通过量化来控制不同的 emotion 的强度。
 
 ## Introduction
 
