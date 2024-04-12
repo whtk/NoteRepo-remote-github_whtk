@@ -43,7 +43,7 @@
 
 使用 [ECAPA-TDNN- Emphasized channel attention, propagation and aggregation in tdnn based speaker verification 笔记](../../声纹识别论文阅读笔记/ECAPA-TDNN-%20Emphasized%20channel%20attention,%20propagation%20and%20aggregation%20in%20tdnn%20based%20speaker%20verification%20笔记.md) 模型提取音频的 speaker embeddings（模型在 VoxCeleb 数据集上进行了预训练，会对 frame-level embeddings 进行 utterance level pooling，得到 x-vectors），为了 suppress emotion 信息，添加两个全连接层到 x-vector ，并使用 emotion 对抗损失进行训练，得到所谓的 Emotion Agnostic Speaker Encoder (EASE) vectors。损失函数为：
 $$\large\mathcal{L}_{tot-spkr}=\mathcal{L}_{ce}^{spkr}-\lambda_{adv}^{emo}\mathcal{L}_{ce}^{emo}$$
-> 这个损失使得模型可以区分不同的说话人，但是不同区分不同的情感。似乎和 GRL 梯度反转层的效果一致？
+> 这个损失使得模型可以区分不同的说话人，但是不区分不同的情感。似乎和 GRL 梯度反转层的效果一致？
 
 ### Speaker Adversarial Classifier of Emotions(SACE)
 
