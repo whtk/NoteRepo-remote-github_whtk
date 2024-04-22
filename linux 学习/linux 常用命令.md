@@ -137,3 +137,39 @@ pip 安装包：
 	2. 不下载源文件，pip install git+地址
 2. 安装 wheel 文件：
 	1. pip install xxx.whl
+
+
+
+### 4002 & 4003 服务器配置记录
+
+1. 删除用户所有的信息（包括文件、记录等）： userdel -r user
+2. 查看所有用户：cat /etc/passwd
+3. 查看所有用户组：cat /ect/group
+4. 修改 root 权限：建议添加至 sudo 用户组（不是 root 用户组），避免直接修改 sudoers 文件（如果要修改，用 visudo）
+5. 查看当前用户所在用户组（一个用户可以在多个用户组中）：groups
+6. 查看 gpu 型号：lspci | grep -i nvidia，然后在 https://admin.pci-ids.ucw.cz/read/PC/10de 这里搜索
+7. 查看 cpu 情况：lscpu
+
+已做修改：
+1. 更改 sudoers 文件中的 %sudo 用户组的 NOPASSWD 
+2. 设置了 root 的密码：wyh210518 
+3. 关闭自动更新（用于解决 Failed to initialize NVML: Driver/library version mismatch 问题，如果直接重启就可以解决，但是这个还是要关闭）：
+	1. sudo vim /etc/apt/apt.conf.d/10periodic
+	2. sudo vim /etc/apt/apt.conf.d/20auto-upgrades
+4. 关闭自动休眠：sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+5. 开启持久模式：sudo nvidia-smi  -pm 1
+
+4002 & 4003 参数配置：
++ CPU：Intel(R) Xeon(R) Platinum 8352V CPU @ 2.10GHz，双 CPU、每个 CPU 36 核心，每个核 双线程
++ GPU：GeForce RTX 4090 D
++ 硬盘：三星 SSD 990 PRO 4TB + 西数 WUS721010ALE6L4 10TB
++ 内存：16 卡槽，但是只用了 4 x Samsung 3200MT/s 64G DDR4 
+
+个人配置：
+1. 数据集下载
+2. miniconda 安装：https://docs.anaconda.com/free/miniconda/index.html
+3. 代码迁移
+4. 免密登陆
+
+4002：跑虚假检测
+4003：跑语音合成
