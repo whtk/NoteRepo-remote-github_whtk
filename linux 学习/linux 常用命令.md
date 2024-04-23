@@ -1,7 +1,6 @@
 
 https://pypi.tuna.tsinghua.edu.cn/simple
 
-
 1.  查看文件内容
     1.  cat {file} — 查看全部
     2.  cat -n {file} — 输出行号查看全部
