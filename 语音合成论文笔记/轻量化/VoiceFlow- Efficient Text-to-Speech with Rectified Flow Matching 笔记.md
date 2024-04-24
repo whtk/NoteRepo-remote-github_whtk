@@ -86,7 +86,9 @@ $$\boldsymbol{\hat{x}}_{{\frac{k+1}{N}}}=\boldsymbol{\hat{x}}_{{\frac{k}{N}}}+\f
 $$\min_\theta\mathbb{E}_{t,p(\boldsymbol{x}_0^{\prime},\hat{\boldsymbol{x}}_1|\boldsymbol{y}),p_t(\boldsymbol{x}_t|\boldsymbol{x}_0^{\prime},\hat{\boldsymbol{x}}_1,\boldsymbol{y})}\|\boldsymbol{u}_\theta(\boldsymbol{x}_t,\boldsymbol{y},t)-(\boldsymbol{\hat{x}}_1-\boldsymbol{x}_0^{\prime})\|^2$$
 
 与前面式子的唯一区别是使用配对的 $(\boldsymbol{x}^\prime_0, \hat{\boldsymbol{x}}_1)$ 而不是独立采样。上式中每个 spectrogram 样本 $\hat{\boldsymbol{x}}_1$ 都与同一轨迹中的一个噪声样本相关联。这样，vector field estimator 被要求找到一个更直接的采样轨迹连接 $(\boldsymbol{x}^\prime_0, \hat{\boldsymbol{x}}_1)$，从而在很大程度上提高了采样效率。
-> 在为 rectified flow 生成数据时，模型输入的是真实的 duration。从而确保模型输入更自然的语音，降低了不准确的 duration 预测导致模型性能下降的风险。
+> 在为 rectified flow 生成数据时，模型输入的是真实的 duration。从而确保模型输入更自然的语音，降低了不准确的 duration 预测导致模型性能下降的风险。```
+sudo apt-get install -y ffmpeg
+```
 
 下面的算法总结了训练 VoiceFlow 的整个过程，包括 flow rectification：
 ![](image/Pasted%20image%2020240422220416.png)

@@ -72,6 +72,12 @@ https://pypi.tuna.tsinghua.edu.cn/simple
 	1. ssh 登录：ssh -o "ProxyCommand=nc -X connect -x 127.0.0.1:1081 %h %p" guoyinlin@10.13.71.37 -p 4001
 	2. scp 传输：scp -o "ProxyCommand=nc -X connect -x 127.0.0.1:1081 %h %p" -P 4001 /path/to/local/file guoyinlin@10.13.71.37:/path/to/remote/directory
 22. 深度查看 cpu 占用情况：sudo sysdig -c topprocs_cpu
+23. gpu 驱动、cuda 版本相关问题：
+	1. 关于 gpu driver 和 cuda 版本，可以查看 nvidia 官方手册的表 3：https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html
+	2. 实际上，nvidia-smi 中显示的 12.4 之类的是所谓的 driver API，而我们平时跑代码用的是所谓的 runtime API（也包括 nvcc 这个命令得到的 cuda 驱动版本），且一般来说，只要 runtime API 的版本小于 driver API 就是正常的（因为 driver API 是向下兼容）
+	3. 对于 pytorch，安装 pytorch 某个版本时，python 会自动安装对应的 runtime API 的 cuda 版本，所以即使 nvcc 这个命令显示没有也不影响跑 cuda + pytorch 的代码；但是需要注意的是，pytorch 的版本一定要和 cuda 版本对应，可以在这里查看：https://pytorch.org/get-started/previous-versions/
+	4. 存在一种比较极端的情况，如果 runtime API 的版本太小了（远远小于 driver API，比如一个 10.2 一个 12.4），这时跑 python 代码的时候可能报错，可以通过安装更高版本的 cuda 和对应的 pytorch 来解决（一般一个 pytorch 也会兼容不同的 cuda 版本）
+24. 
 
 
 
@@ -146,7 +152,7 @@ pip 安装包：
 3. 查看所有用户组：cat /ect/group
 4. 修改 root 权限：建议添加至 sudo 用户组（不是 root 用户组），避免直接修改 sudoers 文件（如果要修改，用 visudo）
 5. 查看当前用户所在用户组（一个用户可以在多个用户组中）：groups
-6. 查看 gpu 型号：lspci | grep -i nvidia，然后在 https://admin.pci-ids.ucw.cz/read/PC/10de 这里搜索
+6. 查看 gpu 型号：lspci | grep -i nvidia，然后在 https://admin.pci-ids.ucw.cz/read/PC/10de 这里搜索（或者 nvidia-smi -L）
 7. 查看 cpu 情况：lscpu
 
 已做修改：
