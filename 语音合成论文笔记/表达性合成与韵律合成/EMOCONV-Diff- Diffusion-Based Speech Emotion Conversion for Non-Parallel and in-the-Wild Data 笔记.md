@@ -30,7 +30,7 @@
 ![](image/Pasted%20image%2020240411160813.png)
 
 包含：
-+ 一组 encoder，用于 encode 要解耦的属性
++ 一组 encoder，来编码要解耦的属性
 + 基于 diffusion 的 decoder，用于解耦属性，进行 emotion-controllable 的语音合成。输出是 mel 谱 $\hat{\mathbf{X}}_{l,s,\bar{e}} \in \mathbb{R}^{n \times T}$，最后用预训练的 HiFiGAN vocoder 转为时域信号
 
 ### encoder

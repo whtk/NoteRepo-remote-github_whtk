@@ -1,4 +1,4 @@
-> preprint，腾讯 AI Lab，yu dong
+> ICML workshop，腾讯 AI Lab，yu dong
 
 1. DDPM 很难用于实时语音处理
 2. 提出 DiffGAN-TTS，基于 denoising diffusion generative adversarial networks，采用对抗训练来近似 denoising 的分布
