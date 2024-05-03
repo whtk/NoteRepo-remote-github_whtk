@@ -1,6 +1,8 @@
 
 https://pypi.tuna.tsinghua.edu.cn/simple
 
+### linux 常用命令
+
 1.  查看文件内容
     1.  cat {file} — 查看全部
     2.  cat -n {file} — 输出行号查看全部
@@ -104,7 +106,7 @@ test 中的
 	+ 系统级的位于 `/etc/bashrc`，对所有用户生效。
 	+ 用户级的位于 `~/.bashrc`，仅对当前用户生效
 	+ bashrc 文件只会对指定的 shell 类型起作用，bashrc 只会被 bash shell 调用
-+ bash_profile：只对单一用户有效，文件存储位于`**~/.bash_profile**`，该文件是一个用户级的设置，可以理解为某一个用户的 profile 目录下，这个文件同样也可以用于配置环境变量和启动程序，但只针对单个用户有效。和 profile 文件类似，bash_profile 也会在用户登录（login）时生效，也可以用于设置环境变理。但与 profile 不同，bash_profile 只会对当前用户生效。
++ bash_profile：只对单一用户有效，文件位于`~/.bash_profile`，该文件是一个用户级的设置，可以理解为某一个用户的 profile 目录下，这个文件同样也可以用于配置环境变量和启动程序，但只针对单个用户有效。和 profile 文件类似，bash_profile 也会在用户登录（login）时生效，也可以用于设置环境变理。但与 profile 不同，bash_profile 只会对当前用户生效。
 
 这三种文件类型的差异用一句话表述就是：
 
@@ -114,39 +116,54 @@ test 中的
 三个文件的执行情况如下：
 ![](v2-ea0eb026fe5e9c7a9520a930f34e5125_720w.webp)
 
+> 在 vscode 中，➕ 号创建的 shell 为交互式非登录 shell，此时只会执行 ~/.bashrc 中的代码。
 
+### 服务器基本信息
+
+| 校区  |       ip       |  端口   |                    显卡                     |
+| :-: | :------------: | :---: | :---------------------------------------: |
+| 玉泉  |  10.13.71,37   | 4001  |            GeForce RTX 3090*4             |
+| 玉泉  |  10.13.71,37   | 3001  |            GeForce GTX 1080*3             |
+| 玉泉  |  10.13.71,37   | 3002  | GeForce GTX 1080*1, GeForce GTX 1080 Ti*2 |
+| 玉泉  |  10.13.71,37   | 2001  |            GeForce GTX 1080*2             |
+| 工院  | 10.115.107.217 |  22   |               Tesla P100*4                |
+| 工院  | 10.115.107.218 | 21822 |               Tesla P100*8                |
+| 工院  | 10.115.107.218 | 4002  |           GeForce RTX 4090 D*4            |
+| 工院  | 10.115.107.218 | 4003  |           GeForce RTX 4090 D*4            |
 
 服务器硬盘和目录映射：
 217 服务器：
 home5 : /dev/sdb1
 home2 : /dev/sdc1
 218 服务器：
-/dev/sdg1 /home6
-/dev/sdc1 /home3
+/dev/sdg1 : /home6
+/dev/sdc1 : /home3
 
-linux 源：
+### 其他杂项
+
+服务器中病毒（挖矿）参考解决方案：https://www.cc98.org/topic/5812515
+
+关于 linux 源：
 + 系统的软件源位于 /etc/apt/sources.list 的文件中，所以如果需要新加系统软件源可以直接 vim 编辑这个文件
 + 其他自己加的软件源位于 /etc/apt/sources.list.d/ 的文件夹下
 
-临时使用系统代理：
+如何在 Linux 终端中使用临时的系统代理：
 - export http_proxy=http://127.0.0.1:20171
 - export https_proxy=http://127.0.0.1:7890
 
-pip 安装包：
-
+安装 python 包 的几种方法及其区别：
 1. 从 github 安装：
 	1. 先下载源文件，git clone 地址，然后cd进入到目录下：
 		1. python setup.py install 使用 Python 的 `setuptools` 模块来安装包，执行该目录下的 `setup.py` 脚本，根据 `setup.py` 中的配置信息，将包安装到 Python 解释器的默认路径中，使得你可以在任何地方导入该包的模块
 		2. pip install .：安装后的模块freeze在pip/conda依赖下，换句话说，再修改本地的原项目文件，不会导致对应模块发生变化
 		3. pip install -e .：-e 理解为 editable，修改本地文件，调用的模块以最新文件为准
 	2. 不下载源文件，pip install git+地址
-2. 安装 wheel 文件：
-	1. pip install xxx.whl
-
-
+2. 安装 wheel 文件：pip install xxx.whl
+3. 直接 pip install + 包名字：pip install xxx
 
 ### 4002 & 4003 服务器配置记录
 
+一些常用的命令：
 1. 删除用户所有的信息（包括文件、记录等）： userdel -r user
 2. 查看所有用户：cat /etc/passwd
 3. 查看所有用户组：cat /ect/group
@@ -155,14 +172,15 @@ pip 安装包：
 6. 查看 gpu 型号：lspci | grep -i nvidia，然后在 https://admin.pci-ids.ucw.cz/read/PC/10de 这里搜索（或者 nvidia-smi -L）
 7. 查看 cpu 情况：lscpu
 
-已做修改：
+已做的修改：
 1. 更改 sudoers 文件中的 %sudo 用户组的 NOPASSWD 
-2. 设置了 root 的密码：wyh210518 
-3. 关闭自动更新（用于解决 Failed to initialize NVML: Driver/library version mismatch 问题，如果直接重启就可以解决，但是这个还是要关闭）：
+2. 设置了 root 的密码：**wyh210518** 
+3. 关闭自动更新（用于解决 Failed to initialize NVML: Driver/library version mismatch 问题，直接重启其实就可以解决这个问题，但是这个还是要关闭）：
 	1. sudo vim /etc/apt/apt.conf.d/10periodic
 	2. sudo vim /etc/apt/apt.conf.d/20auto-upgrades
 4. 关闭自动休眠：sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
 5. 开启持久模式：sudo nvidia-smi  -pm 1
+6. 映射机械硬盘到 /mnt/sda1 目录
 
 4002 & 4003 参数配置：
 + CPU：Intel(R) Xeon(R) Platinum 8352V CPU @ 2.10GHz，双 CPU、每个 CPU 36 核心，每个核 双线程
@@ -170,11 +188,3 @@ pip 安装包：
 + 硬盘：三星 SSD 990 PRO 4TB + 西数 WUS721010ALE6L4 10TB
 + 内存：16 卡槽，但是只用了 4 x Samsung 3200MT/s 64G DDR4 
 
-个人配置：
-1. 数据集下载
-2. miniconda 安装：https://docs.anaconda.com/free/miniconda/index.html
-3. 代码迁移
-4. 免密登陆
-
-4002：跑虚假检测
-4003：跑语音合成
