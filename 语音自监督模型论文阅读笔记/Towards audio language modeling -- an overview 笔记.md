@@ -63,8 +63,8 @@
 + AudioGen 训练了一个 SoundStream 模型来得到 audio tokens，然后训练了一个 LM 来利用文本特征生成 audio tokens
 + MusicLM 和 MusicGen 也是类似的模型，MusicLM 使用 Mulan 生成 semantic tokens，然后用 Soundstream 生成 acoustic features，MusicGen 输入为文本描述或旋律特征，生成 tokens，可以合成高保真的音乐
 
-%% + 另一种方法是用量化 self-supervised speech representations 得到的离散单元，其包含丰富的 acoustic 和 linguistic 信息，但缺少说话人和 paralinguistic 信息。这个方向主要关注 speech 的语义，可以使用 encoder 学习说话人特征和 prosody。speech-resynthesis 使用这些离散单元和 prosody 和 speaker encoders 来编码 speech 为低比特率的 code，然后用 decoder 重构 speech 信号，实现低比特率传输。这些离散单元可以看作是“pseudo-text”，可以用来训练 textless speech LM，如 GSLM、pGSLM、dGSLM 和 TWIST。这些 speech LM 可以执行 spoken language modeling 和 speech continuation。在 speech translation 领域，Unit mBART 和 wav2vec 2.0 encoder 可以直接预测翻译的离散单元，UnitY 进一步整合 text modality 来增强 speech translation。Seamless models 结合 UnitY 框架来执行 speech-to-text 和 speech-to-speech translation。这些强大的 speech LM 的发展，研究人员开始探索在 speech LM 上使用 prompting 来进行各种 speech 处理任务，如 prompt tuning、in-context learning 和 instruction tuning 等。
- %%
++ 另一种方法是用量化 self-supervised speech representations 得到的离散单元，其包含丰富的 acoustic 和 linguistic 信息，但缺少说话人和 paralinguistic 信息。这个方向主要关注 speech 的语义，可以使用 encoder 学习说话人特征和 prosody。speech-resynthesis 使用这些离散单元和 prosody 和 speaker encoders 来编码 speech 为低比特率的 code，然后用 decoder 重构 speech 信号，实现低比特率传输。这些离散单元可以看作是“pseudo-text”，可以用来训练 textless speech LM，如 GSLM、pGSLM、dGSLM 和 TWIST。这些 speech LM 可以执行 spoken language modeling 和 speech continuation。在 speech translation 领域，Unit mBART 和 wav2vec 2.0 encoder 可以直接预测翻译的离散单元，UnitY 进一步整合 text modality 来增强 speech translation。Seamless models 结合 UnitY 框架来执行 speech-to-text 和 speech-to-speech translation。这些强大的 speech LM 的发展，研究人员开始探索在 speech LM 上使用 prompting 来进行各种 speech 处理任务，如 prompt tuning、in-context learning 和 instruction tuning 等
+
 
 ### codec-based LM 对比
 
