@@ -92,4 +92,12 @@ $$\begin{aligned}
 &f_{\mathrm{res}}(V_a,V_s) =\mathrm{RVQ}(V_a-V_s)+V_s 
 \end{aligned}$$
 <!-- where Vs denotes semantic tokens, such as frame-aligned phoneme labels and Hubert embeddings [26]. To make a single model oper- ate across variable bitrates, structured quantization dropout is also implemented in FunCodec. -->
-其中 
+其中 $V_s$ 表示 semantic token，包括 frame-aligned phoneme labels 和 Hubert embeddings。
+
+<!-- Adversarialtrainingobjectivewithmultiplediscriminators -->
+### 基于多个 discriminator 的对抗训练
+<!-- The training objective consists of three components: reconstruction loss terms, adversarial loss terms, and the RVQ commit losses. The L1 distance between original x and reconstructed speech xˆ is mini- mized over time domain: Lt (x, xˆ) = ||x − xˆ||1 . For the frequency domain, both L1 and L2 distances are minimized on multiple Mel and magnitude spectra: -->
+训练目标包括三个部分：重构损失、对抗损失和 RVQ commit 损失。时域上的 L1 距离和频域上的 L1 和 L2 距离：
+$$\begin{aligned}\mathcal{L}_f(x,\hat{x})&=\frac1{|\alpha|}\sum_{i\in\alpha}(||\mathcal{S}_i(x)-\mathcal{S}_i(\hat{x})||_1+||\mathcal{S}_i(x)-\mathcal{S}_i(\hat{x})||_2\\&+||\mathcal{M}_i(x)-\mathcal{M}_i(\hat{x})||_1+||\mathcal{M}_i(x)-\mathcal{M}_i(\hat{x})||_2)\end{aligned}$$
+<!-- where, Si and Mi represent the log-compressed power and Mel spectra with a window size of 2i and a shift length of 2i/4. α is set to [5, 6, . . . , 11]. It worth noting that the log-compressed power spectrum loss improves speech quality in the middle and high fre- quencies, which is missed in other toolkits and models. -->
+其中 $\mathcal{S}_i$ 和 $\mathcal{M}_i$ 分别表示 log-compressed power 和 Mel 谱，窗口大小为 $2^i$，移动长度为 $2^i/4$。$\alpha$ 取 $[5,6,\ldots,11]$。
