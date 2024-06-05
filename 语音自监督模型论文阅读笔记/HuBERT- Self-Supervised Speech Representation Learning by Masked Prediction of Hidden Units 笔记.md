@@ -23,10 +23,11 @@
 基于此，提出 acoustic unit discovery models 来提取 frame level 的目标。设一段语音序列 $X=\left[x_1, \cdots, x_T\right]$，一共有 $T$ 帧，得到的 hidden unit 记为 $h(X)=Z=\left[z_1, \cdots, z_T\right]$，其中 $z_t \in[C]$ 是一个 $C$ 类的 categorical variable，$h$ 代表某种聚类模型如 k-means 聚类。
 > 这个过程（对应上图顶部的红色模块）首先是对原始音频提取语音特征，如 MFCC 特征，然后对这些特征进行聚类，最后得到的 time step 要和后面 CNN encoder 得到的 time step 一样（都是 $T$）
 > 然后聚类成 $C$ 类，聚类得到的结果经过 code embedding 层之后，就是后面提到的 codeword $e_c$，下标 $c$ 代表第 $c$ 个类别的聚类中心。
+> 这一点有点类似于无监督学习。
 
 ### 通过掩码预测进行表征学习
 
-令 $M \subset[T]$ 表示要 mask 的 indices $\tilde{X}=r(X, M)$ 表示被 mask 之后的输入，其中 $x_t$ 被 $\tilde{x}$ 取代（当 $t\in M$）。掩码预测模型 $f$ 输入为 $\tilde{X}$，然后在每个 time step 预测 target 的分布。
+令 $M \subset[T]$ 表示要 mask 的 indices，$\tilde{X}=r(X, M)$ 表示被 mask 之后的输入，其中 $x_t$ 被 $\tilde{x}$ 取代（当 $t\in M$）。掩码预测模型 $f$ 输入为 $\tilde{X}$，然后在每个 time step 预测 target 的分布。
 
 mask 过程涉及两个问题，如何 mask 和 在哪计算 预测损失。
 
