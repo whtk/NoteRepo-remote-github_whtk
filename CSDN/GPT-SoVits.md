@@ -19,10 +19,11 @@ webui 支持
 	3. 进行 ASR 识别，得到 list 文件
 	4. 校对 list
 	5. 填入 list 和 音频 文件路径，预处理，得到文件：
-		1. 2-xxx：name2text
+		1. 2-xxx：name2text.txt
 		2. 3-xxx：SSL 特征，pt 后缀
 		3. 4-xxx：中文 SSL 特征，pt 后缀
 		4. 5-xxx：音频
+        5. 6-xxx：name2semantic.tsv，SSL 特征通过量化器得到的离散的 code
 
 ## 从 SoVITS 到 GPT-SoVITS
 SoVITS 做的是 VC，不做 TTS，因此输入只有两端音频而没有文本。
@@ -65,9 +66,9 @@ VC 任务中用上了 ContentVec
 > GPT-SoVITS 约等于 VALLE+VITS
 
 ## 模型结构
-微调包括有先后顺序的两步：
-1. 先调 SoVITS，对应代码 train_s2
-2. 再调 GPT 模块，对应代码 train_s1
+微调包括两个部分，且两个部分是无序的
+1. SoVITS，对应代码 train_s2
+2. GPT 模块，对应代码 train_s1
 
 微调的时候，先数据预处理得到上述需要的特征：
 然后：
@@ -110,4 +111,39 @@ freeze_quantizer = True
 
 
 train_s1：
+用 Pytorch Lightning 框架
+模型：Text2SemanticLightningModule
++ 输入：phoneme_ids、phoneme_ids_len、semantic_ids、semantic_ids_len、bert_feature
++ 内部的模型为 Text2SemanticDecoder
+    + 输入为 phoneme_ids、phoneme_ids_len、semantic_ids、semantic_ids_len、bert_feature
+    + forward 中，make_input_data 用于准备输入和输出数据：
+        + xy_pos：就是对齐之后的用于 GPT 的输入
+        + target：GPT 模型的目标
+    + infer 的时候，semantic_ids 就变成了 prompt，
++ forward 函数在 AR/models/t2s_model.py 中
 
+
+
+
+数据：Text2SemanticDataModule
++ 包含 train 和 val
++ 用的是 DistributedBucketSampler
++ dataset 用的是 Text2SemanticDataset，有 collate_fn
++ __getitem__ 返回的是
+    "idx": idx,
+    "phoneme_ids": phoneme_ids,
+    "phoneme_ids_len": phoneme_ids_len,
+    "semantic_ids": semantic_ids,
+    "semantic_ids_len": semantic_ids_len,
+    "bert_feature": bert_feature,
++ 
+
+## 推理
+
+推理对应的代码为：
+inference_webui 为推理的窗口
+
+
+## 问题
+
+GPT 模型具体的输入输出是什么？
