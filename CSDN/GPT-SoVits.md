@@ -9,6 +9,14 @@ webui 支持
 
 语言：中日英，可以跨语言转换
 
+## 原始的训练的数据来源
+
+> 训练数据来源：
+> 数据是从我做TTS以来陆续清洗采集的，很难给到你一个完整的list，需要你自己采集。统计层面大概是1000小时左右中文，700小时左右英文和300小时左右日文，一共约2000小时。清洗层面，sovits侧重下音质，gpt侧重文本和停顿正确性（比如口吃、复读的要过滤，标点ASR错误的要过滤，长句中间说话人多次停顿但是文本里又没有标注停顿的要过滤，等等）
+
+> 请问作者，基础模型的数据对采样率有要求吗？
+> 录音质量好就可以，采样率没有要求，反正预处理脚本都会统一
+
 ## 微调
 
 1. 下载预训练模型
@@ -24,6 +32,10 @@ webui 支持
 		3. 4-xxx：中文 SSL 特征，pt 后缀
 		4. 5-xxx：音频
         5. 6-xxx：name2semantic.tsv，SSL 特征通过量化器得到的离散的 code
+
+> 里面有两个自监督模型：
+> 1. chinese-hubert-base 用于从音频中提取自监督特征
+> 2. chinese-roberta-wwm-ext-large 用于从文本中提取自监督特征
 
 ## 从 SoVITS 到 GPT-SoVITS
 SoVITS 做的是 VC，不做 TTS，因此输入只有两端音频而没有文本。
@@ -90,6 +102,8 @@ train_s1：训练 GPT
 输入：text1 + text2 + wav1-hubert-token
 输出：wav2-hubert-token
 > 本质就是一个 VALLE
+> 实际执行代码：/data/miniconda3/envs/GPTSoVits/bin/python" GPT_SoVITS/s2_train.py --config "/workspace/user_code/GPT-SoVITS/TEMP/tmp_s2.json；简化后的执行代码：python GPT_SoVITS/s2_train.py --config tmp_s2.json
+> tmp_s2.json 来源：加载s2.json，然后用 data 变量修改其中的一部分参数
 
 train_s2：训练 VITS
 输入：wav2-hubert-token + wav1-audio（用于提取音色信息的） + text2
@@ -97,6 +111,10 @@ train_s2：训练 VITS
 > 这里还多加了一个 s1 得到的 wav2-hubert-token，也就是前面反复提到的泄漏了音色的 SSL 特征。
 
 > 注意：wav1 reference wav，即用来给音色的，wav2 为 target wav，即要合成的
+
+> 实际执行代码：/data/miniconda3/envs/GPTSoVits/bin/python" GPT_SoVITS/s1_train.py --config_file "/workspace/user_code/GPT-SoVITS/TEMP/tmp_s1.yaml；简化后的执行代码：python GPT_SoVITS/s1_train.py --config_file tmp_s1.yaml
+> tmp_s1.yaml 来源：加载s1longer.yaml，然后用 data 变量修改其中的一部分参数
+
 
 train_s2：
 SynthesizerTrn：来自 VITS 的 generator
@@ -117,8 +135,8 @@ train_s1：
 + 内部的模型为 Text2SemanticDecoder
     + 输入为 phoneme_ids、phoneme_ids_len、semantic_ids、semantic_ids_len、bert_feature
     + forward 中，make_input_data 用于准备输入和输出数据：
-        + xy_pos：就是对齐之后的用于 GPT 的输入
-        + target：GPT 模型的目标
+        + xy_pos：就是对齐之后的用于 GPT 的输入，来自 phoneme_ids 和 bert_feature
+        + target：GPT 模型的目标，来自于 semantic_ids
     + infer 的时候，semantic_ids 就变成了 prompt，
 + forward 函数在 AR/models/t2s_model.py 中
 
@@ -135,7 +153,7 @@ train_s1：
     "phoneme_ids_len": phoneme_ids_len,
     "semantic_ids": semantic_ids,
     "semantic_ids_len": semantic_ids_len,
-    "bert_feature": bert_feature,
+    "bert_feature": bert_feature（文本中提取的 feature）
 + 
 
 ## 推理
@@ -144,6 +162,13 @@ train_s1：
 inference_webui 为推理的窗口
 
 
-## 问题
+## 其他
 
-GPT 模型具体的输入输出是什么？
+1. 关于从零训练：https://github.com/RVC-Boss/GPT-SoVITS/wiki/%E4%BB%8E%E9%9B%B6%E8%AE%AD%E7%BB%83(train-from-scratch)
+    1. 从零训练和微调的唯一的区别在于：webui微调训练微操降低了sovits模块文本编码器的lr，底模训练没有
+    2. 当然，要改一下 webui，用命令行训练
+2. 训练的一些 trick：训练的时候是一个两阶段的训练，先训 VITS，然后用 VITS 得到的量化后的 token 再去训练 GPT
+2. 关于训练其他语种的模型：
+3. 时间估算：
+    1. C0936 估计总时长（16k采样率、16bit、单通道）：大小为 62705054 字节，计算时长 62705054/32000 = 1,959.5329375 s = 32.6588822917 min = 0.54431470486 h
+    2. 但是训练的时候会上采样到 32k（不过总时长理论上不变）：大小变为 115600344，计算时长为 115600344/64000 = 1,806.255375 s = 30.10425625 min = 5.01737604167
