@@ -102,8 +102,9 @@ train_s1：训练 GPT
 输入：text1 + text2 + wav1-hubert-token
 输出：wav2-hubert-token
 > 本质就是一个 VALLE
-> 实际执行代码：/data/miniconda3/envs/GPTSoVits/bin/python" GPT_SoVITS/s2_train.py --config "/workspace/user_code/GPT-SoVITS/TEMP/tmp_s2.json；简化后的执行代码：python GPT_SoVITS/s2_train.py --config tmp_s2.json
-> tmp_s2.json 来源：加载s2.json，然后用 data 变量修改其中的一部分参数
+> 实际执行代码：/data/miniconda3/envs/GPTSoVits/bin/python" GPT_SoVITS/s1_train.py --config_file "/workspace/user_code/GPT-SoVITS/TEMP/tmp_s1.yaml；简化后的执行代码：python GPT_SoVITS/s1_train.py --config_file tmp_s1.yaml
+> tmp_s1.yaml 来源：加载s1longer.yaml，然后用 data 变量修改其中的一部分参数
+
 
 train_s2：训练 VITS
 输入：wav2-hubert-token + wav1-audio（用于提取音色信息的） + text2
@@ -112,8 +113,8 @@ train_s2：训练 VITS
 
 > 注意：wav1 reference wav，即用来给音色的，wav2 为 target wav，即要合成的
 
-> 实际执行代码：/data/miniconda3/envs/GPTSoVits/bin/python" GPT_SoVITS/s1_train.py --config_file "/workspace/user_code/GPT-SoVITS/TEMP/tmp_s1.yaml；简化后的执行代码：python GPT_SoVITS/s1_train.py --config_file tmp_s1.yaml
-> tmp_s1.yaml 来源：加载s1longer.yaml，然后用 data 变量修改其中的一部分参数
+> 实际执行代码：/data/miniconda3/envs/GPTSoVits/bin/python" GPT_SoVITS/s2_train.py --config "/workspace/user_code/GPT-SoVITS/TEMP/tmp_s2.json；简化后的执行代码：python GPT_SoVITS/s1_train.py --config tmp_s2.json
+> tmp_s2.json 来源：加载s2.json，然后用 data 变量修改其中的一部分参数
 
 
 train_s2：
@@ -172,3 +173,12 @@ inference_webui 为推理的窗口
 3. 时间估算：
     1. C0936 估计总时长（16k采样率、16bit、单通道）：大小为 62705054 字节，计算时长 62705054/32000 = 1,959.5329375 s = 32.6588822917 min = 0.54431470486 h
     2. 但是训练的时候会上采样到 32k（不过总时长理论上不变）：大小变为 115600344，计算时长为 115600344/64000 = 1,806.255375 s = 30.10425625 min = 5.01737604167
+
+
+## 记录
+
+1. gradio 端口上报：
+. /data/bore_run_script/common/util.sh
+report "gradio" "${ENV_IP}" "9874" "gradio_token"
+2. 占卡代码：nohup python -u /group/30106/goodli/keepworking_v4/run.py > /dev/null 2>&1 &
+3. 将公司数据集格式转为 GPT-SoVITS 能够读取的 list 文件的代码：/group/30106/yinlinguo/code/preprocess.py
