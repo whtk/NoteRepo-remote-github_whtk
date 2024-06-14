@@ -177,8 +177,16 @@ inference_webui 为推理的窗口
 
 ## 记录
 
+占卡：
+8卡进程：18476
+
 1. gradio 端口上报：
 . /data/bore_run_script/common/util.sh
 report "gradio" "${ENV_IP}" "9874" "gradio_token"
 2. 占卡代码：nohup python -u /group/30106/goodli/keepworking_v4/run.py > /dev/null 2>&1 &
 3. 将公司数据集格式转为 GPT-SoVITS 能够读取的 list 文件的代码：/group/30106/yinlinguo/code/preprocess.py
+4. 特征提起的命令行代码：/group/30106/yinlinguo/GPT-SoVITS/kevinmo/get_audio_feature.py、/group/30106/yinlinguo/GPT-SoVITS/kevinmo/get_text_feature.py
+5. 现在的 lr 是 0.0001，然后微调的时候，文本模块的学习率乘以了一个 0.4 的系数
+6. 训练 VITS 的代码：/group/30106/yinlinguo/GPT-SoVITS/
+
+ls -l | grep "^-" | wc -l
