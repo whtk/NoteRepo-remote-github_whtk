@@ -178,7 +178,7 @@ inference_webui 为推理的窗口
 ## 记录
 
 占卡：
-8卡进程：18476
+8卡进程：24813
 
 1. gradio 端口上报：
 . /data/bore_run_script/common/util.sh
@@ -190,3 +190,11 @@ report "gradio" "${ENV_IP}" "9874" "gradio_token"
 6. 训练 VITS 的代码：/group/30106/yinlinguo/GPT-SoVITS/
 
 ls -l | grep "^-" | wc -l
+find ./ -type f | wc -l 这个速度比上面的快得多
+
+10k_data_005_lin 是修复命名 bug 之前，用 500 h 提取的数据，但是
+
+/group/30106/yinlinguo/lzy/raw.list
+lzy_70h_ft_v1
+
+ckpt的两种加载方式，一种是加载 log_s2 里面的模型，然后进行 fine tune；另一种是默认的，当 los_s2 里面没有时，按照 except 的代码加载，此时 加载的文件 要和 默认的底模 或者 fine tune 得到的那一系列的模型 是一样的。
