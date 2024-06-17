@@ -197,4 +197,19 @@ find ./ -type f | wc -l 这个速度比上面的快得多
 /group/30106/yinlinguo/lzy/raw.list
 lzy_70h_ft_v1
 
-ckpt的两种加载方式，一种是加载 log_s2 里面的模型，然后进行 fine tune；另一种是默认的，当 los_s2 里面没有时，按照 except 的代码加载，此时 加载的文件 要和 默认的底模 或者 fine tune 得到的那一系列的模型 是一样的。
+ckpt的两种加载方式，一种是加载 log_s2 里面的模型，然后进行 fine tune；另一种是默认的，当 los_s2 里面没有时，按照 except 的代码加载，此时 加载的文件 要和 默认的底模 或者 fine tune 得到的那一系列的模型（weight 的那种） 是一样的。
+
+首先加载默认的路径，根据 list 自动找（默认路径是 exp_name/log_s2），找到了就忽略输入的路径，没有的话，则按照 weight 那种格式读取给定路径的模型。
+
+
+70h 底模：
++ /group/30106/yinlinguo/GPT-SoVITS/logs/10k_data_005_lin/logs_s2/D_233333333333.pth
++ /group/30106/yinlinguo/GPT-SoVITS/logs/10k_data_005_lin/logs_s2/D_233333333333.pth
++ /group/30106/yinlinguo/GPT-SoVITS/SoVITS_weights/10k_data_005_lin_e1_s1177.pth
++ 
+
+150h_500h：
++ VITS：
+    + /group/30106/yinlinguo/GPT-SoVITS/SoVITS_weights/500h_data_D_e1_s1457.pth
+    + /group/30106/yinlinguo/GPT-SoVITS/SoVITS_weights/500h_data_e1_s1457.pth
+    + /group/30106/yinlinguo/GPT-SoVITS/GPT_weights/500h_data-ei.ckpt
