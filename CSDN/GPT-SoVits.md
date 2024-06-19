@@ -94,6 +94,20 @@ code 和 文本特征 输入到 先验编码器TextEncoder 得到分布的均值
 
 ## 代码
 
+### 前端
+
+phoneme：
+1. 对于中文，用的是 python 的 [pypinyin](https://pypi.org/project/pypinyin/) 库，将输入的文本转为 phoneme
+2. 对于英文，用的是 python 的 [g2p_en](https://pypi.org/project/g2p-en/) 库，将输入的文本转为 phoneme
+3. 对于中英文混合输入，首先用 LangSegment 将文本分为中文和英文，然后分别用上述两个库转为 phoneme
+
+bert feature：
+1. 中文的 bert 特征是用的 huggingface 的 CN_HuBERT 模型（[chinese-roberta-wwm-ext-large](https://huggingface.co/hfl/chinese-roberta-wwm-ext-large)）
+2. 对于其他语种，不用 bert 这个特征（Bert = torch.zeros）
+
+混合语种：
+1. 对于混合
+
 ### 数据预处理
 
 ### 微调
@@ -159,9 +173,9 @@ train_s1：
 
 ## 推理
 
-推理对应的代码为：
-inference_webui 为推理的窗口
-
+1. 推理对应的代码为：inference_webui 为推理的窗口，里面包含了从数据预处理到推理的所有的代码！如果要流程化，建议基于这个来改。
+2. 推理的时候，参考音频会被重采样到 16k
+> TODO：所以 32k 音频的作用是什么？
 
 ## 其他
 
@@ -173,6 +187,15 @@ inference_webui 为推理的窗口
 3. 时间估算：
     1. C0936 估计总时长（16k采样率、16bit、单通道）：大小为 62705054 字节，计算时长 62705054/32000 = 1,959.5329375 s = 32.6588822917 min = 0.54431470486 h
     2. 但是训练的时候会上采样到 32k（不过总时长理论上不变）：大小变为 115600344，计算时长为 115600344/64000 = 1,806.255375 s = 30.10425625 min = 5.01737604167
+4. *个人的想法*：
+    1. VITS 可能更偏向于负责音质，当然，训练 VITS 的时候，音色也是有的（mel 谱那块给的），所以训好了也可以提升音质
+    2. GPT 模块负责文本的正确性（读得对不对）、音色的相似度（音色好不好）
+
+## 增训
+1. 50w条音频 
+2. batch size：16 
+3. 8卡 A100
+4. 一个 epoch（500000/16/8 约等于 3900，4k） 大概 一天。。。。。。
 
 
 ## 记录
@@ -213,3 +236,4 @@ ckpt的两种加载方式，一种是加载 log_s2 里面的模型，然后进�
     + /group/30106/yinlinguo/GPT-SoVITS/SoVITS_weights/500h_data_D_e1_s1457.pth
     + /group/30106/yinlinguo/GPT-SoVITS/SoVITS_weights/500h_data_e1_s1457.pth
     + /group/30106/yinlinguo/GPT-SoVITS/GPT_weights/500h_data-ei.ckpt
+
