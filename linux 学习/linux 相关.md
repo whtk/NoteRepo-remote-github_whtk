@@ -81,7 +81,7 @@ https://pypi.tuna.tsinghua.edu.cn/simple
 	4. 存在一种比较极端的情况，如果 runtime API 的版本太小了（远远小于 driver API，比如一个 10.2 一个 12.4），这时跑 python 代码的时候可能报错，可以通过安装更高版本的 cuda 和对应的 pytorch 来解决（一般一个 pytorch 也会兼容不同的 cuda 版本）
 24. 清理缓存：sync; sudo sh -c "echo 3 > /proc/sys/vm/drop_caches"
 25. 批量查找相关进程并 kill 掉：pgrep -f 'a.py' | xargs kill
-
+26. 查看端口占用情况：sof -i:端口号
 
 
 ### bash 中的测试命令
