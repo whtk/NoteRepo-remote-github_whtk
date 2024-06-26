@@ -6,6 +6,11 @@
 git remote -v
 ```
 
+查看配置
+```bash
+git config --list
+```
+
 配置用户名和邮箱：
 ```bash
 git config --global user.name "Name"
