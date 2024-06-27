@@ -202,7 +202,7 @@ train_s1：
 
 1. gradio 端口上报：
 . /data/bore_run_script/common/util.sh
-report "gradio" "${ENV_IP}" "9876" "gradio_token"
+report "gradio" "${ENV_IP}" "9874" "gradio_token"
 2. 占卡代码：nohup /group/30106/yinlinguo/envs/GPTSoVits/bin/python -u /group/30106/goodli/keepworking_v4/run.py > /dev/null 2>&1 &
 3. 将公司数据集格式转为 GPT-SoVITS 能够读取的 list 文件的代码：/group/30106/yinlinguo/code/preprocess.py
 4. 特征提起的命令行代码：/group/30106/yinlinguo/GPT-SoVITS/kevinmo/get_audio_feature.py、/group/30106/yinlinguo/GPT-SoVITS/kevinmo/get_text_feature.py
