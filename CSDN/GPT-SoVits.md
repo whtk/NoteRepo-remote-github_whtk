@@ -191,11 +191,6 @@ train_s1：
     1. VITS 可能更偏向于负责音质，当然，训练 VITS 的时候，音色也是有的（mel 谱那块给的），所以训好了也可以提升音质
     2. GPT 模块负责文本的正确性（读得对不对）、音色的相似度（音色好不好）
 
-## 增训
-1. 50w条音频 
-2. batch size：16 
-3. 8卡 A100
-4. 一个 epoch（500000/16/8 约等于 3900，4k） 大概 一天。。。。。。
 
 
 ## 记录
@@ -234,3 +229,24 @@ ckpt的两种加载方式，一种是加载 log_s2 里面的模型，然后进�
     + /group/30106/yinlinguo/GPT-SoVITS/SoVITS_weights/500h_data_e1_s1457.pth
     + /group/30106/yinlinguo/GPT-SoVITS/GPT_weights/500h_data-ei.ckpt
 
+关于 GPT 模块的训练：
+> 来自作者的经验：训练acc太高不是件好事，train的acc和loss曲线对最终合成效果的意义不大。
+
+
+## 模型增训要点
+
+GPT 每次训练要注意调的参数：
++ output_dir：这个是 tensorboard、log、checkpoint 的保存路径，eg: logs/0p5h_data/logs_s1_without_sovits_training
++ exp_name：这个是保存在 GPT_weights 下的文件名，eg: 0p5h_data_without_sovits_training
++ train_phoneme_path：一般保持不变
++ train_semantic_path：一般也保持不变
+
+SoVITS 每次训练要注意调的参数：
++ exp_dir：这个别调了（这个目前仅用于给出 2- 3- 4- 特征文件的路径）
++ s2_ckpt_dir：和 output_dir 作用类似了，eg: logs/0p5h_data/logs_s2_fix_quantizer
++ name：这个是保存在 SoVITS_weights 下的文件名，eg：0p5h_data_fix_quantizer
++ gpu_numbers：
+
+取名规则：
++ SoVITS：0p5h_data_fix_quantizer / 0p5h_data_tune_quantizer
++ GPT：0p5h_data_without_sovits_training / 0p5h_data_with_fix_quantizer_sovits_training / 0p5h_data_with_tune_quantizer_sovits_training
