@@ -248,5 +248,7 @@ SoVITS 每次训练要注意调的参数：
 + gpu_numbers：
 
 取名规则：
-+ SoVITS：0p5h_data_fix_quantizer / 0p5h_data_tune_quantizer
++ SoVITS：0p5h_data_fix_quantizer_ft_from_pretrained / 0p5h_data_tune_quantizer_train_from_scratch / 0p5h_data_tune_quantizer_train_from_pretrained
+
 + GPT：0p5h_data_without_sovits_training / 0p5h_data_with_fix_quantizer_sovits_training / 0p5h_data_with_tune_quantizer_sovits_training
+

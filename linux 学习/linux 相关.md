@@ -82,6 +82,7 @@ https://pypi.tuna.tsinghua.edu.cn/simple
 24. 清理缓存：sync; sudo sh -c "echo 3 > /proc/sys/vm/drop_caches"
 25. 批量查找相关进程并 kill 掉：pgrep -f 'a.py' | xargs kill
 26. 查看端口占用情况：sof -i:端口号
+27. MD5 校验：md5sum 文件名
 
 
 ### bash 中的测试命令
