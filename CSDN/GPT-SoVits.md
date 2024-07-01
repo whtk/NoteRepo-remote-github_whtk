@@ -248,7 +248,50 @@ SoVITS 每次训练要注意调的参数：
 + gpu_numbers：
 
 取名规则：
-+ SoVITS：0p5h_data_fix_quantizer_ft_from_pretrained / 0p5h_data_tune_quantizer_train_from_scratch / 0p5h_data_tune_quantizer_train_from_pretrained
++ SoVITS：
+    + {name}_fix_quantizer_ft_from_pretrained_{version}
+    + {name}_tune_quantizer_train_from_scratch_{version}
+    + {name}_tune_quantizer_ft_from_pretrained_{version}
+    + eg: 0p5h_data_fix_quantizer_ft_from_pretrained_v1
 
-+ GPT：0p5h_data_without_sovits_training / 0p5h_data_with_fix_quantizer_sovits_training / 0p5h_data_with_tune_quantizer_sovits_training
++ GPT：
+    + {name}_train_gpt_from_pretrained_with_sovits==pretrained_s2G488k=={version}
+    + {name}_train_gpt_from_scratch_with_sovits=={sovits_name}=={version}
+    + {name}_train_gpt_ft_from_pretrained_with_sovits=={sovits_name}=={version}
+    + eg: {name}_train_gpt_from_scratch_with_sovits==tune_quantizer_train_from_scratch_v1==v1
 
+
+模型配置：
+
+1. 原始底模
+2. 不训 SoVITS，只增训 GPT
+    1. SoVITS 可以直接用底模
+    2. SoVITS 可以用 3 中训练的 SoVITS
+3. fix quantizer 增训 SoVITS：
+    1. GPT 可以直接用底模
+    2. 也可以用 2 中训练的 GPT（等于2.2）
+4. 从零开始训两个模型
+
+5. 还有一个，tune quantizer 训练 SoVITS，然后基于这个 tune 的 SoVITS 训 GPT
+
+
+需要测试的：
+1. 原始底模（c1）
+2. 不训 SoVITS，只增训 GPT，SoVITS 直接用底模（c2）
+3. fix quantizer 增训 SoVITS，GPT 则用 2 中增训的 GPT（c3）
+4. 从零开始训两个模型（c4）
+
+目前已出的 demo：
+A: 在配置 1 下测试所有的说话人：《御姐》、《李泽言》、《范闲》、《妲己》、《吕布》、《猴哥》、《四郎》
+B: 在配置 2.1 下，用小说文本测试：《御姐》、《猴哥》
+
+今晚准备出的 demo：
+C: 在配置 3.2 下，用小说文本测试：《御姐》、《猴哥》
+
+> 只要 VITS 不训练 或者 训练的时候不改变量化器，得到的 semantic 特征是一样的。
+
+
+yj_300h_ft_gpt_v1: 2.1 的配置进行 fine tune
+yj_300h_ft_scratch_v1: 4 的配置进行 fine tune
+yj_300h_ft_v1: 5 的配置进行 fine tune
+yj_orig_ft_v1: 1 的配置进行 fine tune
