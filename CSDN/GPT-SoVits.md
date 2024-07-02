@@ -204,13 +204,8 @@ report "gradio" "${ENV_IP}" "9874" "gradio_token"
 5. 现在的 lr 是 0.0001，然后微调的时候，文本模块的学习率乘以了一个 0.4 的系数
 6. 训练 VITS 的代码：/group/30106/yinlinguo/GPT-SoVITS/
 
-ls -l | grep "^-" | wc -l
-find ./ -type f | wc -l 这个速度比上面的快得多
-
 10k_data_005_lin 是修复命名 bug 之前，用 500 h 提取的数据，但是
 
-/group/30106/yinlinguo/lzy/raw.list
-lzy_70h_ft_v1
 
 ckpt的两种加载方式，一种是加载 log_s2 里面的模型，然后进行 fine tune；另一种是默认的，当 los_s2 里面没有时，按照 except 的代码加载，此时 加载的文件 要和 默认的底模 或者 fine tune 得到的那一系列的模型（weight 的那种） 是一样的。
 
@@ -247,7 +242,7 @@ SoVITS 每次训练要注意调的参数：
 + name：这个是保存在 SoVITS_weights 下的文件名，eg：0p5h_data_fix_quantizer
 + gpu_numbers：
 
-取名规则：
+增训模型的取名规则：
 + SoVITS：
     + {name}_fix_quantizer_ft_from_pretrained_{version}
     + {name}_tune_quantizer_train_from_scratch_{version}
@@ -260,8 +255,9 @@ SoVITS 每次训练要注意调的参数：
     + {name}_train_gpt_ft_from_pretrained_with_sovits=={sovits_name}=={version}
     + eg: {name}_train_gpt_from_scratch_with_sovits==tune_quantizer_train_from_scratch_v1==v1
 
+> 添加了 new 的是修复了 enc_q 的 bug 之后的模型
 
-模型配置：
+目前增训的模型配置：
 
 1. 原始底模
 2. 不训 SoVITS，只增训 GPT
@@ -283,15 +279,48 @@ SoVITS 每次训练要注意调的参数：
 
 目前已出的 demo：
 A: 在配置 1 下测试所有的说话人：《御姐》、《李泽言》、《范闲》、《妲己》、《吕布》、《猴哥》、《四郎》
-B: 在配置 2.1 下，用小说文本测试：《御姐》、《猴哥》
-
-今晚准备出的 demo：
-C: 在配置 3.2 下，用小说文本测试：《御姐》、《猴哥》
-
-> 只要 VITS 不训练 或者 训练的时候不改变量化器，得到的 semantic 特征是一样的。
+B: 在配置 2 下，用小说文本测试：《御姐》、《猴哥》
+C: 在配置 2 下， 用小说文本测试：《李泽言》、《范闲》、《妲己》、《吕布》、《四郎》
 
 
-yj_300h_ft_gpt_v1: 2.1 的配置进行 fine tune
+> 只要 VITS 不训练 或者 训练的时候不改变量化器，得到的 semantic 特征是一样的（已验证）。
+
+
+yj_300h_ft_gpt_v1: 2 的配置进行 fine tune
 yj_300h_ft_scratch_v1: 4 的配置进行 fine tune
 yj_300h_ft_v1: 5 的配置进行 fine tune
 yj_orig_ft_v1: 1 的配置进行 fine tune
+
+
+测试
+1. 猴哥数据：
+    1. 从底模 fine tune，loss 正常 
+    2. 从 300h 增训模型（fix vits 的 quantizer）训练，loss 不正常
+    3. 从 御姐 tune 好的模型 再进行 fine tune， loss 不正常
+
+2. qqfm 集内数据：
+    1. 从 300h 增训模型（fix vits 的 quantizer）训练，loss 不正常
+
+4. 御姐数据：
+    1. 从底模 fine tune，loss 正常
+    2. 从 300h 增训模型（fix vits 的 quantizer）训练，loss 不正常
+    3. 妲己 tune 好的模型 再进行 fine tune， loss 不正常
+
+> 有没有可能是 text encode 的 lr 的问题？
+
+
+SoVITS_weights/300h_data_balanced_fix_quantizer_ft_from_pretrained_v1_G_e6_s9624.pth
+SoVITS_weights/300h_data_balanced_fix_quantizer_ft_from_pretrained_v1_D_e6_s9624.pth
+GPT_weights/300h_data_balanced_train_gpt_from_pretrained_with_sovits==pretrained_s2G488k==v1-e8.ckpt
+
+300h_data_random_300_line
+
+
+关于增训后 loss 异常的尝试：
+1. quantizer 是否 fine tune：尝试训练 fix 版本的 quantizer，发现不能解决问题
+1. text model 的 lr 的系数的问题：尝试在增训和微调的时候，将两者的 lr 系数调整为一致（都是 1），发现不能解决问题
+2. 增训或者微调的时候，没有保存 enc_q（PosteriorEncoder）的问题，尝试用小数据集训练一个 epoch 的模型，保存下来后进行微调：
+    1. 保持源代码的配置，不保存 enc_q 的参数，loss 依然异常
+    2. 保存 enc_q 的参数，**loss 正常**！
+> 为什么源代码保存模型的时候不存 enc_q ？？？（可能是为了节省保存文件的大小。。。） 导致增训的模型也不会加载 enc_q 这个模块的参数，从而在微调的时候进行随机参数初始化，从而微调的时候不匹配。
+

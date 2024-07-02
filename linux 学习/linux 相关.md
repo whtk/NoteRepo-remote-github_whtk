@@ -18,7 +18,8 @@ https://pypi.tuna.tsinghua.edu.cn/simple
     1.  wc -l — 列出行数
         1.  统计文件夹中**文件**的个数：ls -l | grep "^-" | wc -l
         2.  统计文件夹中**文件夹**的个数：ls -l | grep "^d" | wc -l
-        3. 统计特定后缀的文件个数：find . -type f -name "星.txt" | wc -l
+        3. 统计特定后缀的文件个数：find . -type f -name "星.txt" | wc -l 
+            1. 实际使用发现，对于大量文件的统计（大于 10w 个），这个速度比上面的快得多
     2.  wc -w — 列出英文单词数
     3.  wc -m — 列出字符数
 5.  磁盘相关
