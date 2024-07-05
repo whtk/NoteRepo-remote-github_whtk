@@ -199,8 +199,8 @@ train_s1：
 ## 记录
 
 1. gradio 端口上报：
-. /data/bore_run_script/common/util.sh
-report "gradio" "${ENV_IP}" "9874" "gradio_token"
+    . /data/bore_run_script/common/util.sh
+    report "gradio" "${ENV_IP}" "9874" "gradio_token"
 2. 占卡代码：nohup /group/30106/yinlinguo/envs/GPTSoVits/bin/python -u /group/30106/goodli/keepworking_v4/run.py > /dev/null 2>&1 &
 3. 将公司数据集格式转为 GPT-SoVITS 能够读取的 list 文件的代码：/group/30106/yinlinguo/code/preprocess.py
 4. 特征提起的命令行代码：/group/30106/yinlinguo/GPT-SoVITS/kevinmo/get_audio_feature.py、/group/30106/yinlinguo/GPT-SoVITS/kevinmo/get_text_feature.py
@@ -328,6 +328,9 @@ GPT_weights/300h_data_balanced_train_gpt_from_pretrained_with_sovits==pretrained
 > 为什么源代码保存模型的时候不存 enc_q ？？？（可能是为了节省保存文件的大小。。。） 导致增训的模型也不会加载 enc_q 这个模块的参数，从而在微调的时候进行随机参数初始化，从而微调的时候不匹配。
 
 
+关于引入静音 token 的想法：
+1. 第一种，最简单粗暴：对于文本中的静音 token，直接将其转为 逗号
+2. 第二种，修改 bert 特征，记录文本中的静音 token，在提取 bert 特征后插入一个新的 全零 的向量
 
 
 
