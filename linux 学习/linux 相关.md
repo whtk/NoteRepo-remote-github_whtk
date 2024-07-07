@@ -12,22 +12,22 @@ https://pypi.tuna.tsinghua.edu.cn/simple
     1.  tar -xvf {file} — 解压文件到当前目录
     2.  tar -xvf {file} -C {dir} — 解压文件到{dir}目录
 3. zip 压缩
-	1. zip -r file.zip dir/
+	1. `zip -r file.zip dir/`
 	2. 跳过某个目录 -x '' （引号必须有，引号内部写相对目录位置）
 4.  统计文件数量
     1.  wc -l — 列出行数
-        1.  统计文件夹中**文件**的个数：ls -l | grep "^-" | wc -l
-        2.  统计文件夹中**文件夹**的个数：ls -l | grep "^d" | wc -l
-        3. 统计特定后缀的文件个数：find . -type f -name "星.txt" | wc -l 
-            1. 实际使用发现，对于大量文件的统计（大于 10w 个），这个速度比上面的快得多
+        1.  统计文件夹中**文件**的个数：`ls -l | grep "^-" | wc -l`
+        2.  统计文件夹中**文件夹**的个数：`ls -l | grep "^d" | wc -l`
+        3. 统计特定后缀的文件个数：`find . -type f -name "星.txt" | wc -l ``
+            1. 实际使用发现，对于大量文件的统计（大于 10w 个），`find` 命令的速度比 `ls` 快得多
     2.  wc -w — 列出英文单词数
     3.  wc -m — 列出字符数
 5.  磁盘相关
     1.  查看当前文件夹下的所有文件大小：du -sh *
     2. 查看磁盘占用：df -h
 6.  查看cpu、gpu占用率等情况：
-    1.  nvidia-smi — gpu占用率
-    2.  top — cpu 使用情况
+    1.  nvidia-smi查看 gpu占用率
+    2.  top 查看 cpu 使用情况
         -   %us：表示用户空间程序的cpu使用率（没有通过nice调度）
         -   %sy：表示系统空间的cpu使用率，主要是内核程序。
         -   %ni：表示用户空间且通过nice调度过的程序的cpu使用率。
@@ -52,41 +52,56 @@ https://pypi.tuna.tsinghua.edu.cn/simple
 11. 文件删除：
 	1. rm -i 用于再次确认
 	2. rm -r 用于删除目录，推荐使用 rm -i -r 每次都检查目录文件
-12. 查看文件的前/后 10 行：
-	1. head/tail -n 10 file.txt
+12. 查看文件的前/后 k 行：
+	1. 前：`head -n <k> file.txt`
+    2. 后：`tail -n <k> file.txt`
 13. ps 进程管理
-	1. ps -ef 详细列出所有的进程
+	1. `ps -ef` 详细列出所有的进程
+    2. `ps aux | grep <name>` 查找名字为 `<name>` 的进程
 14. 数据搜索
-	1. 在文件中查找关键词（输出关键词所在的行）：grep key_word file，同时 key_word 可以是正则表达式
-15. 修改 dns：sudo vim /etc/hosts；刷新 sudo /etc/init.d/network-manager restart
-16. 重启网络：service networking restart
+	1. 在文件中查找关键词（输出关键词所在的行）：`grep <key_word> <file>`，同时 `key_word` 可以是正则表达式
+15. 修改 dns：`sudo vim /etc/hosts`；刷新 `sudo /etc/init.d/network-manager restart`
+16. 重启网络：`service networking restart`
 17. 解决 gitee 无法使用 ssh 连接：
-	1. 设置 网卡的 mtu 为 1200（一般默认都是 1500）：sudo ifconfig enp5s0 mtu 1200
-	2. 重启网络：service networking restart
-18. linux 审计系统查看：sudo tail -f /var/log/audit/audit.log
+	1. 设置 网卡的 mtu 为 1200（一般默认都是 1500）：`sudo ifconfig enp5s0 mtu 1200`
+	2. 重启网络：`service networking restart`
+18. linux 审计系统查看：`sudo tail -f /var/log/audit/audit.log`
 	1. 高级审计：ausearch
 19. 挂载和卸载：
-	1. 挂载：mount 分区 路径
-	2. 卸载：unmount 分区/路径
+	1. 挂载：`mount <分区> <路径>`
+	2. 卸载：`unmount <分区或路径>`
 20. nvidia 驱动 runfile 卸载和安装：
-	1. 卸载：cd /usr/local/cuda-xx.x/bin，然后 sudo ./cuda-uninstaller
-	2. 安装：下载对应的 runfile 文件（https://developer.nvidia.com/cuda-12-2-0-download-archive），sudo sh cuda_xxxx_linux.run
+	1. 卸载：`cd /usr/local/cuda-xx.x/bin`，然后 `sudo ./cuda-uninstaller`
+	2. 安装：下载对应的 runfile 文件（https://developer.nvidia.com/cuda-12-2-0-download-archive），`sudo sh cuda_xxxx_linux.run`
 21. vscode 代理下，服务器登录和文件传输（以 4001 为例）：
-	1. ssh 登录：ssh -o "ProxyCommand=nc -X connect -x 127.0.0.1:1081 %h %p" guoyinlin@10.13.71.37 -p 4001
-	2. scp 传输：scp -o "ProxyCommand=nc -X connect -x 127.0.0.1:1081 %h %p" -P 4001 /path/to/local/file guoyinlin@10.13.71.37:/path/to/remote/directory
-22. 深度查看 cpu 占用情况：sudo sysdig -c topprocs_cpu
+	1. ssh 登录：`ssh -o "ProxyCommand=nc -X connect -x 127.0.0.1:1081 %h %p" guoyinlin@10.13.71.37 -p 4001`
+	2. scp 传输：`scp -o "ProxyCommand=nc -X connect -x 127.0.0.1:1081 %h %p" -P 4001 /path/to/local/file guoyinlin@10.13.71.37:/path/to/remote/directory`
+22. 深度查看 cpu 占用情况：`sudo sysdig -c topprocs_cpu`
 23. gpu 驱动、cuda 版本相关问题：
 	1. 关于 gpu driver 和 cuda 版本，可以查看 nvidia 官方手册的表 3：https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html
 	2. 实际上，nvidia-smi 中显示的 12.4 之类的是所谓的 driver API，而我们平时跑代码用的是所谓的 runtime API（也包括 nvcc 这个命令得到的 cuda 驱动版本），且一般来说，只要 runtime API 的版本小于 driver API 就是正常的（因为 driver API 是向下兼容）
 	3. 对于 pytorch，安装 pytorch 某个版本时，python 会自动安装对应的 runtime API 的 cuda 版本，所以即使 nvcc 这个命令显示没有也不影响跑 cuda + pytorch 的代码；但是需要注意的是，pytorch 的版本一定要和 cuda 版本对应，可以在这里查看：https://pytorch.org/get-started/previous-versions/
 	4. 存在一种比较极端的情况，如果 runtime API 的版本太小了（远远小于 driver API，比如一个 10.2 一个 12.4），这时跑 python 代码的时候可能报错，可以通过安装更高版本的 cuda 和对应的 pytorch 来解决（一般一个 pytorch 也会兼容不同的 cuda 版本）
-24. 清理缓存：sync; sudo sh -c "echo 3 > /proc/sys/vm/drop_caches"
-25. 批量查找相关进程并 kill 掉：pgrep -f 'a.py' | xargs kill
-26. 查看端口占用情况：sof -i:端口号
-27. MD5 校验：md5sum 文件名
+24. 清理黄色缓存：`sync; sudo sh -c "echo 3 > /proc/sys/vm/drop_caches"`
+25. 批量查找相关进程并 kill 掉：`pgrep -f 'a.py' | xargs kill`
+26. 查看端口占用情况：`sof -i:<端口号>`
+27. MD5 校验：`md5sum <文件名>`
+28. linux 中的文件下载：
+	1. 使用 wget，一些常用的配置为：
+        1. 重试次数 `-t n`， `n=0` 表示无限次重试
+        2. 指定文件名 `-O name`，`name` 表示文件名
+        3. 断点续传 `-c`
+        4. 多文件下载 `-i file`，`file` 表示包含下载链接的文件
+    2. 使用 curl，一些常用的配置为：
+        1. 指定文件名 `-o name`，`name` 表示文件名
+        2. 断点续传 `-C -`，`-` 表示从上次下载的地方继续下载
+    3. curl 和 wget 的区别：
+        1. wget 是一个独立的下载程序，无需额外的资源库
+        2. curl是一个多功能工具，是libcurl这个库支持的。它可以下载网络内容，但同时它也能做更多别的事情。
 
 
 ### bash 中的测试命令
+
 ```bash
 test condition
 ```
@@ -121,6 +136,7 @@ test 中的
 
 > 在 vscode 中，➕ 号创建的 shell 为交互式非登录 shell，此时只会执行 ~/.bashrc 中的代码。
 
+
 ### 服务器基本信息
 
 | 校区  |       ip       |  端口   |                    显卡                     |
@@ -144,25 +160,25 @@ home2 : /dev/sdc1
 
 ### 其他杂项
 
-服务器中病毒（挖矿）参考解决方案：https://www.cc98.org/topic/5812515
+1. 服务器中病毒（挖矿）参考解决方案：https://www.cc98.org/topic/5812515
 
-关于 linux 源：
-+ 系统的软件源位于 /etc/apt/sources.list 的文件中，所以如果需要新加系统软件源可以直接 vim 编辑这个文件
-+ 其他自己加的软件源位于 /etc/apt/sources.list.d/ 的文件夹下
+2. 关于 linux 源：
+	+ 系统的软件源位于 /etc/apt/sources.list 的文件中，所以如果需要新加系统软件源可以直接 vim 编辑这个文件
+	+ 其他自己加的软件源位于 /etc/apt/sources.list.d/ 的文件夹下
 
-如何在 Linux 终端中使用临时的系统代理：
-- export http_proxy=http://127.0.0.1:20171
-- export https_proxy=http://127.0.0.1:7890
+3. 如何在 Linux 终端中使用临时的系统代理：
+	- export http_proxy=http://127.0.0.1:20171
+	- export https_proxy=http://127.0.0.1:7890
 
-安装 python 包 的几种方法及其区别：
-1. 从 github 安装：
-	1. 先下载源文件，git clone 地址，然后cd进入到目录下：
-		1. python setup.py install 使用 Python 的 `setuptools` 模块来安装包，执行该目录下的 `setup.py` 脚本，根据 `setup.py` 中的配置信息，将包安装到 Python 解释器的默认路径中，使得你可以在任何地方导入该包的模块
-		2. pip install .：安装后的模块freeze在pip/conda依赖下，换句话说，再修改本地的原项目文件，不会导致对应模块发生变化
-		3. pip install -e .：-e 理解为 editable，修改本地文件，调用的模块以最新文件为准
-	2. 不下载源文件，pip install git+地址
-2. 安装 wheel 文件：pip install xxx.whl
-3. 直接 pip install + 包名字：pip install xxx
+4. 安装 python 包 的几种方法及其区别：
+	1. 从 github 安装：
+		1. 先下载源文件，git clone 地址，然后cd进入到目录下：
+			1. python setup.py install 使用 Python 的 `setuptools` 模块来安装包，执行该目录下的 `setup.py` 脚本，根据 `setup.py` 中的配置信息，将包安装到 Python 解释器的默认路径中，使得你可以在任何地方导入该包的模块
+			2. pip install .：安装后的模块freeze在pip/conda依赖下，换句话说，再修改本地的原项目文件，不会导致对应模块发生变化
+			3. pip install -e .：-e 理解为 editable，修改本地文件，调用的模块以最新文件为准
+		2. 不下载源文件，pip install git+地址
+	2. 安装 wheel 文件：pip install xxx.whl
+	3. 直接 pip install + 包名字：pip install xxx
 
 ### 4002 & 4003 服务器配置记录
 
