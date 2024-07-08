@@ -282,8 +282,8 @@ SoVITS 每次训练要注意调的参数：
 
 目前已出的 demo：
 A: 在配置 1 下测试所有的说话人：《御姐》、《范闲》、《妲己》、《吕布》、《猴哥》、《四郎》、《小帅》
-B: 在配置 2 下，用小说文本测试：《御姐》、《猴哥》
-C: 在配置 2 下， 用小说文本测试：《范闲》、《妲己》、《吕布》、《四郎》、《小帅》
+B: 在配置 2 下，用小说文本测试：《御姐》、《猴哥》、《范闲》、《妲己》、《吕布》、《四郎》、《小帅》
+C: 在配置 3 下， 用小说文本测试：《御姐》
 
 
 > 只要 VITS 不训练 或者 训练的时候不改变量化器，得到的 semantic 特征是一样的（已验证）。
@@ -338,7 +338,9 @@ GPT_weights/300h_data_balanced_train_gpt_from_pretrained_with_sovits==pretrained
 
 conda activate /group/30106/yinlinguo/envs/GPTSoVits/
 
-python GPT_SoVITS/inference_from_phonemes_v2.py --ref_wav_path /group/40052/kevinmo/dataset/yujie/all_data/102366.wav --prompt_text "我也相信，谢谢你和我讨论这个话题，让我更加了解了你的想法。" --phoneme_path ../phonemes/xiaoshuo.txt --save_path ../phonemes/yj_300h_gpt_new_sovits/
+python GPT_SoVITS/inference_from_phonemes_v2.py --ref_wav_path /group/40052/kevinmo/dataset/yujie/all_data/102366.wav --prompt_text "我也相信，谢谢你和我讨论这个话题，让我更加了解了你的想法。" --phoneme_path ../phonemes/xiaoshuo.txt --save_path ../phonemes/
+
+python GPT_SoVITS/inference_from_phonemes_v2.py --ref_wav_path /group/30106/yinlinguo/houge/clips/12.wav --prompt_text "我们先去看看机器人展区吧，我听说那里有很多新奇的东西。" --phoneme_path ../phonemes/xiaoshuo.txt --save_path ../phonemes/
 
 python GPT_SoVITS/inference_from_phonemes_v2.py --ref_wav_path /group/30106/yinlinguo/fx/wave_16khz_norm/10030073.wav --prompt_text "柳姨，要不我先过去，咱们都是自家亲戚，以后我常来看您。" --phoneme_path ../phonemes/xiaoshuo.txt --save_path ../phonemes/fx/
 
