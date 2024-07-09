@@ -309,9 +309,6 @@ yj_orig_ft_v1: 1 的配置进行 fine tune
     2. 从 300h 增训模型（fix vits 的 quantizer）训练，loss 不正常
     3. 妲己 tune 好的模型 再进行 fine tune， loss 不正常
 
-> 有没有可能是 text encode 的 lr 的问题？
-
-
 SoVITS_weights/300h_data_balanced_fix_quantizer_ft_from_pretrained_v1_G_e6_s9624.pth
 SoVITS_weights/300h_data_balanced_fix_quantizer_ft_from_pretrained_v1_D_e6_s9624.pth
 GPT_weights/300h_data_balanced_train_gpt_from_pretrained_with_sovits==pretrained_s2G488k==v1-e8.ckpt
@@ -333,7 +330,9 @@ GPT_weights/300h_data_balanced_train_gpt_from_pretrained_with_sovits==pretrained
 2. 第二种，修改 bert 特征，记录文本中的静音 token，在提取 bert 特征后插入一个新的 全零 的向量
 
 
-
+## 从零开始训练
+1. GPT 模块的 DPO 功能？
+2. GPT 中包含一个固定的
 
 
 conda activate /group/30106/yinlinguo/envs/GPTSoVits/
