@@ -60,7 +60,7 @@ $$p(\mathbf{c}_{:,1}|\mathbf{x},\mathbf{\tilde{C}}_{:,1};\theta_{AR})=\prod_{t=0
 
 对于剩下的 7 个，$\mathbf{c}_{:,j\in[2,8]}$，训练一个非自回归的 language model。模型基于 $\mathbf{x},\tilde{\mathbf{C}}$ 和前面位置的 codebook 的 acoustic token $\mathbf{C}_{:,<j}$：
 $$p(\mathbf{C}_{:,2:8}|\mathbf{x},\mathbf{\tilde{C}};\theta_{NAR})=\prod_{j=2}^8p(\mathbf{c}_{:,j}|\mathbf{C}_{:,<j},\mathbf{x},\mathbf{\tilde{C}};\theta_{NAR})$$
-两个模型组合，可以实现合成质量和推理速度直接的 trade off，这里的 AR 模型可以用于预测序列的长度，而 非 AR 减少了复杂度，整个的 tokens 预测可以写为：
+两个模型组合，可以实现合成质量和推理速度之前的 trade off，这里的 AR 模型可以用于预测序列的长度，而 非 AR 减少了复杂度，整个的 tokens 预测可以写为：
 $$p(\mathbf{C}|\mathbf{x},\tilde{\mathbf{C}};\theta)=p(\mathbf{c}_{i,1}|\tilde{\mathbf{C}}_{i,1},\mathbf{X};\theta_{AR})\prod_{j=2}^8p(\mathbf{c}_{i,j}|\mathbf{c}_{i,<j},\mathbf{x},\tilde{\mathbf{C}};\theta_{NAR})$$
 #### 自回归
 

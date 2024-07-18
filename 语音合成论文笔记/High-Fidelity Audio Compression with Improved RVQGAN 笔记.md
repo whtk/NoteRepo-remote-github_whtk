@@ -33,7 +33,7 @@
 
 ## Improved RVQGAN 模型
 
-基于 VQ-GANs 框架，用的是 [SoundStream- An End-to-End Neural Audio Codec 笔记](../语音领域其他论文笔记/SoundStream-%20An%20End-to-End%20Neural%20Audio%20Codec%20笔记.md) 和 EnCodec 的模式，使用了 全卷积的 encoder-decoder 网络，包含时间降采样。使用 RVQ 对编码进行量化，。训练时使用 quantizer dropout，使得单个模型可以在多个目标比特率下运行。训练时使用频域重构损失、对抗损失和感知损失。
+基于 VQ-GANs 框架，用的是 [SoundStream- An End-to-End Neural Audio Codec 笔记](../语音领域其他论文笔记/SoundStream-%20An%20End-to-End%20Neural%20Audio%20Codec%20笔记.md) 和 [EnCodec- High Fidelity Neural Audio Compression 笔记](../语音领域其他论文笔记/EnCodec-%20High%20Fidelity%20Neural%20Audio%20Compression%20笔记.md) 的模式，使用了 全卷积的 encoder-decoder 网络，包含时间降采样。使用 RVQ 对编码进行量化，。训练时使用 quantizer dropout，使得单个模型可以在多个目标比特率下运行。训练时使用频域重构损失、对抗损失和感知损失。
 
 音频信号的采样率为 $f_s$ (Hz)，编码器的 striding factor 为 $M$，RVQ 的层数为 $N_q$，则离散的 code matrix 为 $S \times N_q$，其中 $S$ 是帧率，定义为 $f_s / M$。下表为不同模型对比：
 ![](image/Pasted%20image%2020240716121009.png)

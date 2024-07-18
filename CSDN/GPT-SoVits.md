@@ -329,12 +329,34 @@ GPT_weights/300h_data_balanced_train_gpt_from_pretrained_with_sovits==pretrained
 1. 第一种，最简单粗暴：对于文本中的静音 token，直接将其转为 逗号
 2. 第二种，修改 bert 特征，记录文本中的静音 token，在提取 bert 特征后插入一个新的 全零 的向量
 
+### 静音 token
+目前代码里，有 sp、sp2、sp3 三个静音 token，分别对应于：
++ sp：%（注释了）
++ sp2：￥
++ sp3：^
 
-## 从零开始训练
-1. GPT 模块的 DPO 功能？
-2. GPT 中包含一个固定的
+即，对于输入的文本，检测到上述三个字符，就会将其转为对应的静音 token。
+而为了提取对应的文本特征，会将上述三个字符转为 ',' 即逗号。
+所以实际输入模型的时候，文本是用逗号分隔的，但是 phoneme 不是逗号，而是上述的静音 token。
+如，对于文本：
+> 这几十年皇帝换了好几任。
+
+对应的 phoneme 序列为：
+> ['zh', 'e4', 'j', 'i3', 'sh', 'ir2', 'n', 'ian2', 'h', 'uang2', 'd', 'i4', 'h', 'uan4', 'l', 'e5', 'h', 'ao2', 'j', 'i3', 'r', 'en4', '.']
+
+而如果引入静音 token（以￥为例），对应的输入文本为：
+> 这几十年￥皇帝￥换了￥好几任。
+
+但是实际输入提取 bert 特征是，用的文本是：
+> 这几十年,皇帝,换了,好几任。
+
+而此时对应的 phoneme 序列为：
+> ['zh', 'e4', 'j', 'i3', 'sh', 'ir2', 'n', 'ian2', 'SP3', 'h', 'uang2', 'd', 'i4', 'SP3', 'h', 'uan4', 'l', 'e5', 'SP3', 'h', 'ao2', 'j', 'i3', 'r', 'en4', '.']
 
 
+
+
+## TEMP
 conda activate /group/30106/yinlinguo/envs/GPTSoVits/
 
 python GPT_SoVITS/inference_from_phonemes_v2.py --ref_wav_path /group/40052/kevinmo/dataset/yujie/all_data/102366.wav --prompt_text "我也相信，谢谢你和我讨论这个话题，让我更加了解了你的想法。" --phoneme_path ../phonemes/xiaoshuo.txt --save_path ../phonemes/
