@@ -98,7 +98,9 @@ https://pypi.tuna.tsinghua.edu.cn/simple
     3. curl 和 wget 的区别：
         1. wget 是一个独立的下载程序，无需额外的资源库
         2. curl是一个多功能工具，是libcurl这个库支持的。它可以下载网络内容，但同时它也能做更多别的事情。
-
+29. conda 相关：
+    1. 在指定路径创建虚拟环境：`conda create -p /path/to/env`
+    2. 复制环境：`conda create --name new_env --clone old_env`
 
 ### bash 中的测试命令
 

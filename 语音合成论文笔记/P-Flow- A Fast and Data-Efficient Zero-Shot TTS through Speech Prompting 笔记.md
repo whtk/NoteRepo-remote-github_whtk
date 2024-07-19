@@ -8,15 +8,13 @@
 	1. speech-prompted text encoder 采用 speech prompts 和 text 来生成speaker- conditional 的表征
 	2. flow matching generative decoder 用这些表征来合成语音
 
-> 需要了解 flow matching。
-
 ## Introduction
 
 1. 用 codec 得到的表征，又复杂又耗计算，而且还没有可解释性；本文就采用标准的 mel 谱
-2. 同时为了提高推理速度，用最近的 ODE-based 生成模型，如  Flow Matching，和 diffusion 很相似，但是更简单也更直接
+2. 同时为了提高推理速度，用最近的 ODE-based 生成模型 —— Flow Matching
 3. 本文贡献：
 	1. 提出一种 speech prompt 方法，超过了 speaker  embedding，可以提供 in-context learning 的能力
-	2. 采用 flow matching generative model 提高速度和质量
+	2. 采用 flow matching 模型提高速度和质量
 	3. 可以在更少的训练数据、更少的 encoder 下实现 comparable 的性能
 
 ## 相关工作（略）

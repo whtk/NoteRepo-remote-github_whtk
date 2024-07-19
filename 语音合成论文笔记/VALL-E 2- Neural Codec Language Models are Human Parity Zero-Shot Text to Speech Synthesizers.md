@@ -160,4 +160,4 @@ $$\begin{aligned}\mathbf{C}_{\geq T^{\prime},\geq1}&=\arg\max_{\mathbf{C}_{\geq 
  -->
 VALL-E 2 不仅可以使用 unseen speaker 的 reference utterance 作为 prompt 生成 speech 来 clone 声音，还可以实现 zero-shot speech continuation，其中，使用 utterance 的完整 transcription 作为文本条件，前 3 秒的前缀作为 prompt 用于生成语音。
 
-## 实验
+## 实验（略）
