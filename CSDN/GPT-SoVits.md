@@ -353,7 +353,25 @@ GPT_weights/300h_data_balanced_train_gpt_from_pretrained_with_sovits==pretrained
 而此时对应的 phoneme 序列为：
 > ['zh', 'e4', 'j', 'i3', 'sh', 'ir2', 'n', 'ian2', 'SP3', 'h', 'uang2', 'd', 'i4', 'SP3', 'h', 'uan4', 'l', 'e5', 'SP3', 'h', 'ao2', 'j', 'i3', 'r', 'en4', '.']
 
+### 推理
+1. 原始的推理核心（GPT 部分）：
 
+得到 xy_pos，输入为 transformer decoder 中，得到 xy_dec，通过 ar_predict_layer 得到 logits，对于第一次推理，删除 EOS token 防止一开始就结束。然后进入采样函数，得到采样后的 token，将其拼到 y（y 是 token 序列），同时将当前时刻预测得到的 y_emb 拼接到 xy_pos 中，然后继续下一时刻的预测。直到 EOS token 出现则 break。
+
+采样过程中，首先对输入的 logits 应用某些采样策略，得到 probs 概率，然后采用 gumbel softmax 采样得到 token index。
+
+采样策略：
+1. 对应函数 logits_to_probs，输入为 logits、previouse_token、top_k、top_p、repetition_penalty、temperature
+2. 首先进行重复惩罚，从 logits 中找出 previouse_token 的位置，然后将对应位置的 logits：
+    1. 如果 logits 大于 0，除以 repetition_penalty（惩罚项大于 1）
+    2. 如果 logits 小于 0，乘以 repetition_penalty（惩罚项小于 1）
+3. top_p 采样
+4. 引入 temperature
+5. top_k 采样
+6. softmax 得到概率
+
+
+    
 
 
 ## TEMP

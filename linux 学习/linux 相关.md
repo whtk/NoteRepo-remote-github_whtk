@@ -101,12 +101,19 @@ https://pypi.tuna.tsinghua.edu.cn/simple
 29. conda 相关：
     1. 在指定路径创建虚拟环境：`conda create -p /path/to/env`
     2. 复制环境：`conda create --name new_env --clone old_env`
+30. 大量文件复制的最佳解决方案，采用 rsync：
+    1. 一般就用：`rsync -av --progress /path/to/source /path/to/destination`，其中 `-a` 表示 archive，`-v` 表示 verbose，`--progress` 表示显示进度
+    2. 上面的适用于单个文件比较大的时候，可以看到单个文件的传输进度
+    3. 对于大量、小文件的情况，可以采用：`rsync -av /path/to/source /path/to/destination --info=progress2`，其中 `--info=progress2` 表示显示整体进度（非常有用！！！不用再去写什么脚本了）
+        1. 大量小文件传输加速 [教程](https://www.resilio.com/blog/rsync-large-number-of-files)
+31. 关于软链接 ln -s 的删除问题：
+    1.  在删除软链接时，可以使用软链接的绝对路径来确保确实要删除软链接，而不是原始文件。使用 `ls -l` 命令可以查看软链接的绝对路径。
+    2. 对于文件链接，直接 `rm <软链接名>` 即可删除，不影响原始的文件
+    3. 对于目录软链接，可以不用 `-r` 来删除，建议使用 `-i` 来确保删除的是软链接，删除时，直接使用目录名或者绝对路径（注意最后不能加 / ）
 
-### bash 中的测试命令
+### linux 中的测试命令
 
-```bash
-test condition
-```
+`test condition`
 因为 bash 中的 if 不会判断条件是否成立，而是执行条件对应的命令，如果条件执行成功，则 if 成立。
 
 而 test 命令可以将条件转成真假，此时就和常见的编程语言中的 if 差不多了。
