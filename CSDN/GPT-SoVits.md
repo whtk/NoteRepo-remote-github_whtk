@@ -370,7 +370,9 @@ GPT_weights/300h_data_balanced_train_gpt_from_pretrained_with_sovits==pretrained
 5. top_k 采样
 6. softmax 得到概率
 
-
+### 从零开始训-计划
+1. qqfm-300h 训练 SoVITS，训练了 120 epoch
+2. 基于上面训练的，用 1000h-qqfm 继续训练
     
 
 
