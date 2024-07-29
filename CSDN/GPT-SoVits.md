@@ -373,7 +373,13 @@ GPT_weights/300h_data_balanced_train_gpt_from_pretrained_with_sovits==pretrained
 ### 从零开始训-计划
 1. qqfm-300h 训练 SoVITS，训练了 120 epoch
 2. 基于上面训练的，用 1000h-qqfm 继续训练
-    
+
+### VALL-E 2 
+
+1. 固定住 SoVITS 的底模，从零训练 GPT
+2. 改好代码无bug之后，测试通过
+3. 可以提前测试一下速度（好像不行，因为是自回归，长度随时变）
+4. 还是直接训练吧
 
 
 ## TEMP
