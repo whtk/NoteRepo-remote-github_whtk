@@ -45,7 +45,10 @@ $$\mathcal{L}_{CFM}(\theta)=\mathbb{E}_{t,q(x_1),p_t(x|x_1)}||u_t(x\mid x_1)-v_t
 
 ### 问题定义
 
-给定 文本-语音 数据集 $(x, y)$，其中 $x$ 和 $y$ 分别表示音频样本和其文本，目标是构建一个模型，可以通过 in-context learning 执行多种文本引导的语音生成任务。提出在文本引导的语音填充任务上训练这样的生成模型，给定其周围音频和完整的对应的文本，预测语音段。设 $m$ 为二值时间掩码，与 $x$ 长度相同，$x_{\text{mis}} = m \odot x$ 和 $x_{\text{ctx}} = (1 - m) \odot x$ 为 $x$ 的互补掩码。模型学习 $p(x_{\text{mis}} | y, x_\text{ctx})$。换句话说，$y$ 和 $x_{\text{ctx}}$ 是上下文，$x_{\text{mis}}$ 是缺失数据。
+给定 文本-语音 数据集 $(x, y)$，其中 $x$ 和 $y$ 分别表示音频样本和其文本，目标是构建一个模型，可以通过 in-context learning 执行多种文本引导的语音生成任务。提出在文本引导的语音填充任务上训练这样的生成模型，给定其周围音频和完整的对应的文本，预测语音段。
+> 这个思路和 VALL-E 是一样的，和 GPT-SoVITS 也是一样的。
+
+设 $m$ 为二值时间掩码，与 $x$ 长度相同，$x_{\text{mis}} = m \odot x$ 和 $x_{\text{ctx}} = (1 - m) \odot x$ 为 $x$ 的互补掩码。模型学习 $p(x_{\text{mis}} | y, x_\text{ctx})$。换句话说，$y$ 和 $x_{\text{ctx}}$ 是上下文，$x_{\text{mis}}$ 是缺失数据。
 
 ### 模型和训练
 
@@ -64,7 +67,7 @@ $$\mathcal{L}_{CFM}(\theta)=\mathbb{E}_{t,q(x_1),p_t(x|x_1)}||u_t(x\mid x_1)-v_t
 
 建模的是所有帧 $x$ 的条件分布 $q(x | z, x_{\text{ctx}})$，而非仅掩码帧 $x_{\text{mis}}$。使用神经网络参数化条件向量场 $v_t(x_t, x_{\text{ctx}}, z; \theta)$，输入为 $x_{\text{ctx}}$ 和 $z$。
 
-给定输入 $x_{\text{ctx}} \in \mathbb{R}^{N \times F}$，$x_t \in \mathbb{R}^{N \times F}$，音素序列 $z \in [K]^N$，$K$ 表示音素类别数，时间步 $t \in [0, 1]$，用 Transformer 模型参数化向量场 $v_t$。使用查找表 $L \in \mathbb{R}^{K \times H}$ embed 音素序列 $z$，得到 embedding $z_{\text{emb}} \in \mathbb{R}^{N \times H}$，其中 $z_i = L(z_i)$。然后，三个序列（$x_t$、$x_{\text{ctx}}$ 和 $z_{\text{emb}}$）逐帧连接，并通过矩阵 $W_p \in \mathbb{R}^{(2F+H) \times D}$ 投影，得到序列 $H_c \in \mathbb{R}^{N \times D}$，其中 $D$ 表示 Transformer 模型的嵌入维度。
+给定输入 $x_{\text{ctx}} \in \mathbb{R}^{N \times F}$，$x_t \in \mathbb{R}^{N \times F}$，音素序列 $z \in [K]^N$，$K$ 表示音素类别数，时间步 $t \in [0, 1]$，用 Transformer 模型参数化向量场 $v_t$。使用 look table $L \in \mathbb{R}^{K \times H}$ embed 音素序列 $z$，得到 embedding $z_{\text{emb}} \in \mathbb{R}^{N \times H}$，其中 $z_i = L(z_i)$。然后，三个序列（$x_t$、$x_{\text{ctx}}$ 和 $z_{\text{emb}}$）逐帧连接，并通过矩阵 $W_p \in \mathbb{R}^{(2F+H) \times D}$ 投影，得到序列 $H_c \in \mathbb{R}^{N \times D}$，其中 $D$ 表示 Transformer 模型的嵌入维度。
 
 为了 embed flow step，用正弦位置编码将 $t \in [0, 1]$ 映射到 $h_t \in \mathbb{R}^D$。将 $H_c$ 与向量 $h_t$ 沿时间维度拼接得到输入序列 $\tilde{H}_c \in \mathbb{R}^{(N+1) \times D}$。Transformer 的输出为 $v_t(x_t, x_{\text{mis}}, z; \theta) \in \mathbb{R}^{N \times F}$，计算损失为：
 $$\mathcal{L}_\text{audio-CFM}{ ( \theta ) }=\mathbb{E}_{t,m,q(x,z),p_0(x_0)}||u_t(x_t\mid x)-v_t(x_t,x_{ctx},z;\theta)||^2,$$
