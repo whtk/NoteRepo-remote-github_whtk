@@ -61,9 +61,9 @@ $$\mathcal{L}_{CFM}(\theta)=\mathbb{E}_{t,q(x_1),p_t(x|x_1)}||u_t(x\mid x_1)-v_t
  如图：
  ![](image/Pasted%20image%2020240307103520.png)
 
-给定长度为 $N$ 的上下文 $z$ 和 $x_{\text{ctx}}$，$x_{\text{mis}}$ 的分布是随机的。
+给定上下文 $z$ 和长度为 $N$ 的 $x_{\text{ctx}}$，可以假设 $x_{\text{mis}}$ 的分布是随机的。于是可以采用 CNF 来参数化，采用 flow matching 的目标函数进行训练。
 
-音频 $x$ 表示为 80 维对数 Mel 谱（$x_i \in \mathbb{R}^{80}$），在 100Hz 帧率下提取。当 $m_i = 1$，$x_{\text{ctx}} = 0$，当 $m_i = 0$，$x_{\text{ctx}} = x_i$ 。
+将音频 $x$ 在 100Hz 帧率下提取为 80 维对数 Mel 谱（$x_i \in \mathbb{R}^{80}$）。当 $m_i = 1$，$x_{\text{ctx}} = 0$，当 $m_i = 0$，$x_{\text{ctx}} = x_i$ 。
 
 建模的是所有帧 $x$ 的条件分布 $q(x | z, x_{\text{ctx}})$，而非仅掩码帧 $x_{\text{mis}}$。使用神经网络参数化条件向量场 $v_t(x_t, x_{\text{ctx}}, z; \theta)$，输入为 $x_{\text{ctx}}$ 和 $z$。
 
@@ -112,7 +112,7 @@ $$\tilde{v}_t(w,x_{mis},z;\theta)=(1+\alpha)\cdot v_t(w,x_{ctx},z;\theta)-\alpha
 
 #### Zero-shot TTS & alignment-preserved style transfer
 
-给定目标文本 $\hat{y}$ 和参考音频 $(x, y)$，zero-shot TTS 合成类似参考音频风格的语音。Voicebox 通过将参考音频和目标语音视为一个 utterance，其中目标语音被 mask。设 $l$ 和 $z$ 为 $(x, y)$ 的音素持续时间和帧级因素。目标持续时间 $\hat{l}$ 在给定持续时间上下文 $l$ 和拼接的音素序列 $\text{cat}(y, \hat{y})$ 下进行采样得到。目标语音 $x^{\hat{}}$ 在给定上下文 $x$ 和拼接的帧级音素 $\text{cat}(z, \text{rep}(\hat{y}, \hat{l}))$ 下进行采样得到。
+给定目标文本 $\hat{y}$ 和参考音频 $(x, y)$，zero-shot TTS 合成类似参考音频风格的语音。将参考音频和目标语音视为一个整体的 utterance，但是目标语音被 mask。设 $l$ 和 $z$ 为 $(x, y)$ 的音素持续时间和 frame-level phoneme。目标持续时间 $\hat{l}$ 在给定持续时间上下文 $l$ 和拼接的音素序列 $\text{cat}(y, \hat{y})$ 下进行采样得到。目标语音 ${\hat{x}}$ 在给定上下文 $x$ 和拼接的帧级音素 $\text{cat}(z, \text{rep}(\hat{y}, \hat{l}))$ 下进行采样得到。
 
 #### Transient noise removal & content editing
 
