@@ -1,8 +1,8 @@
-> preprint 2023，CUHK、CMU、MSRA、ZJU
+> ICML 2024，CUHK、CMU、MSRA、ZJU
 <!-- 翻译&理解 -->
 <!-- Large Language models (LLM) have demonstrated the capability to handle a vari- ety of generative tasks. This paper presents the UniAudio system, which, unlike prior task-specific approaches, leverages LLM techniques to generate multiple types of audio (including speech, sounds, music, and singing) with given input conditions. UniAudio 1) first tokenizes all types of target audio along with other condition modalities, 2) concatenates source-target pair as a single sequence, and 3) performs next-token prediction using LLM. Also, a multi-scale Transformer model is proposed to handle the overly long sequences caused by the residual vector quantization-based neural codec in tokenization. Training of UniAudio is scaled up to 165K hours of audio and 1B parameters, based on all generative tasks, aiming to obtain sufficient prior knowledge not only in the intrinsic properties of audio but also the inter-relationship between audio and other modalities. Therefore, the trained UniAudio model has the potential to become a foundation model for universal audio generation: it shows strong capability in all trained tasks and can seamlessly support new audio generation tasks after simple fine-tuning. Experi- ments demonstrate that UniAudio achieves state-of-the-art or at least competitive resultsonmostofthe11audiogenerationtasks.Demoandcodearereleased.1 . -->
-1. 提出 UniAudio，和 task-specific 方法不一样，采用 LLM 来生产多种类型的音频（包括语音、声音、音乐和歌唱）：
+1. 提出 UniAudio，采用 LLM 来生产多种类型的音频（包括语音、声音、音乐和歌唱）：
     1. 首先对所有音频和其他条件模态进行 tokenization
     2. 将源-目标对连接成一个序列
     3. 使用 LLM 预测下一个 token
-2. 提出了一个多尺度 Transformer 模型，用于处理由于基于残差向量量化的神经 codec 在 tokenization 中导致的过长序列
+2. 提出了一个多尺度 Transformer 模型，用于处理由于基于 RVQ 的 codec 在 tokenization 中导致的过长序列

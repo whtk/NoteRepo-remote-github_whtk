@@ -8,9 +8,15 @@ https://pypi.tuna.tsinghua.edu.cn/simple
     2.  cat -n {file} — 输出行号查看全部
     3.  more {file} — 只可向下翻页查看全部，q退出查看后终端还是有文件内容
     4.  less {file} — 可上下翻页查看全部，q退出查看后终端不会显示文件内容
-2.  解压 tar
+2.  tar
     1.  tar -xvf {file} — 解压文件到当前目录
     2.  tar -xvf {file} -C {dir} — 解压文件到{dir}目录
+    3. -z 通过gzip的支持进行压缩/解压缩，此时文件名为.tar.gz
+    4. -j 通过bzip2的支持进行压缩/解压缩，此时文件名为.tar.bz2
+    5. -x 从归档文件中提取文件
+    6. -c 创建归档文件
+    7. -v 显示归档文件的详细信息
+    8. -f 指定归档文件
 3. zip 压缩
 	1. `zip -r file.zip dir/`
 	2. 跳过某个目录 -x '' （引号必须有，引号内部写相对目录位置）
