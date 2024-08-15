@@ -90,7 +90,7 @@ https://pypi.tuna.tsinghua.edu.cn/simple
 	4. 存在一种比较极端的情况，如果 runtime API 的版本太小了（远远小于 driver API，比如一个 10.2 一个 12.4），这时跑 python 代码的时候可能报错，可以通过安装更高版本的 cuda 和对应的 pytorch 来解决（一般一个 pytorch 也会兼容不同的 cuda 版本）
 24. 清理黄色缓存：`sync; sudo sh -c "echo 3 > /proc/sys/vm/drop_caches"`
 25. 批量查找相关进程并 kill 掉：`pgrep -f 'a.py' | xargs kill`
-26. 查看端口占用情况：`sof -i:<端口号>`
+26. 查看端口占用情况：`lsof -i:<端口号>`
 27. MD5 校验：`md5sum <文件名>`
 28. linux 中的文件下载：
 	1. 使用 wget，一些常用的配置为：
@@ -116,6 +116,11 @@ https://pypi.tuna.tsinghua.edu.cn/simple
     1.  在删除软链接时，可以使用软链接的绝对路径来确保确实要删除软链接，而不是原始文件。使用 `ls -l` 命令可以查看软链接的绝对路径。
     2. 对于文件链接，直接 `rm <软链接名>` 即可删除，不影响原始的文件
     3. 对于目录软链接，可以不用 `-r` 来删除，建议使用 `-i` 来确保删除的是软链接，删除时，直接使用目录名或者绝对路径（注意最后不能加 / ）
+32. linux 中的环境变量：
+    1. 查看某个环境变量：`echo $<name>`
+    2. 设置环境变量：`export <name>=<value>`
+    3. 永久设置环境变量：`vim ~/.bashrc`，在文件末尾添加 `export <name>=<value>`，然后 `source ~/.bashrc`
+    4. 删除环境变量：`unset <name>`
 
 ### linux 中的测试命令
 
