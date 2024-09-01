@@ -1,6 +1,6 @@
 > ACM MM 2023，中科院大学
-<!-- 翻译&理解 -->
-<!-- Video outpainting aims to adequately complete missing areas at the edges of video frames. Compared to image outpainting, it presents an additional challenge as the model should maintain the temporal consistency of the filled area. In this paper, we introduce a masked 3D diffusion model for video outpainting. We use the technique of mask modeling to train the 3D diffusion model. This allows us to use multiple guide frames to connect the results of multiple video clip inferences, thus ensuring temporal consistency and reducing jitter between adjacent frames. Meanwhile, we extract the global frames of the video as prompts and guide the model to obtain infor- mation other than the current video clip using cross-attention. We also introduce a hybrid coarse-to-fine inference pipeline to allevi- ate the artifact accumulation problem. The existing coarse-to-fine pipeline only uses the infilling strategy, which brings degradation because the time interval of the sparse frames is too large. Our pipeline benefits from bidirectional learning of the mask modeling and thus can employ a hybrid strategy of infilling and interpolation when generating sparse frames. Experiments show that our method achieves state-of-the-art results in video outpainting tasks. More results are provided at our project page.-->
+
+
 1. video outpainting 目标是充分填补视频帧边缘的缺失区域
 2. 与 image outpainting 相比，模型需要保持填充区域的时间一致性
 3. 本文提出用于 video outpainting 的 Hierarchical Masked 3D Diffusion 模型，使用 mask modeling 技术来训练 3D Diffusion，从而可以使用多个 guide frame 来连接多个 video clip 以确保时间一致性
@@ -9,26 +9,25 @@
 6. 实验表明，方法取得了 SOTA 的 video outpainting 结果
 
 ## Introduction
-<!-- The task of video outpainting is to expand edge areas of videos according to the provided contextual information (the middle part of the videos). In recent years, image outpainting [4, 5, 22, 27, 29, 37, 41] has been heavily researched and has yielded very promising results with the advent of GAN(Generative Adversarial Network) and Diffusion Model. However, video outpainting is currently far from achieving ideal results. Different from image outpainting, which only considers the spatial appearance of a single image, video outpainting requires the modeling of motion information to ensure temporal consistency among video frames. Besides, videos in real scenarios are typically longer than 5 seconds. It poses two extra challenges: 1) a video would be divided into multiple clips due to the long duration and memory constraints of GPUs. It is challenging to ensure the temporal consistency of generated content among different clips of the same video. and 2) long video outpainting suffers from artifact accumulation issues and meanwhile requires a large amount of computation resources.-->
-1. video outpainting 的任务是根据提供的上下文信息（视频的中间部分）扩展视频的边缘区域。与仅考虑单个图像的 image outpainting 不同，video outpainting 需要对运动信息进行建模，以确保视频帧之间的时间一致性（temporal consistency）。且长视频还有两个额外的挑战：1）由于长时间和 GPU 内存限制，视频会被分成多个 clip。确保同一视频的不同 clip 之间生成内容的时间一致性很难。2）长视频 outpainting 存在 artifact 积累问题，同时需要大量的计算资源。
-<!-- A few studies have investigated video outpainting. Dehan [6] formed a background estimation using video object segmentation and video inpainting methods, and temporal consistency is en- sured by introducing optical flow [10, 33]. However, they often produce poor results in scenarios with complex camera motion and when foreground objects leave the frame. MAGVIT [43] pro- posed a generic mask-based video generation model that can also be used for video outpainting tasks. They introduced a 3D-Vector- Quantized (3DVQ) tokenizer to quantize a video and design a trans- former for multi-task conditional masked token modeling. Such a method is able to generate a reasonable short video clip, but the complete result, consisting of multiple clips for a long video, would become poor. The reason is that it lacks the ability to achieve high temporal consistency in the complete video and suffers from artifact accumulation in multiple clip inferences. -->
-2.现有方法：
-+ Dehan 使用 video object segmentation 和 video inpainting 方法形成背景估计，并通过引入 optical flow 来确保时间一致性。但是在相机运动复杂和前景对象离开的情况下结果很差
-+ MAGVIT 提出基于 mask 的 video 生成模型，也可用于 video outpainting。引入 3D-Vector-Quantized（3DVQ）tokenizer 来量化视频，把 transformer 用于 multi-task conditional masked token 建模。这种方法能够生成合理的短视频 clip，但对于长视频的多个 clip 组成完整结果，效果会变差。因为无法实现时间一致性，且在多个 clip 推理存在 artifact 积累问题。
-<!-- In this work, we focus on video outpainting tasks. To address the issues above, we propose a masked 3D diffusion model (M3DDM) and a hybrid coarse-to-fine inference pipeline. Recently, the dif- fusion model [8, 19, 25] has achieved impressive results in image synthesis [14, 27, 29] and video generation [2, 18, 30]. Our video out- painting method is based on the latent diffusion models (LDMs) [28]. There are two benefits to choosing LDMs here: 1) They encode the video frames in the latent space instead of the pixel space, thus re- quiring less memory and achieving better efficiency. 2) Pre-trained LDMs provides good prior about the natural image content and structure that can help our model quickly converges in video out- painting task.-->
-3. 本文提出 masked 3D diffusion model（M3DDM）和 hybrid coarse-to-fine 推理 pipeline。方法基于 latent diffusion models（LDMs）。选择 LDMs 的好处：1）其在 latent space 中编码视频帧而非像素空间，需要内存更少，效率更高。2）预训练的 LDMs 提供了图像的先验，可以帮助模型在 video outpainting 任务中快速收敛
-<!-- To ensure high temporal consistency in a single clip and across different clips of the same video, we employ two techniques: 1) Masked guide frames, which help to generate current clips that are more semantically coherent and have less jitter with neighboring clips. Mask modeling has proven to be effective in image [4] and video generation [4, 15]. During the training phase, we randomly replace the contextual information with raw frames, which has edge areas and act as guide frames. In this way, the model can predict the edge areas not only based on contextual information but also based on adjacent guide frames. The adjacent guide frames can help to generate more coherent and less jittery results. During the inference phase, we iteratively and sparsely outpaint the frames, which allows us to use previously generated frames as guide frames. There are two benefits to using the mask modeling approach. On the one hand, the bidirectional learning mode of mask modeling allows the model to perceive contextual information better, resulting in better single- clip inference. On the other hand, it enables us to use a hybrid coarse- to-fine inference pipeline. The hybrid pipeline not only uses the infilling strategy with the first and last frames as the guide frames but also uses the interpolation strategy with multiple intermediate frames as the guide frames. 2) Global video clips as prompts, which uniformly extracts 𝑔 global frames from the complete video, encodes them into a feature map using a lightweight encoder, and then interacts with the context of the current video clip (the middle part of the video clip) through cross-attention. This technique enables the model to obtain some global video information when generating the current clip. It is worth noting that the global frames of the video we input do not include the edge areas to be filled in order to avoid leakage. Our experiments show that in scenes with complex camera motion and foreground objects moving back and forth, our method can generate a more temporally consistent complete video. Some results generated by our method can be seen in Fig. 1-->
+
+1. video outpainting 根据上下文信息（视频的中间部分）扩展视频的边缘区域。需要对运动信息进行建模，以确保视频帧之间的时间一致性（temporal consistency）。且长视频额外的挑战：
+    + 由于长时间和 GPU 内存限制，视频会被分成多个 clip。确保同一视频的不同 clip 之间生成内容的时间一致性很难
+    + 长视频 outpainting 存在 artifact 积累问题，同时需要大量的计算资源。
+
+2. 现有方法：
+    + Dehan 使用 video object segmentation 和 video inpainting 方法形成背景估计，并通过引入 optical flow 来确保时间一致性。但是在相机运动复杂和前景对象离开的情况下结果很差
+    + MAGVIT 提出基于 mask 的 video 生成模型，也可用于 video outpainting。引入 3D-Vector-Quantized（3DVQ）tokenizer 来量化视频，把 transformer 用于 multi-task conditional masked token 建模。这种方法能够生成合理的短视频 clip，但对于长视频的多个 clip 组成完整结果，效果会变差。因为无法实现时间一致性，且在多个 clip 推理存在 artifact 累积问题。
+
+3. 本文提出 masked 3D diffusion model（M3DDM）和 hybrid coarse-to-fine 推理 pipeline。方法基于 latent diffusion models（LDMs），LDMs 的好处有：
+    + 其在 latent space（而非 pixel space） 中编码视频帧，需要内存更少，效率更高
+    + 预训练的 LDMs 可以提供图像先验，帮助模型在 video outpainting 任务中快速收敛
+
 4. 为了确保单个 clip 和同一视频的不同 clip 之间的高时间一致性，采用两种技术：
-    1. Masked guide frames，可以生成语义一致、与相邻 clip 之间 jitter 更少的 clip。训练时，随机用 raw frames 替换上下文信息，作为 guide frames。模型不仅可以基于上下文信息预测边缘区域，还可以基于相邻 guide frames。推理时，iteratively 和 sparsely 地去 outpaint frames，从而可以使用先前生成的 frames 作为 guide frames。mask modeling 的双向学习模式使模型更好地感知上下文信息，从而更好地推理 single clip。也可以用上 hybrid coarse-to-fine 的推理 pipeline。hybrid pipeline 不仅使用 infilling 策略，还使用 interpolation 策略，多个中间 frames 作为 guide frames。
-    2. Global video clips 作为 prompts，从完整视频中均匀提取 global frames，使用轻量级 encoder 将其编码为 feature map，然后通过 cross-attention 与当前 video clip 的上下文交互。从而模型在生成当前 clip 时可以看到一些全局信息（输入的视频的 global frames 不包括要填充的边缘区域，以避免泄漏）。
+    + Masked guide frames，可以生成语义一致、与相邻 clip 之间 jitter 更少的 clip。训练时，随机用 raw frames 替换上下文信息，作为 guide frames。模型不仅可以基于上下文信息预测边缘区域，还可以基于相邻 guide frames。推理时，iteratively 和 sparsely 地去 outpaint frames，从而可以使用先前生成的 frames 作为 guide frames。mask modeling 的双向学习模式使模型更好地感知上下文信息，从而更好地推理 single clip。也可以用上 hybrid coarse-to-fine 的推理 pipeline。hybrid pipeline 不仅使用 infilling 策略，还使用 interpolation 策略，多个中间 frames 作为 guide frames。
+    + Global video clips 作为 prompts，从完整视频中均匀提取 global frames，使用轻量级 encoder 将其编码为 feature map，然后通过 cross-attention 与当前 video clip 的上下文交互。从而模型在生成当前 clip 时可以看到一些全局信息（输入的视频的 global frames 不包括要填充的边缘区域，以避免泄漏）。
 5. 实验表明，在相机运动复杂和前景对象来回移动的场景中，提出的方法可以生成更具时间一致性的完整视频
-<!-- Our hybrid coarse-to-fine inference pipeline can alleviate the artifact accumulation problem in long video outpainting. Due to the iterative generation using the guide frames at the inference phase, a bad case generated in the previous step would pollute the subsequent generation results (This is shown in Fig. 2. We will detail later). For the task of long video generation, the coarse-to- fine inference pipeline [17, 42] has been proposed recently. In the coarse phase, the pipeline first sparsely generates the keyframes of the video. After that, it generates each frame densely according to the keyframes. Compared to generating the video in a dense manner directly, the coarse stage requires fewer iterations (because of sparse), thereby alleviating the problem of artifact accumulation in long videos. The existing coarse-to-fine inference pipeline [17, 42] used a three-level hierarchical structure. However, it used only the infilling strategy with the first and last frames to guide the video generation from coarse to fine. This strategy results in a large time interval between key frames generated in the coarsest stage (the first level), thus bringing degradation in the generated results (This is shown in Fig. 6a.). We also use the coarse-to-fine inference pipeline for video outpainting. Thanks to the masking strategy during the training phase, we can hybridize the infilling strategy and the interpolation strategy together. That means we can not only use the first and last frames as guides for the three-level coarse-to-fine structure but also use multiple frames interpolation to generate the video. Experiments show that our hybrid coarse-to- fine inference pipeline brings lower artifacts and better results in long video generation -->
+
 6. hybrid coarse-to-fine 推理 pipeline 可以缓解长视频 outpainting 中的 artifact 积累问题。由于推理阶段使用 guide frames 迭代生成，前一步生成的不好的结果会污染后面生成的结果。而在长视频生成任务中的 coarse-to-fine 推理 pipeline 中，coarse 阶段首先稀疏生成视频的关键帧，然后根据关键帧密集生成每一帧。与直接密集生成视频相比，coarse 阶段需要更少的迭代，从而缓解了长视频中 artifact 积累问题。现有的 coarse-to-fine 推理 pipeline 使用了三级层次结构，但只使用 infilling 策略，导致了 coarsest 阶段生成的关键帧之间的时间间隔较大，从而降低了生成结果的质量。本文使用 coarse-to-fine 推理 pipeline 进行 video outpainting，由于训练阶段的 masking 策略，可以将 infilling 策略和 interpolation 策略混合在一起，从而不仅可以使用第一帧和最后一帧作为 three-level 的 coarse-to-fine 的 guide，还可以使用多帧插值生成视频
-<!-- To the best of our knowledge, we are the first to use a masked 3D diffusion model for video outpainting and achieve state- of-the-art results.
-• We propose a bidirectional learning method with mask mod- eling to train our 3D diffusion model. Additionally, we show that using guide frames to connect different clips of the same video can effectively generate video outpainting results with high temporal consistency and low jitter.
-• Weextractglobaltemporalandspatialinformationasprompt from global frames of the video and feed it into the network in the form of cross-attention, which guides the model to generate more reasonable results.
-• We propose a hybrid coarse-to-fine generation pipeline that combines infilling and interpolation when generating sparse frames. Experiments show that our pipeline can reduce arti- fact accumulation in long video outpainting while maintain- ing a good level of temporal consistency.
- -->
 7. 贡献如下：
     1. 首次使用 masked 3D diffusion model 进行 video outpainting，并取得了 SOTA 结果
     2. 提出了双向学习方法，使用 mask modeling 训练 3D diffusion model。同时，使用 guide frames 连接同一视频的不同 clip，可以有效生成具有高时间一致性和低 jitter 的 video outpainting 结果
@@ -36,49 +35,46 @@
     4. 提出了 hybrid coarse-to-fine 生成 pipeline，在生成 sparse frames 时结合 infilling 和 interpolation
 
 ## 相关工作
-<!-- Diffusion Model. The diffusion model [19, 25, 31] has recently become the best technology in image generation [27, 29], espe- cially in video generation [18, 24, 30]. Compared with GAN [12], it can generate samples with richer diversity and higher quality [8]. Considering the significant achievements of the diffusion model in video generation, we adopt it as the main body of our video outpainting method. LDMs [28] are diffusion models in the latent space, which reduce the GPU memory usage, and their open-source parameters are excellent image priors for our video outpainting task. -->
-Diffusion 模型：与 GAN 相比，Diffusion 模型可以生成更丰富多样、质量更高的样本。LDMs 是 latent space 中的 diffusion 模型，减少了 GPU 内存使用，其参数是 video outpainting 任务的先验
-<!-- Mask Modeling. Mask modeling was first proposed in the BERT [7] in the field of NLP for language representation learning. BERT randomly masks tokens in sentences and performs bidirec- tional learning by predicting the masked tokens based on context. MAE [16] has demonstrated that mask modeling can be effectively used in unsupervised image representation learning in the field of computer vision. This is achieved by masking patch tokens in the image and predicting the original patch tokens based on context. Recently, Mask modeling has also been used in the field of video generation [15]. In more recent times, the combination of mask modeling and diffusion model has been applied to image [14, 39] and video generation [36] tasks. In this paper, we do not apply masks on images or entire frames of videos, but rather, in consider- ation of the feature of video outpainting, masks are applied to the surrounding areas of the video that need to be filled with a proba- bility. Our experiments show that for video outpainting tasks, the employment of the diffusion model technique with mask modeling can generate higher-quality results -->
+
+Diffusion 模型：与 GAN 相比，Diffusion 模型可以生成更丰富多样、质量更高的样本。LDMs 是 latent space 中的 diffusion 模型。
+
 Mask modeling：BERT 随机 mask 句子中的 token，并根据上下文预测 mask 的 token。MAE 在 CV 领域证明了 mask modeling 可以有效用于无监督图像表示学习；mask modeling 也被用于 video generation；mask modeling 和 diffusion model 的结合也可用于 image 和 video generation 。本文不在图像或整个视频帧上应用 mask，而是应用于需要填充的视频周围区域
-<!-- Coarse-to-Fine Pipeline. In the generation of long videos, models often suffer from artifact accumulation due to the auto- regressive strategy. For the method of generating videos with guid- ance frames, artifacts from the previous video clips often affect the later iterations. Recent research [2, 17, 42] adopt a coarse-to-fine generation pipeline for video generation. They first generate sparse key frames of the video and alleviate the artifact problem by re- ducing the number of iterations. In our video outpainting task, we adopt the coarse-to-fine inference pipeline and use both infilling strategies with two guidance frames and interpolation strategies with multiple guidance frames to help alleviate the problem of artifact accumulation in long videos. -->
+
 Coarse-to-Fine Pipeline：在生成长视频时，模型往往会因为自回归策略而遭受 artifact 积累问题。最近的研究采用 coarse-to-fine 生成 pipeline，首先生成稀疏的视频 key frame，通过减少迭代次数来缓解 artifact 积累问题。本文采用 coarse-to-fine 推理 pipeline，并使用 infilling 策略和 interpolation 策略来帮助缓解长视频中的 artifact 积累问题
 
 ## 方法
 
 ### 预备知识
-<!-- Diffusion models [8, 19, 25, 31] are probabilistic models that learn the data distribution 𝑝𝑑𝑎𝑡𝑎 by first forward adding noise to the orig- inal distribution, and then gradually denoising the normal distribu- tion variables to recover the original distribution. In the forward noising process, a sample 𝑥0 can corrupted from 𝑡 = 0 to 𝑡 = 𝑇 using the following transition kernel: -->
-diffusion 学习数据分布 $p_{data}$。首先向原始分布添加噪声，然后逐渐去噪以恢复原始分布。在 forward noising 过程中，从 $t=0$ 到 $t=T$ 可以使用以下公式生成样本 $x_0$：
+
+diffusion 学习数据分布 $p_{data}$。首先向原始分布添加噪声，然后逐渐去噪以恢复原始分布。在 forward 过程中，从 $t=0$ 到 $t=T$ 使用以下公式从 $x_0$ 进行加噪：
 $$q_t(x_t|x_{t-1})=\mathcal{N}(x_t;\sqrt{1-\beta_t}x_{t-1},\beta_tI).$$
-<!-- And 𝑥𝑡 can be directly sampled from 𝑥0 using the following accu-mulation kernel: -->
+
 $x_t$ 可以直接从 $x_0$ 中采样：
 $$x_t=\sqrt{\widetilde{\alpha}_t}x_0+\sqrt{1-\widetilde{\alpha}_t}\epsilon,$$
-<!-- where𝛼e = Î𝑡 (1−𝛽),and𝜖 ∼ N(0,1).Intheprocessof
-denoising, a deep model is typically trained to predict the noise in
-a corrupted signal 𝑥𝑡 . The loss function of the model can be simply written as -->
-其中 $\widetilde{\alpha}_t=\prod_{i=1}^t(1-\beta_i)$，$\epsilon\sim\mathcal{N}(0,1)$。在去噪过程中，通常训练一个深度模型来预测受损信号 $x_t$ 中的噪声。模型的损失函数可以简单地写为：
+
+其中 $\widetilde{\alpha}_t=\prod_{i=1}^t(1-\beta_i)$，$\epsilon\sim\mathcal{N}(0,1)$。去噪时，训练模型预测 $x_t$ 中的噪声。损失函数为：
 $$L_{DM}=\mathbb{E}_{x,\epsilon\sim\mathcal{N}(0,1),t}[\|\epsilon-\epsilon_\theta(x_t,c,t)\|_2^2],$$
-<!-- where 𝑐 is the conditional input and 𝑡 is uniformly sample from {1,...,𝑇}. -->
-其中 $c$ 是条件输入，$t$ 从 {1,...,T} 中均匀采样。
-<!-- LDMs [28] additionally trained an encoder 𝐸 to map the original 𝑥0 from the pixel space to the latent space, greatly reducing memory usage and making the model more efficient with an acceptable loss. Then, the decoder D is used to map 𝑧0 back to the pixel space. Considering that video outpainting task requires large memory, we choose the LDMs framework as our pipeline. Additionally, the pre-training parameters of LDMs can serve as a good image prior, which helps our model converge faster. In equation 3, we rewrite 𝑥 as𝑧.-->
-LDMs 训练了一个 encoder $E$，将原始 $x_0$ 从像素空间映射到 latent space，大大减少了内存使用，使模型更高效。然后，decoder $D$ 用于将 $z_0$ 映射回像素空间。考虑到 video outpainting 任务需要大内存，选择 LDMs 框架作为 pipeline。此外，LDMs 的预训练参数可以作为很好的图像先验，有助于模型更快地收敛。在上式中，将 $x$ 重写为 $z$。
-<!-- Masked 3D Diffusion Model-->
+
+其中 $c$ 是条件输入，$t$ 从 $1$ 到 $T$。
+
+LDMs 训练 encoder $E$，将原始 $x_0$ 从像素空间映射到 latent space。然后，decoder $D$ 将 $z_0$ 映射回像素空间。考虑到 video outpainting 任务需要大内存，选择 LDMs 框架作为 pipeline。此外，LDMs 的预训练参数可以作为 image prior，加速收敛。在上式中，将 $x$ 重写为 $z$。
+
 ### Masked 3D Diffusion Model
-<!-- With the help of LDMs, a naive approach is to concatenate the noisy latent of raw video clip with the context of the video clip as a condi- tional input and train a model to predict the added noise. Thus, the model can recover the raw video clip (the original video) from the randomly sampled Gaussian noise distribution.Since videos usually contain hundreds of frames, the model is required to perform infer- ence on different clips of the same video separately, and then the generated clips are stitched together to form the final outpainting result of the complete video. Under this circumstance, the naive approach above cannot guarantee the temporal consistency of the predicted video clips. -->
-使用 LDMs 的一种简单方法是将原始视频 clip 的 noise latent 与视频 clip 的context 进行拼接作为条件输入，并训练模型预测噪声。然后从随机采样的高斯噪声分布中恢复原始视频 clip（原始视频）。
+
+使用 LDMs 的一种简单方法是将原始视频 clip 的 noise latent 与视频 clip 的 context 进行拼接作为条件输入，并训练模型预测噪声。然后从随机采样的高斯噪声分布中恢复原始视频 clip（原始视频）。
 
 但是由于视频通常包含数百帧，模型需要分别对同一视频的不同 clip 进行推理，然后将生成的 clip 拼接在一起形成完整视频的最终 outpainting 结果。在这种情况下，上述简单方法无法保证预测的视频 clip 的时间一致性。
 
-<!-- To address it, we propose the masked 3D diffusion model, whose overview is shown in Fig. 3. Our model can generate F frames at once. We describe our network architecture in Appendix C.1. We sample video frames with different frames per second (fps) and additionally feed the fps into 3D UNet. This allows us to use one unifying model to adapt to videos with different frame rates. Our framework follows LDMs and first maps video frames in the pixel space to the latent space through a pre-trained encoder 𝐸. At the training stage, each context frame is replaced with raw video frames with a probability 𝑝𝑓 𝑟𝑎𝑚𝑒 before they are fed into the encoder 𝐸. Therefore, our model has the ability to use guide frames at the inference stage, and more than two frames can be conditioned to facilitate the generation of other frames. This modification has two benefits. First, it enables our coarse-to-fine inference pipeline, ensuring consistent inference time across multiple passes. Second, compared to solely using the first or the last raw frames as input conditions, bidirectional learning can help the model better perceive contextual information, thereby improving generation quality. We would validate this point in our ablation study. -->
 于是提出了 masked 3D diffusion model，其概述如图：
 ![](image/Pasted%20image%2020240403111813.png)
 
-模型可以一次生成 $F$ 帧。采样不同帧率（fps）的视频帧，并将帧率输入 3D UNet。从而可以用一个统一的模型适应不同帧率的视频。框架和 LDMs 一样，先通过预训练的 encoder $E$ 将视频帧从像素空间映射到 latent space。在训练阶段，每个 context frame 在输入 encoder $E$ 之前以概率 $p_{frame}$ 被 raw video frames 替换。模型在推理阶段可以使使用两个以上的 frames 来生成其他 frames。这种修改有两个好处：
-+ 确保 coarse-to-fine 推理 pipeline 在多次 passes 之间的一致推理时间；
+模型可以一次生成 $F$ 帧。采样不同帧率（fps）的视频帧，并将帧率输入 3D UNet。从而可以用一个统一的模型适应不同帧率的视频。框架和 LDMs 一样，先通过预训练的 encoder $E$ 将视频帧从像素空间映射到 latent space。训练时，每个 context frame 在输入 encoder $E$ 之前以概率 $p_{frame}$ 被 raw video frames 替换。模型在推理阶段可以使用两个以上的 frames 来生成其他 frames。好处：
++ 确保 coarse-to-fine 推理 pipeline 在多次 pass 之间的推理时间一致；
 + 与仅使用第一个或最后一个 raw frames 作为输入条件相比，双向学习可以帮助模型更好地感知上下文信息，从而提高生成质量
 
-<!-- Mask Strategy. In order to construct the training samples for video outpainting, we randomly mask out the edges of each frame. We mask a frame with different direction strategies: four- direction, single-direction, bi-direction (left-right or top-down), random in any of four directions, and mask all. Taking into account the practical application scenarios, we adopt the proportions of these five strategies as 0.2, 0.1, 0.35, 0.1, and 0.25, respectively. The "mask all" strategy enables the model to perform unconditional generation, which allows us to adopt the classifier-free guidance [20] technique during the inference phase. Considering the size of the edge area that needs to be outpainted in practical application scenarios, we randomly sample the mask ratio of a frame from [0.15, 0.75] uniformly. -->
-Mask 策略：为了构建 video outpainting 的训练样本，随机 mask 每个 frame 的边缘。采用不同的方向策略：四个方向、单方向、双方向（左右或上下）、任意四个方向中的随机方向、mask all。考虑到实际应用场景，采用这五种策略的比例分别为 0.2、0.1、0.35、0.1 和 0.25。"mask all" 策略使模型可以进行无条件生成，从而可以在推理时用无分类器的引导技术。且 mask ratio 从 [0.15, 0.75] 中均匀采样。
-<!-- In order to generate masked guide frames, we replace the con- textual frame with the raw frame in three cases: 1) All F frames are given only context information, where each frame is masked with the above masking strategy. 2) The first frame or the first and last frames of F frames are replaced with the unmasked raw frame, and the rest of the frames are given only context information. 3) Any frame is replaced with an unmasked raw frame with probability 𝑝𝑓𝑟𝑎𝑚𝑒 =0.5.Theguideframesallowthemodeltopredicttheedge areas not only based on contextual information but also based on the adjacent guide frames. The adjacent guide frames can help to generate more coherent and less jittery results. We evenly distrib- ute the training proportions of the three cases. The proportions of these three cases are 0.3, 0.35, and 0.35, respectively. We do not only train using case 3 because we considered that the first two cases would be used more frequently during the prediction phase. -->
+
+Mask 策略：为了构建 video outpainting 的训练样本，随机 mask 每个 frame 的边缘。采用不同的方向策略：四个方向、单方向、双方向（左右或上下）、任意四个方向中的随机方向、mask all。考虑到实际应用场景，采用这五种策略的比例分别为 0.2、0.1、0.35、0.1 和 0.25。"mask all" 策略使模型可以进行无条件生成，从而可以在推理时用 classifier-free guidance。且 mask ratio 从 [0.15, 0.75] 中均匀采样。
+
 为了生成 masked guide frames，有三种情况下替换 contextual frame 为 raw frame：
 1. 所有 $F$ frames 只给出上下文信息，每个 frame 都使用上述 masking 策略；
 2. 第一个 frame 或第一个和最后一个 frame 被替换为未 mask 的 raw frame，其余 frame 只给出上下文信息；
@@ -86,20 +82,20 @@ Mask 策略：为了构建 video outpainting 的训练样本，随机 mask 每�
 
 guide frames 可以帮助模型预测边缘区域，不仅基于上下文信息，还基于相邻 guide frames。相邻 guide frames 可以帮助生成更一致、更少 jitter 的结果。三种情况的训练比例均匀分布，分别为 0.3、0.35 和 0.35。
 
-<!-- Global Video Clip as a Prompt. In order to enable the model to perceive global video information beyond the current clip, we uniformly sample 𝑔 frames from the video. These global frames are passed through a learnable lightweight encoder to obtain the feature map, which is then fed into 3D-UNet via cross-attention. We do not feed the global frames in the input layer of 3D-UNet because we suggest that cross-attention can help masked frames interact with global frames more thoroughly. It is worth noting that the global frames passed in here are aligned with the context of the current video clip and are also masked in the same way as other frames to avoid information leakage. -->
-全局视频 clip 作为 prompt：为了使模型感知超出当前 clip 的全局视频信息，从视频中均匀采样 $g$ 帧。这些 global frames 通过可学习的轻量级 encoder 得到 feature map，然后通过 cross-attention 输入 3D-UNet。不在 3D-UNet 的输入层中输入 global frames，因为 cross-attention 可以帮助 masked frames 与 global frames 更彻底地交互。全局 frames 与当前 video clip 的上下文对齐，并与其他 frames 一样被 mask 以避免信息泄漏。
-<!-- Classifier-free Guidance. Classifier-free guidance [20] has been proven to be effective in diffusion models. Classifier-free guid- ance improves the results of conditional generation, where the implicit classifier 𝑝𝜃 (𝑐 |𝑧𝑡 ) assigns high probability to the condition- ing 𝑐 . In our case, we have two conditional inputs. One is the context information of the video 𝑐1,and the other is the global video clip 𝑐2. We jointly train the unconditional and conditional models by randomly setting 𝑐1 and 𝑐2 to a fixed null value ∅ with probabilities 𝑝1 and 𝑝2. At inference time, we follow Brooks’ [3] approach for two conditional inputs and use the following linear combination of the conditional and unconditional score estimates: -->
-无分类器引导：无分类器引导可以改善条件生成，其中隐式分类器 $p_\theta(c|z_t)$ 为条件 $c$ 分配高概率。这里有两个条件输入。一个是视频的 context $c_1$，另一个是 global video clip $c_2$。通过随机设 $c_1$ 和 $c_2$ 为一个固定的空 $\emptyset$ 的概率 $p_1$ 和 $p_2$ 来同时训练无条件和条件模型。推理时，遵循 Brooks 的方法，使用条件和无条件分数估计的线性组合：
+
+全局视频 clip 作为 prompt：为了使模型感知超出当前 clip 的全局视频信息，从视频中均匀采样 $g$ 帧。这些 global frames 通过可学习的轻量级 encoder 得到 feature map，然后通过 cross-attention 输入 3D-UNet。
+> 不在 3D-UNet 的输入层中输入 global frames，因为 cross-attention 可以帮助 masked frames 与 global frames 更好地交互。global frames 与当前 video clip 的上下文对齐，并与其他 frames 一样被 mask 以避免信息泄漏。
+
+Classifier-free Guidance：Classifier-free Guidance 可以改善条件生成，其中隐式分类器 $p_\theta(c|z_t)$ 为条件 $c$ 分配高概率。这里有两个条件输入。一个是视频的 context $c_1$，另一个是 global video clip $c_2$。通过随机设 $c_1$ 和 $c_2$ 为一个固定的空 $\emptyset$ 的概率 $p_1$ 和 $p_2$ 来同时训练无条件和条件模型。推理时，遵循 Brooks 的方法，使用条件和无条件分数估计的线性组合：
 $$\begin{aligned}\hat{\epsilon}(z_t,c_1,c_2)=\epsilon(z_t,\emptyset,\emptyset)+s_1(\epsilon(z_t,c_1,\emptyset)-\epsilon(z_t,\emptyset,\emptyset))\\+s_2(\epsilon(z_t,c_1,c_2)-\epsilon(z_t,c_1,\emptyset)),\end{aligned}$$
-<!-- where 𝑠1 and 𝑠2 are the guidance scales. The guidance scales control whether the generated video relies more on the context of the video or on the global frames of the video. -->
+
 其中 $s_1$ 和 $s_2$ 是 guidance scale，用于控制生成的视频更多地依赖于视频的 context 还是全局 frames。
 
-<!-- Hybrid Coarse-to-Fine Pipeline for Video Outpainting -->
+
 ### Hybrid Coarse-to-Fine Pipeline for Video Outpainting
-<!-- In video generation tasks, the generation of long videos often leads to the accumulation of artifacts, resulting in degraded performance. Recent research [2, 17, 42] used a hierarchical structure first to generate sparse key frames of the video, and then use an infilling strategy to fill in dense video frames. The infilling strategy requires the first and last frames as guide frames to guide the generation of the next level. However, using infilling alone can result in a large time interval between frames in the coarse phase. For example, as shown in Fig. 4, if we only use infilling strategy, our model requires a frame interval of 225 instead of 30 in the coarsest level. Due to the difficulty of the problem and the lack of long video data in the training set, this can lead to poor results. -->
+
 在 video generation 任务中，生成长视频往往会导致 artifact 积累，从而导致性能下降。最近的研究使用 hierarchical 结构首先生成视频的稀疏关键帧，然后使用 infilling 策略填充密集视频帧。infilling 策略需要第一个和最后一个 frame 作为 guide frames 来指导下一级的生成。然而，仅使用 infilling 可能导致 coarse 阶段帧之间的时间间隔较大。例如，如图所示，如果仅使用 infilling 策略，模型在 coarsest level 需要 225 的帧间隔而不是 30。由于问题的难度和训练集中缺乏长视频数据，这可能导致结果很差。
-<!-- Thanks to bidirectional learning, our 3D UNet can perform video outpainting by combining infilling and interpolation. This avoids the problem of large frame intervals in the coarse generation phase.
-Our coarse-to-fine process diagram is shown in Fig. 4. Our coarse- to-fine pipeline is divided into three levels. In the first level (coarse), we unconditionally generate the first video clip and then itera- tively generate all keyframes based on the results of the last frame from the previous iteration. In the second level (coarse), we use the keyframes generated in the first level as conditional inputs to generate more keyframes through interpolation. In the third level (fine), we generate the final video outpainting result with a frame interval of 1, using the first and last frames as guide frames for dense generation. -->
+
 由于双向学习，我们的 3D UNet 可以通过结合 infilling 和 interpolation 来进行 video outpainting。这避免了 coarse 生成阶段帧间隔较大的问题。我们的 coarse-to-fine 过程如下图所示。pipeline 分为三个层次：
 1. 在第一级（coarse）中，无条件生成第一个视频 clip，然后基于上一次迭代的最后一帧结果迭代生成所有关键帧。
 2. 在第二级（coarse）中，使用第一级生成的关键帧作为条件输入，通过插值生成更多关键帧。
