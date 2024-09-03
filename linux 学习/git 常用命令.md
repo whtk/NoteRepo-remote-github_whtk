@@ -87,7 +87,8 @@ git branch
 ```bash
 git checkout <分支名>
 ```
-> git checkout -b <分支名>：创建并切换到新的分支
+> `git checkout -b <新的分支名>`：创建并切换到新的分支
+> `git checkout -b <新的分支名> <commit>`：在指定的提交基础上创建并切换到新的分支。
 
 
 取消文件的追踪：
