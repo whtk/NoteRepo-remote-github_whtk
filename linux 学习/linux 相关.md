@@ -200,6 +200,11 @@ home2 : /dev/sdc1
 	2. 安装 wheel 文件：pip install xxx.whl
 	3. 直接 pip install + 包名字：pip install xxx
 
+
+### 一些小技巧
+1. 如果要 git clone 项目到本地或者服务器，但是由于网络问题无法直接 clone，可以借助于 [码云 gitee](https://gitee.com/)，在 gitee 上新建项时，选取从指定 url 导入，然后再用 gitee clone 到本地或者服务器。
+2. 对于 HuggingFace 中的模型，因为网络问题无法下载时，可以先去国内的 [镜像站点](https://hf-mirror.com/) 下载，然后再上传到服务器上。
+
 ### 4002 & 4003 服务器配置记录
 
 一些常用的命令：
