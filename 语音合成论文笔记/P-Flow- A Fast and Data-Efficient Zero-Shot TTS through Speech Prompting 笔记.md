@@ -33,7 +33,7 @@ P-Flow 的训练目标为：给定 $c$ 和 $x^p$ 的条件下重构 $x$，即学
 
 如上如，模型输入随机段 $x^p$ 和文本 $c$ 作为 speech prompt，然后将两者投影到相同的维度作为 text encoder 的输入。
 
-为了训练 speech-prompted text encoder，采用了一个 encoder loss 来直接最小化 text encoder representation 和 mel 谱之间的距离。这个 loss 用于减少 sampling 步数，使得 encoder 将 speaker 相关的细节引到生成的 text representation 中。
+为了训练 speech-prompted text encoder，采用了一个 encoder loss 来直接最小化 text encoder representation 和 mel 谱之间的距离。这个 loss 用于减少 sampling 步数，使得 encoder 可以将 speaker 信息加到生成的 text representation 中。
 
 由于 $h_c$ 和 $x$ 的长度不同，采用 MAS 来得到对齐 $A=MAS(h_{c},x)$，最小化对齐后的 text encoder 输出和 mel 谱之间的 L2 距离。根据对齐 $A$，确定每个文本 token 的 duration $d$，然后通过复制 encoder representation 来扩展 encoder 输出 $h_c$。这个对齐过程得到的 text encoder 输出 $h$ 和 mel 谱 $x$ 对齐。重构 loss 定义为 $L_{enc}=MSE(h,x)$。
 
@@ -43,7 +43,7 @@ $$L_{enc}^p=MSE(h\cdot m^p,x\cdot m^p)$$
 
 通过最小化这个 loss，encoder 尽可能多地从 speech prompt 中提取 speaker 信息，以生成一个和给定 speech x 相似的输出 $h$，从而增强 speaker 自适应的 in-context 能力。
 
-为了实现 TTS，采用 flow-matching 生成模型作为 decoder 建模概率分布 $p(x|c,x^p)\:=\:p(x|h)$。decoder 模型建模 CNF 的条件向量场 $v_t(\cdot|h)$，此向量代表从标准正太分布转为数据分布的条件映射。decoder 用的是 flow-matching loss $L_{cfm}$（这里也用了 mask $m^p$）。
+为了实现 TTS，采用 flow-matching 生成模型作为 decoder 建模概率分布 $p(x|c,x^p)\:=\:p(x|h)$。decoder 模型建模的是 CNF 的条件向量场 $v_t(\cdot|h)$。loss 用的是 flow-matching loss $L_{cfm}$（这里也用了 mask $m^p$）。
 
 然后用的是类似 Glow-TTS 中的 duration predictor，输入为 text encoder 的输出。这个模块用于估计对数 duration $\log\widehat{d}$，其目标函数为，最小化与 MAS 得到的 $\log d$ 之间的 MSE loss。
 
@@ -72,13 +72,13 @@ $$L_{CFM}(\theta)=\mathbb{E}_{t\thicksim U[0,1],x_1\thicksim q(x_1),x_0\thicksim
 从而最终的 CFM 目标函数为：
 $$L_{CFM}(\theta)=\mathbb{E}_{t,q(x_1),p(x_0)}\|\upsilon_t(\phi_{t,x_1}(x_0);\theta)-(x_1-(1-\sigma_{\min})x_0)\|^2$$
 
-flow matching decoder 建模 $p(x|h)$，因为 $h$ 是 text encoder 的输出，由子段 $x^p\in x$ 提供，所以需要 mask 掉 $x^p$ 部分的 loss。此时 $v_t(x_t;\theta)$ 参数化为 $\hat{v}_{\theta}(x_t,h,t)$，这里 $t$ 用 continuous sinusoidal embedding 表示。得到 mask CFM 目标函数：
+flow matching decoder 建模 $p(x|h)$，因为 $h$ 是 text encoder 的输出，来自 $x^p\in x$，所以需要 mask 掉 $x^p$ 部分的 loss。此时 $v_t(x_t;\theta)$ 参数化为 $\hat{v}_{\theta}(x_t,h,t)$，这里 $t$ 用 continuous sinusoidal embedding 表示。得到 mask CFM 目标函数：
 $$L_{CFM}^p(\theta)=\mathbb{E}_{t,q(x_1),p(x_0)}\|m^p\cdot(\hat{v}_\theta(\phi_{t,x_1}(x_0),h,t)-(x_1-(1-\sigma_{\min})x_0))\|^2$$
 
-conditional flow matching loss 边缘化 conditional vector field 得到 marginal vector field 用于采样。本文作者发现，conditional flow matching 可以得到足够简单的轨迹，因此在推理时用 10 步 Euler 方法求解 ODE。N Euler steps 的采样过程的递推如下：
+CFM loss 边缘化 conditional vector field 得到 marginal vector field 用于采样。本文作者发现，conditional flow matching 可以得到足够简单的轨迹，因此在推理时用 10 步 Euler 方法求解 ODE。N Euler steps 的采样过程的递推如下：
 $$x_0\sim\mathcal{N}(0,I);\quad x_{t+\frac1N}=x_t+\frac1N\hat{v}_\theta(x_t,h,t)$$
 
-采用 classifier-free guidance 来进一步增强 pronunciation clarity。本文采用 GLIDE 中的方法，通过减去空文本序列的轨迹来放大 text-conditional sampling trajectory。我们采用类似的公式，通过计算平均特征向量 $h$ 来指导采样轨迹，记为 $\bar{h}$。$\bar{h}$ 通过沿时间轴对 $h$ 进行平均得到固定大小的向量，然后沿时间维度重复。$\gamma$ 为 guidance scale。此时  guidance-amplified Euler 公式如下：
+采用 classifier-free guidance 来进一步增强 pronunciation clarity。本文采用 GLIDE 中的方法，通过减去空文本序列的轨迹来放大 text-conditional sampling trajectory。这里采用类似的公式，通过计算平均特征向量 $h$ 来指导采样轨迹，记为 $\bar{h}$。$\bar{h}$ 通过沿时间轴对 $h$ 进行平均得到固定大小的向量，然后沿时间维度重复。$\gamma$ 为 guidance scale。此时  guidance-amplified Euler 公式如下：
 $$x_{t+\frac1N}=x_t+\frac1N(\hat{v}_\theta(x_t,h,t)+\gamma(\hat{v}_\theta(x_t,h,t)-\hat{v}_\theta(x_t,\bar{h},t))$$
 ****
 ### 模型细节
@@ -100,5 +100,4 @@ $$x_{t+\frac1N}=x_t+\frac1N(\hat{v}_\theta(x_t,h,t)+\gamma(\hat{v}_\theta(x_t,h,
 
 评估时，和两个 zero-shot speaker-adaptive TTS 模型 YourTTS 和 VALL-E 进行比较。
 
-and generate the synthesized speech xgen for the text ci. -->
 从 LibriSpeech test-clean 数据集中提取 4-10s 的样本，共 2.2 小时。对于每个配对数据 $(x_i,c_i)$，从另一个样本 $x_j$ 中提取 3s 的参考 speech $x_{p_j}$，生成文本 $c_i$ 的合成 speech $x_{gen}$。
