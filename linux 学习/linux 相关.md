@@ -1,5 +1,7 @@
-****
-https://pypi.tuna.tsinghua.edu.cn/simple
+
+pip 镜像 https://pypi.tuna.tsinghua.edu.cn/simple
+
+
 
 ### linux 常用命令
 
@@ -121,6 +123,14 @@ https://pypi.tuna.tsinghua.edu.cn/simple
     2. 设置环境变量：`export <name>=<value>`
     3. 永久设置环境变量：`vim ~/.bashrc`，在文件末尾添加 `export <name>=<value>`，然后 `source ~/.bashrc`
     4. 删除环境变量：`unset <name>`
+33. 关于 torch 指定 版本 和 cuda 的安装：
+	1. 照抄官网，直接替换 torch 镜像 https://mirror.sjtu.edu.cn/pytorch-wheels/torch_stable.html
+		1. 示例：`pip install torch==1.7.0+cu110 torchvision==0.8.0+cu110 torchaudio==0.7.0 -f https://mirror.sjtu.edu.cn/pytorch-wheels/torch_stable.html`
+		2. 解释：因为直接使用清华的源是找不到 `torch==1.7.0+cu110` 的 torch 版本的，所以一般会报错 `ERROR: Could not find a version that satisfies the requirement`；目前只找到上交的这个路径可以直接原封不动地替换
+	2. 手动指定 cuda 路径， https://mirrors.aliyun.com/pytorch-wheels/cu118 （后面的 118 可以替换为任意的版本）
+		1. 示例：`pip install torch==1.7.0 torchvision==0.8.0 -f https://mirrors.aliyun.com/pytorch-wheels/cu110`
+	3. 去路径：
+
 
 ### linux 中的测试命令
 
