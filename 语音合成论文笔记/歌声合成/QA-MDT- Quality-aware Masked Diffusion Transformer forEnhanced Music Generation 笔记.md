@@ -57,7 +57,63 @@ music signals with captions, thereby enhancing text-audio
 correlation in extensive music datasets. Our ablation studies
 on public datasets confirm the effectiveness of our methodology, with the final model surpassing previous works in
 both objective and subjective measures. The main contributions of this study are as follows: -->
-1. 提出 quality-aware masked diffusion transformer (QA-MDT)：
+2. 提出 quality-aware masked diffusion transformer (QA-MDT)：
     1. 在训练时，将 quantified music pseudo-MOS (pMOS) scores 注入到 denoising stage 来提高质量
     2. 使用 masking strategy 增强音乐频谱的空间相关性，加速收敛
     3. 使用 LLMs 和 CLAP model 同步音乐信号和 caption，提高 text-audio 相关性
+
+## 相关工作（略）
+
+## 预备知识
+<!-- Latent diffusion model. Direct application of DMs to
+cope with distributions of raw signals incurs significant
+computational overhead (Ho, Jain, and Abbeel 2020;
+Song, Meng, and Ermon 2020). Conversely, studies (Liu
+et al. 2023c,b) apply them in a latent space with fewer
+dimensions. The latent representation z0 is the ultimate
+prediction target for DMs, which involve two key pro-
+cesses: diffusion and reverse processes. In the diffusion
+process, Gaussian noise is incrementally added to the
+original representation at each time step t, described by √√
+zt+1 = 1−βtzt + βtε, where ε is drawn from a standard normal distribution N (0, I ), and βt is gradu- ally adapted based on a preset schedule to progressively  -->
+DM 计算开销大。将 DMs 用于低维 latent space 得到 LDM。latent representation $z_0$ 是 DMs 的最终预测目标，包括两个关键过程：diffusion 和 reverse processes。在 diffusion 过程中，每个时间步 $t$ 逐渐添加高斯噪声：$z_{t+1} = \sqrt{(1-\beta_t)}z_t + \sqrt{beta_t}\epsilon$，其中 $\epsilon$ 来自 $N(0, I)$。损失函数为：$\arg\min_\theta\mathbb{E}_{(\boldsymbol{z}_0,y),\epsilon}\left[\left\|\epsilon-D_\theta\left(\sqrt{\alpha_t}z_0+\sqrt{1-\alpha_t}\epsilon,t,y\right)\right\|^2\right]$，其中 $D_\theta$ 是估计噪声 $\epsilon$ 的 denoising 模型，$\alpha$ 为递增函数。reverse 过程中，通过 $z_{t-1}=\frac{1}{\sqrt{1-\beta_{t}}}\left(z_{t}-\frac{\beta_{t}}{\sqrt{1-\alpha_{t}}}\epsilon_{\theta}\right)+\sqrt{\frac{1-\alpha_{t-1}}{1-\alpha_{t}}\beta_{t}}\epsilon$，其中 $\epsilon_{\theta}$ 是估计的噪声。
+
+<!-- 
+Classifier-free guidance. Classifier-free guidance (CFG),
+introduced by (Ho, Jain, and Abbeel 2020), increases the
+versatility of DMs by enabling both conditional and unconditional generation. Typically, a diffusion model generates content based on specific control signals y within its
+denoising function Dθ(zt, t, y). CFG enhances this mechanism by incorporating an unconditional mode Dθ(zt, t, ∅),
+where ∅ symbolizes the absence of specific control signals. The CFG-enhanced denoising function is then expressed as DCFG
+θ
+(zt, t, y) = Dθ(zt, t, y) + w(Dθ(zt, t, y) −
+Dθ(zt, t, ∅)), where w ≥ 1 denotes the guidance scale. During training, the model substitutes y with ∅ at a constant
+probability puncond. In inference, ∅ might be replaced by a
+negative prompt like “low quality” to prevent the model
+from producing such attributes (Liu et al. 2023b) -->
+CFG 增加了 DMs 的灵活性，使其能够进行有条件和无条件生成。CFG-enhanced denoising function 为 $DCFG_{\theta}(z_t, t, y) = D_{\theta}(z_t, t, y) + w(D_{\theta}(z_t, t, y) - D_{\theta}(z_t, t, \emptyset))$，其中 $w \geq 1$ 为 guidance scale。在训练时，模型以概率 $p_{\text{uncond}}$ 将 $y$ 替换为 $\emptyset$。在推理时，$\emptyset$ 可能被替换为负面提示，如“low quality”。
+
+## 方法
+<!-- Quality Information Injectio -->
+### 质量信息注入
+<!-- At the heart of our work lies the implementation of a pseudo- MOS scoring model (Ragano, Benetos, and Hines 2023) to meticulously assign music quality to quality prefixes and quality tokens. -->
+使用 pseudo-MOS scoring model 给 quality prefixes 和 quality tokens 分配 music quality。
+<!-- We define our training set as Do = {(Mi,Tio) | i = 1, 2, . . . , ND }, where each Mi represents a music signal and Tio is the corresponding original textual description. To optimize model learning from datasets with diverse au- dio quality and minimize the impact of low-quality audio, we initially assign p-MOS scores to each music track us- ing a model fine-tuned with wav2vec 2.0 (Baevski et al. 2020) on a dataset of vinyl recordings for audio quality as- sessment, and achieve the corresponding p-MOS set S = {s1 , s2 , . . . , sn }. These scores facilitate dual-perspective quality control for enhanced granularity and precision. -->
+训练集 $D_o = \{(M_i, T_{io}) | i = 1, 2, \ldots, N_D\}$，其中 $M_i$ 表示音乐信号，$T_{io}$ 是对应的原始文本描述。对于每个 music track，使用 fine-tuned wav2vec 2.0 模型计算 p-MOS scores，得到 p-MOS set $S = \{s_1, s_2, \ldots, s_n\}$。
+
+<!-- First, We analyze this p-MOS set S to identify a nega- tive skew normal distribution with mean μ and variance σ2. We define text prefixes based on s as follows: prepend “low quality” if s < μ−2σ, “medium quality” if μ−σ ≤ m ≤ μ+σ,and“highquality”ifs > μ+2σ.Thisin- formation is prepended before processing through the text encoder with cross-attention, enabling the initial separation of quality-related information. -->
+首先分析 p-MOS set $S$ 识别 skew normal distribution，其中 mean 为 $\mu$，variance 为 $\sigma^2$。定义 text prefixes：
++ 如果 $s < \mu - 2\sigma$，则在 $s$ 前加上 “low quality”
++ 如果 $\mu - \sigma \leq m \leq \mu + \sigma$，则加上 “medium quality”
++ 如果 $s > \mu + 2\sigma$，则加上 “high quality”
+> 这些信息在通过 text encoder 时与 cross-attention 一起处理，实现质量相关信息的初始分离。
+
+<!-- To achieve a more precise awareness and control of wave- form quality, we synergize the role of text control with qual- ity embedding. We observed that the distribution of p-MOS in the dataset is approximately normal, which can be shown in Figure 1, allowing us to use the Empirical Rule to segment the data accordingly. Specifically, we define the quantiza- tion function Q : [0,5] → {1,2,3,4,5} to map the p-MOS scores to discrete levels based on the distance from the mean μ in terms of standard deviation σ: -->
+为了更精确地控制 waveform quality，将 text control 与 quality embedding 结合。观察到 p-MOS 分布近似正态，可以使用 Empirical Rule 对数据进行分段。定义 quantization function $Q : [0, 5] \to \{1, 2, 3, 4, 5\}$，将 p-MOS scores 映射到离 mean $\mu$ 的标准差 $\sigma$ 的距离上：
+$$Q(s)=\left\lfloor\frac{s-(\mu-2\sigma)}{\sigma}\right\rfloor+r$$
+<!-- where r = 2 for s > μ, otherwise, r = 1. Subsequently, Q(s) is mapped to a d-dimensional quality vector embed- ding using the embedding function E, such that -->
+对于 $s > \mu$，$r = 2$，否则 $r = 1$。然后，$Q(s)$ 通过 embedding function $E$ 映射到 $d$ 维 quality vector embedding：
+$$q_{\mathrm{vq}}(s)=E(Q(s))\in\mathbb{R}^d,$$
+<!-- This process provides finer granularity of control within the following model and facilitates the ability of interpolative quality control during inference, enabling precise adjust- ments in Rd . -->
+从而可以更精细地控制模型。
+<!-- Quality-aware Masked Diffusion Transformer -->
+### Quality-aware Masked Diffusion Transformer
