@@ -117,3 +117,38 @@ $$q_{\mathrm{vq}}(s)=E(Q(s))\in\mathbb{R}^d,$$
 从而可以更精细地控制模型。
 <!-- Quality-aware Masked Diffusion Transformer -->
 ### Quality-aware Masked Diffusion Transformer
+<!-- In a general patchify phrase with patch size pf × pl and overlap size of × ol, patchified token sequence X ={x ,x ,...,x } ⊂ Rpf×pl are obtained through spliting 12P F×L the music latent space Mspec ∈ R , as described in Sec- tion 5. The total number of patches P is given by: -->
+patchify 阶段，patch size 为 $p_f \times p_l$，overlap size 为 $o_f \times o_l$，得到 patchified token sequence $X = \{x_1, x_2, \ldots, x_P\} \subset \mathbb{R}^{p_f \times p_l}$，其中 $P$ 为 patch 总数：
+$$P=\left\lceil\frac{L-p_l}{p_l-o_l}+1\right\rceil\times\left\lceil\frac{F-p_f}{p_f-o_f}+1\right\rceil $$
+<!-- A 2D-Rope position embedding (Su et al. 2024) is added to each patch for better modeling of relative position relationshipwhileabinarymaskm∈{0,1}P isappliedduring the training stage, with a variable mask ratio γ. This results in a subset of ⌊γP⌋ patches being masked that PPN m = i=1 i ⌊γP ⌋, leaving P − ⌊γP ⌋ patches unmasked. The subset of masked tokens is invisible in the encoder stage and replaced with trainable mask tokens in the decoder stage following the same strategy utilized in AudioMAE (Huang et al. 2022) and MDT (Gao et al. 2023). -->
+每个 patch 添加 2D-Rope position embedding 建模相对位置。
+
+训练时，binary mask $m \in \{0, 1\}^P$，mask ratio 为 $\gamma$，其中 $\lfloor\gamma P\rfloor$ 个 patches 被 mask，剩下的 $P - \lfloor\gamma P\rfloor$ 个 patches 不被 mask。被 mask 的 tokens 在 decoder 阶段被可训练的 mask tokens 替换。
+<!-- The transformer we use consists of N encoder blocks,
+M decoder blocks, and an intermediate layer to replace the
+masked part with trainable parameters. We treat the em-
+bedding of the quantized p-MOS score as a prefix token,
+concatenated with each stage’s music tokens. Let Xk =
+[xk1,xk2,...,xkP ] ∈ RP×d represent the output of k-th en-
+coder or decoder block, where the initial input of the encoder
+X0 =z =αz +√1−αε,andthefinaldecoderblock tt0t
+estimate XN+M = z0 = [x1,x2,...,xP ]. For k < N, indicating the encoder blocks, the sequence transformation focuses only on unmasked tokens:
+ -->
+使用 N 个 encoder blocks，M 个 decoder blocks 和一个 intermediate layer（用于替换被 mask 的部分）。将 quantized p-MOS score 的 embedding 视为 prefix token，与每个阶段的 music tokens 拼接。$X^k = [x_{1}^k, x_{2}^k, \ldots, x_{P}^k] \in \mathbb{R}^{P \times d}$ 表示第 $k$ 个 encoder 或 decoder block 的输出，其中 encoder 的初始输入 $X^0 = z_t = \alpha_t z_0 + \sqrt{1-\alpha_t}\epsilon$，decoder 的最终输出 $X^{N+M} = z_0 = [x_1, x_2, \ldots, x_P]$。对于 $k < N$，即 encoder blocks。整个过程仅关注未被 mask 的 tokens：
+$$[q_{\mathrm{vq}}^{k+1};X^{k+1}]=\text{ Encoder}^k\left(\left[q_{\mathrm{vq}};X^k\odot(\mathbf{1-m})\right]\right),$$
+<!-- where m ∈ {0, 1}P is the mask vector, with 1 indicating masked positions and 0 for visible tokens. -->
+其中 $m \in \{0, 1\}^P$ 是 mask vector，1 表示 mask 位置，0 表示可见 tokens。
+<!-- /For N < k < N + M , indicating the decoder blocks, the full sequence including both unmasked tokens and learnable masked tokens is considered: -->
+对于 $N < k < N + M$，即 decoder blocks。考虑包括未被 mask 和可学习 mask tokens 的完整序列：
+$$[q_{\mathrm{vq}}^{k+1};X^{k+1}]=\text{Decoder}^k\left(\left[q_{\mathrm{vq}};X^k\right]\right),$$
+<!-- where the previously masked tokens are now subject to pre- diction and refinement. In the decoding phase, the portions that were masked are gradually predicted, and throughout this entire phase, the quality token qvq(s) is progressively infused and optimized. Subsequently, the split patches are unpatchified while the overlapped area is averaged to recon- struct the output noise and every token contributes to calcu- lating the final loss: -->
+先前被 mask 的 tokens 现在被预测和优化。在解码阶段，被 mask 的部分逐渐被预测，整个过程中，quality token $q_{\mathrm{vq}}(s)$ 逐渐被注入和优化。然后，split patches 被 unpatchified，overlap 区域被平均以重构输出 noise，每个 token 贡献于计算最终损失：
+$$\mathcal{L}(\theta)=\mathbb{E}_{(z_0,q_{\upsilon q},y),\epsilon}\left[\left\|\epsilon-D_\theta\left(\sqrt{\alpha_t}z_0+\sqrt{1-\alpha_t}\epsilon,t,q_{vq},y\right)\right\|^2\right]$$
+<!-- In the inference stage, the model can be guided to generate high-quality music through CFG: -->
+推理阶段，通过 CFG 引导模型生成高质量音乐：
+$$\begin{aligned}D_\theta^{\mathrm{High}}(z_t,t,q_{vq}^{\mathrm{high}},y)&=D_\theta(z_t,t,q_{vq}^{\mathrm{high}},y)+\\&w\left(D_\theta(z_t,t,q_{vq}^{\mathrm{high}},y)-D_\theta(z_t,t,q_{vq}^{\mathrm{low}},\emptyset)\right)\end{aligned}$$
+<!-- indicate quantified p-MOS for guiding the model in a balance between generation quality and di-versity. -->
+其中 $q_{vq}^{\text{high}}$ 和 $q_{vq}^{\text{low}}$ 表示 quantified p-MOS，用于平衡生成质量和多样性。
+
+<!-- Music Caption Refinement -->
+### Music Caption Refinement
