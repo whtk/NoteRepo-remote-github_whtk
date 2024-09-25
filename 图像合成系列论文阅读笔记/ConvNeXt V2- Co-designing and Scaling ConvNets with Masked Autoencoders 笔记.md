@@ -1,0 +1,42 @@
+> CVPR 2023，KAIST、Meta AI、New York University
+<!-- 翻译&理解 -->
+<!-- Driven by improved architectures and better representa- tion learning frameworks, the field of visual recognition has enjoyed rapid modernization and performance boost in the early 2020s. For example, modern ConvNets, represented by ConvNeXt [52], have demonstrated strong performance in various scenarios. While these models were originally designed for supervised learning with ImageNet labels, they can also potentially benefit from self-supervised learn- ing techniques such as masked autoencoders (MAE) [31]. However, we found that simply combining these two ap- proaches leads to subpar performance. In this paper, we propose a fully convolutional masked autoencoder frame- work and a new Global Response Normalization (GRN) layer that can be added to the ConvNeXt architecture to enhance inter-channel feature competition. This co-design of self-supervised learning techniques and architectural im- provement results in a new model family called ConvNeXt V2, which significantly improves the performance of pure ConvNets on various recognition benchmarks, including ImageNet classification, COCO detection, and ADE20K segmentation. We also provide pre-trained ConvNeXt V2 models of various sizes, ranging from an efficient 3.7M- parameter Atto model with 76.7% top-1 accuracy on Im- ageNet, to a 650M Huge model that achieves a state-of-the- art 88.9% accuracy using only public training data. -->
+1. ConvNets 在有监督学习中效果很好，但是结合自监督学习效果不佳
+2. 本文提出一种全卷积的 masked autoencoder 框架和新的 Global Response Normalization (GRN) 层加到 ConvNeXt 架构中，增强 inter-channel feature competition，得到 ConvNeXt V2
+3. ConvNeXt V2 在 ImageNet 分类、COCO 检测和 ADE20K 分割中，提高了纯 ConvNets 的性能    
+
+## Introduction
+<!-- Building on research breakthroughs in earlier decades [34,44,47,60,68], the field of visual recognition has ushered in a new era of large-scale visual representation learning. Pre-trained, large-scale vision models have become essen- tial tools for feature learning and enabling a wide range of vision applications. The performance of a visual represen- tation learning system is largely influenced by three main factors: the neural network architecture chosen, the method used for training the network, and the data used for training. In the field of visual recognition, progress in each of these areas contributes to overall improvements in performance. -->
+1. 视觉表征学习的性能受三个因素影响：神经网络架构、训练方法和训练数据
+<!-- Innovation in neural network architecture design has consistently played a major role in the field of representa- tion learning. Convolutional neural network architectures (ConvNets) [34, 44, 47] have had a significant impact on computer vision research by allowing for the use of generic feature learning methods for a variety of visual recognition tasks [25, 33], rather than relying on manual feature engi- neering. In recent years, the transformer architecture [68], originally developed for natural language processing, has also gained popularity due to its strong scaling behavior with respect to model and dataset size [21]. More re- cently, ConvNeXt [52] architecture has modernized tradi- tional ConvNets and demonstrated that pure convolutional models could also be scalable architectures. However, the most common method for exploring the design space for neural network architectures is still through benchmarking supervised learning performance on ImageNet. -->
+2. ConvNeXt 结构表表明，纯卷积模型也是可以扩展的架构；但是现有网络都是在 ImageNet 上进行有监督学习
+<!-- In a separate line of research, the focus of visual repre- sentation learning has been shifting from supervised learn- ing with labels to self-supervised pre-training with pre- text objectives. Among many different self-supervised al- gorithms, masked autoencoders (MAE) [31] have recently brought success in masked language modeling to the vision domain and quickly become a popular approach for visual representation learning. However, a common practice in self-supervised learning is to use a predetermined architec- ture designed for supervised learning, and assume the de- sign is fixed. For instance, MAE was developed using the vision transformer [21] architecture. -->
+3. 视觉表征重点在于自监督学习：
+    1. masked autoencoders (MAE) 效果很好
+    2. 但是自监督学习的架构通常是固定的
+<!-- It is possible to combine the design elements of archi- tectures and self-supervised learning frameworks, but do- ing so may present challenges when using ConvNeXt with masked autoencoders. One issue is that MAE has a specific encode-decoder design that is optimized for the sequence processing capabilities of transformers, which allows the compute-heavy encoder to focus on visible patches and thus reduce the pre-training cost. This design may not be com- patible with standard ConvNets, which use dense sliding windows. Additionally, if the relationship between the ar- chitecture and the training objective is not taken into con- sideration, it may be unclear whether optimal performance can be achieved. In fact, previous research has shown that training ConvNets with mask-based self-supervised learn- ing can be difficult [43], and empirical evidence suggests that transformers and ConvNets may have different feature learning behaviors that can affect representation quality. -->
+4. ConvNeXt 和 masked autoencoders 结合：
+    1. MAE 有特定的 encode-decoder 设计，优化了 transformer 的序列处理能力
+    2. ConvNets 使用 dense sliding windows，可能不兼容
+    3. transformers 和 ConvNets 的特征学习行为不同，可能影响表征质量
+<!-- To this end, we propose to co-design the network archi- tecture and the masked autoencoder under the same frame- work, with the aim of making mask-based self-supervised learning effective for ConvNeXt models and achieving re- sults similar to those obtained using transformers. -->
+5. 本文结合 ConvNeXt 和 masked autoencoder，将 mask-based 自监督学习应用于 ConvNeXt 模型
+<!-- In designing the masked autoencoder, we treat the masked input as a set of sparse patches and use sparse con- volutions [28] to process only the visible parts. The idea is inspired by the use of sparse convolutions in processing large-scale 3D point clouds [15,76]. In practice, we can im- plement ConvNeXt with sparse convolutions, and at fine- tuning, the weights are converted back to standard, dense layers without requiring special handling. To further im- prove the pre-training efficiency, we replace the transformer decoder with a single ConvNeXt block, making the entire design fully convolutional. We have observed mixed results with these changes: the learned features are useful and im- prove upon the baseline results, but the fine-tuning perfor- mance is still not as good as the transformer-based model. -->
+6. masked autoencoder 设计：
+    1. 将 masked input 视为稀疏 patch 集合，使用 sparse convolutions 处理可见部分
+    2. 用稀疏卷积实现 ConvNeXt，微调时将权重转换为标准 dense layers
+    3. 用单个 ConvNeXt block 替换 transformer decoder，实现全卷积
+<!-- We then conduct a feature space analysis of different training configurations for ConvNeXt. We identify a poten- tial issue of feature collapse at the MLP layer when training ConvNeXt directly on masked input. To address this issue, we propose adding a Global Response Normalization layer to enhance inter-channel feature competition. This change is most effective when the model is pre-trained with masked autoencoders, suggesting that reusing a fixed architecture design from supervised learning may be suboptimal. -->
+7. ConvNeXt 训练配置的特征空间分析：
+    1. 训练 ConvNeXt 直接在 masked input 上可能会导致特征崩溃
+    2. 添加 Global Response Normalization layer 增强 inter-channel feature competition
+    3. 在 masked autoencoders 预训练时，这种改变最有效
+<!-- In summary, we introduce ConvNeXt V2 which demon- strates improved performance when used in conjunction with masked autoencoders. We have found that this model significantly improves the performance of pure ConvNets across various downstream tasks, including ImageNet clas- sification [60], COCO object detection [49] and ADE20K segmentation [81]. The ConvNeXt V2 models can be used in a variety of compute regimes and includes models of varying complexity: from an efficient 3.7M-parameter Atto model that achieves 76.7% top-1 accuracy on ImageNet, to a 650M Huge model that reaches a state-of-the-art 88.9% accuracy when using IN-22K labels. -->
+8. 提出 ConvNeXt V2：
+    1. 在 masked autoencoders 中使用 ConvNeXt V2 显著提高了纯 ConvNets 的性能
+    2. ConvNeXt V2 在 ImageNet 分类、COCO 目标检测和 ADE20K 分割中表现优异
+    3. ConvNeXt V2 包括多种复杂度的模型，从 3.7M-parameter Atto 模型到 650M Huge 模型
+
+## 相关工作（略）
+
+## 全卷积 MAE
