@@ -16,16 +16,16 @@
 1. 提出 NaturalSpeech 2，可以实现 expressive prosody, good robustness，且很强的 zero-shot 合成能力
 ![](image/Pasted%20image%2020231114170432.png)
 
-首现训练 codec encoder 将语音波形转换为 latent vector 序列，然后用 codec decoder 从 latent vector 中重构波形。
+首先训练 codec encoder 将语音波形转换为 latent vector 序列，然后用 codec decoder 从 latent vector 中重构波形。
 
 完成训练后，把从训练集中提取的 latent vectors 作为 latent diffusion 模型的 target。而 diffusion 模型基于 phoneme encoder、duration predictor、pitch predictor。
 
-推理时，先从 text/phoneme 序列中，采用 latent diffusion 模型生成 latent vector，然后采用 decoder 从 vector 中生成语音波形。
+推理时，latent diffusion 模型从 text/phoneme 中生成 latent vector，然后用 decoder 从 vector 中生成语音波形。
 
 本文要点：
 + 使用连续的 vector 而非 离散的 token
 + 使用 diffusion 而非 自回归模型
-+ speech prompt 来实现 in- context learning
++ speech prompt 来实现 in-context learning
 
 模型参数为 400M，44K 小时的数据。
 
@@ -65,7 +65,7 @@ Audio Decoder $:x=f_{\mathrm{dec}}(z)$
 
 采用 diffusion 模型，基于文本序列 $y$ 来预测量化后的 latent vector $z$。
 
-先验模型包含 phoneme encoder、duration predictor 和 pitch predictor，用于为 diffusion 模型提供 condition $c$。
+先验模型包含 phoneme encoder、duration predictor 和 pitch predictor，作为 diffusion 模型的 condition $c$。
 
 以 SDE 的方式来看 diffusion 模型，前向 SDE 将 latent vector $z_0$ （即 codec 的输出）转为高斯噪声：
 $$\mathrm{d}z_t=-\frac12\beta_tz_t\mathrm{~d}t+\sqrt{\beta_t}\mathrm{~d}w_t,\quad t\in[0,1]$$
