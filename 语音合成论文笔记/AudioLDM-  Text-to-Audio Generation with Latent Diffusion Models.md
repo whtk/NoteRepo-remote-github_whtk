@@ -30,4 +30,34 @@
 <!-- We denote audio samples as x and the text description as y. A text encoder ftext(·) and an audio encoder faudio(·) are used to extract a text embedding Ey ∈ RL and an audio embedding Ex ∈ RL respectively, where L is the dimen- sion of CLAP embedding. A recent study (Wu et al., 2022) has explored different architectures for both the text encoder and the audio encoder when training the CLAP model. We follow their result to build an audio encoder based on HT- SAT (Chen et al., 2022a), and built a text encoder based on RoBERTa (Liu et al., 2019). We use a symmetric cross- entropy loss as the training objective (Radford et al., 2021; Wu et al., 2022). For details of the training process and the language-audio datasets see Appendix A. -->
 音频样本为 $x$，文本为 $y$。先用文本编码器 $f_{\text{text}}(\cdot)$ 和音频编码器 $f_{\text{audio}}(\cdot)$ 提取文本嵌入 $E^y \in \mathbb{R}^L$ 和音频嵌入 $E^x \in \mathbb{R}^L$，$L$ 是 CLAP 嵌入的维度。
 <!-- After training the CLAP model, an audio sample x can be transformed into an embedding Ex within an aligned audio and text embedding space. The generalization ability of CLAP model has been demonstrated by various downstream tasks such as the zero-shot audio classification (Wu et al., 2022). Then, for unseen language or audio samples, CLAP embeddings also provide cross-modal information. -->
-训练 CLAP 后，音频样本 $x$ 可以转换为一个嵌入 $E^x$，在一个对齐的音频和文本嵌入空间中。CLAP 模型的泛化能力已经通过各种下游任务展示，比如 zero-shot 音频分类。
+训练 CLAP 后，音频样本 $x$ 可以转换为在对齐的音频和文本 embedding 空间中的embedding $E^x$。
+
+### Conditional Latent Diffusion Models
+<!-- The TTA system can generate an audio sample xˆ given text description y. With probabilistic generative model LDMs, we estimate the true conditional data distribution q(z0|Ey) with a model distribution pθ(z0|Ey), where z0 ∈ RC×Tr ×Fr is the prior of an audio sample x in the space formed from the compressed representation of the mel-spectrogram X ∈ RT ×F , and Ey is the text embed- ding obtained by pretrained text encoder ftext(·) in CLAP. Here, r denotes the compression level, C denotes the chan- nel of the compressed representation, T and F denote the time-frequency dimensions in the mel-spectrogram X . With pretrained CLAP to jointly embed the audio and text infor- mation, the audio embedding Ex and the text embedding Ey share a joint cross-modal space. This allows us to pro- vide Ex for training the LDMs, while providing Ey for TTA generation. -->
+TTA 给定文本描述生产音频 $\hat{x}$。用概率生成模型 LDMs 估计真实条件数据分布 $q(z_0 | E^y)$，模型分布 $p_{\theta}(z_0 | E^y)$，其中 $z_0 \in \mathbb{R}^{C \times \frac{T}{r} \times \frac{F}{r}}$ 是 mel-spectrogram $X \in \mathbb{R}^{T \times F}$ 的压缩表征空间，$E^y$ 是 CLAP 的文本嵌入。$r$ 表示压缩级别，$C$ 表示压缩表示的通道数，$T$ 和 $F$ 表示 mel-spectrogram 的时间-频率维度。从而可以用 $E^x$ 训练 LDMs，将 $E^y$ 用于 TTA 生成。
+<!-- Diffusion models (Ho et al., 2020; Song et al., 2021) consist of two processes: i) a forward process to transform the data distribution into a standard Gaussian distribution with a pre- definednoiseschedule0<β1 <···<βn <...βN <1, and ii) a reverse process to gradually generate data samples from the noise according to an inference noise schedule. -->
+Diffusion 包含两部分：
++ 前向过程将数据分布转换为标准高斯分布，noise schedule $0 < \beta_1 < \cdots < \beta_n < \cdots < \beta_N < 1$
++ 反向过程根据噪声生成样本
+<!-- In the forward process, at each time step n ∈ [1, . . . , N], the transition probability is given by: -->
+前向过程中，每个时间步 $n \in [1, \cdots, N]$，转移概率为：
+$$q(\boldsymbol{z}_n|\boldsymbol{z}_{n-1})=\mathcal{N}(\boldsymbol{z}_n;\sqrt{1-\beta_n}\boldsymbol{z}_{n-1},\beta_n\boldsymbol{I}),\\q(\boldsymbol{z}_n|\boldsymbol{z}_0)=\mathcal{N}(\boldsymbol{z}_n;\sqrt{\bar{\alpha}_n}\boldsymbol{z}_0,(1-\bar{\alpha}_n)\boldsymbol{\epsilon}),$$
+<!-- where ε ∼ N (0, I ) denotes injected noise, αn is a repa- rameterization of 1 − βn and α ̄n := Qns=1 αs represents the noise level at each step. At the final time step N, zN ∼ N(0,I) has a standard isotropic Gaussian distri- bution. For model optimization, we employ the reweighted noise estimation training objective (Ho et al., 2020; Kong et al., 2021b; Rombach et al., 2022): -->
+其中 $\boldsymbol{\epsilon} \sim \mathcal{N}(0, \boldsymbol{I})$ 表示注入的噪声，$\alpha_n$ 是 $1 - \beta_n$ 的重新参数化，$\bar{\alpha}_n := \prod_{s=1}^n \alpha_s$ 表示每个步骤的噪声水平。在最后时间步 $N$，$z_N \sim \mathcal{N}(0, \boldsymbol{I})$ 服从标准高斯分布。采用 reweighted noise estimation 作为目标函数：
+$$L_n(\theta)=\mathbb{E}_{\boldsymbol{z}_0,\boldsymbol{\epsilon},n}\left\|\boldsymbol{\epsilon}-\boldsymbol{\epsilon}_\theta(\boldsymbol{z}_n,n,\boldsymbol{E}^x)\right\|_2^2,$$
+<!-- where Ex is the embedding of the audio waveform x pro- duced by the pretrained audio encoder faudio(·) in CLAP. In the reverse process, starting from Gaussian noise distri- bution p(zN) ∼ N(0,I) and the text embedding Ey, a denoising process conditioned on Ey gradually generates the audio prior z0 by the following process: -->
+其中 $E^x$ 是 CLAP 中预训练音频编码器 $f_{\text{audio}}(\cdot)$ 产生的音频 $x$ 的 embedding。在反向过程中，从高斯噪声分布 $p(z_N) \sim \mathcal{N}(0, \boldsymbol{I})$ 和文本 embedding $E^y$ 开始，条件于 $E^y$ 的去噪过程逐渐生成音频先验 $z_0$：
+$$\begin{gathered}
+p_\theta(\boldsymbol{z}_{0:N}|\boldsymbol{E}^y) =p(\boldsymbol{z}_N)\prod_{t=n}^Np_\theta(\boldsymbol{z}_{n-1}|\boldsymbol{z}_n,\boldsymbol{E}^y) \\
+p_\theta(\boldsymbol{z}_{n-1}|\boldsymbol{z}_n,\boldsymbol{E}^y) =\mathcal{N}(\boldsymbol{z}_{n-1};\boldsymbol{\mu}_\theta(\boldsymbol{z}_n,n,\boldsymbol{E}^y),\boldsymbol{\sigma}_n^2\boldsymbol{I}). 
+\end{gathered}$$
+<!-- The mean and variance are parameterized as (Ho et al., 2020): -->
+均值和方差为：
+$$\begin{aligned}
+\boldsymbol{\mu}_\theta(\boldsymbol{z}_n,n,\boldsymbol{E}^y)& =\frac1{\sqrt{\alpha_n}}(\boldsymbol{z}_n-\frac{\beta_n}{\sqrt{1-\bar{\alpha}_n}}\boldsymbol{\epsilon}_\theta(\boldsymbol{z}_n,n,\boldsymbol{E}^y))  \\
+&&& \\
+\boldsymbol{\sigma}_n^2& =\frac{1-\bar{\alpha}_{n-1}}{1-\bar{\alpha}_n}\beta_n && 
+\end{aligned}$$
+<!-- where εθ(zn, n, Ey) is the predicted generation noise, and σ21 = β1. In the training stage, we learn the generation of an audio prior z0 given the cross-modal representation Ex of an audio sample x. Then, in TTA generation, we provide the text embeddings Ey to predict the noise εθ(zn, n, Ey). Built on the CLAP embeddings, our LDM realizes TTA generation without text supervision in the training stage. We provide the details of network architecture in Appendix B. -->
+其中 $\boldsymbol{\epsilon}_\theta(\boldsymbol{z}_n,n,\boldsymbol{E}^y)$ 是预测的生成噪声，$\sigma_1^2 = \beta_1$。在训练阶段，学习给定 $E^x$ 生成音频先验 $z_0$。在 TTA 生成中，输入文本embedding $E^y$ 预测噪声 $\boldsymbol{\epsilon}_\theta(\boldsymbol{z}_n,n,\boldsymbol{E}^y)$。
+> 从而基于 CLAP 的 LDM 实现了 TTA，且训练阶段无需文本。
