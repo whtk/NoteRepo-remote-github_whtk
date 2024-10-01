@@ -25,3 +25,126 @@
 $$\nabla_\theta D_{\mathrm{KL}}\left(q_\theta(x)\|p(x)\right)=E\left[\left(s_q(\widehat{X})-s_p(\widehat{X})\right)\frac{\partial g_\theta(Z)}{\partial\theta}\right].$$
 <!-- However, obtaining sp(x) and sq(x) directly is challenging. Instead, we can train diffusion models to estimate the score functions sp (xt , t) and sq(xt,t) of the perturbed distributions pt(xt) and qθ,t(xt) := R qθ (x)qt (xt |x)dx. Consider the following weighted average of KL divergence at all noise scales [25], [27]: -->
 但是直接得到 $s_p(x)$ 和 $s_q(x)$ 很困难。可以训练 diffusion 模型估计 perturbed distributions $p_t(x_t)$ 和 $q_{\theta, t}(x_t) := R q_{\theta}(x)q_t(x_t|x)dx$ 的 score functions $s_p(x_t, t)$ 和 $s_{q, t}(x_t, t)$。考虑所有 noise scales 的 KL 散度的加权平均：
+$$D_\theta:=E_{t\thicksim p(t)}\left[w_tD_{\mathrm{KL}}\left(q_{\theta,t}(x_t)\|p_t(x_t)\right)\right],$$
+<!-- where wt ≥0 is a time-dependent weighting factor, and p(t) is the
+distribution of time. Let W ∼N(0,Id) be an independent Gaussian
+noise, and define Xt := αtX + σtW. Then, the gradient of the
+weighted KL divergence can be computed as: -->
+其中 $w_t \geq 0$ 是时间相关的权重因子，$p(t)$ 是时间分布。$W \sim \mathcal{N}(0, I_d)$ 是独立的高斯噪声，定义 $\widehat{X}_t\::=\:\alpha_t\widehat{X}\:+\:\sigma_tW$。加权 KL 散度的梯度可以计算为：
+$$\nabla_\theta D_\theta=E_{t\thicksim p(t)}\left[w_t\alpha_t\left(s_q(\widehat{X}_t,t)-s_p(\widehat{X}_t,t)\right)\frac{\partial g_\theta(Z)}{\partial\theta}\right].$$
+<!-- Given a pretrained score estimator sϕ(xt,t) ≈ sp(xt,t), the
+procedure to distill it into a single-step generator gθ is described
+in Algorithm 1. -->
+给定预训练的 score estimator $s_{\phi}(x_t, t) \approx s_p(x_t, t)$，将其 distill 成 one-step generator $g_{\theta}$ 的过程如下：
+![](image/Pasted%20image%2020241001114131.png)
+
+<!-- Although the generator gθ can be randomly initialized in the-
+ory, initializing gθ with sϕ leads to faster convergence and better
+performance [25]. Several studies [28], [29] have discovered that
+pretrained diffusion models already possess latent one-step generation
+capabilities. Moreover, it is possible to convert them into one-step
+generators by tuning only a fraction of the parameters [28], [29],
+such as the normalization layers. -->
+虽然 generator $g_{\theta}$ 理论上可以随机初始化，但是用 $s_{\phi}$ 初始化会更快收敛，性能更好。已有研究发现，预训练的 diffusion 模型已经具有 latent one-step generation 能力，可以通过调整部分参数（如 normalization layers）将其转换为 one-step generator。
+<!-- While distribution matching distillation resembles generative ad-
+versarial networks (GANs) [30] in its requirement for alternating
+optimization, it has been empirically observed [26] to be significantly
+more stable, requiring minimal tuning and avoiding the mode collapse
+issue that often hinders GAN training. -->
+distribution matching distillation 与 GAN 相似，需要交替优化，但是实验证明更稳定，避免了 GAN 训练中常见的 mode collapse 问题。
+
+<!-- Rectified Flow -->
+### Rectified Flow
+<!-- Rectified Flow [24] is capable of constructing a neural ordinary
+differential equation (ODE): -->
+Rectified Flow 构建 ODE：
+$$\mathrm{d}Y_t=v(Y_t,t)\mathrm{d}t,\quad t\in[0,1],$$
+<!-- that maps between two random distributions X0 ∼π0 and X1 ∼π1,
+by solving the following optimization problem: -->
+实现两个随机分布 $X_0 \sim \pi_0$ 和 $X_1 \sim \pi_1$ 的映射，通过优化：
+$$v(x_t,t):=\underset{v}{\operatorname*{\arg\min}}E\|v\left(\alpha_tX_1+\sigma_tX_0,t\right)-(X_0-X_1)\|_2^2,$$
+<!-- where αt = t and σt = (1−t). In the special case where X0 ∼
+N(0,Id) and X0 ⊥X1, the drift v(xt,t) is a linear combination of the score function s(xt,t) = ∇xt log pt(xt) and xt, where Xt :=
+αtX1 + σtX0: -->
+其中 $\alpha_t = t$，$\sigma_t = (1-t)$。特殊情况下，$X_0 \sim \mathcal{N}(0, I_d)$ 且 $X_0 \perp X_1$，drift $v(x_t, t)$ 是 score function $s(x_t, t) = \nabla_{x_t} \log p_t(x_t)$ 和 $x_t$ 的线性组合，其中 $X_t := \alpha_tX_1 + \sigma_tX_0$：
+$$s(x_t,t)=-\frac{1-t}{t}v(x_t,t)-\frac{1}{t}x_t.$$
+<!-- In the experiments, we trained all our diffusion models with the
+Rectified Flow loss in Equation 5. Equation 6 allows us to apply
+DMD to Rectified Flow models. -->
+实验中，所有的 diffusion 模型使用 Rectified Flow loss。
+
+## E1 TTS
+<!-- E1 TTS is a cascaded conditional generative model, taking the
+full text and partially masked speech as input, and outputs com-
+pleted speech. The overall architecture is illustrated in Figure 2. E1
+TTS is similar to the acoustic model introduced in [31] with the
+modification that all speech tokens are generated simultaneously in
+the first stage. Further more, we applied DMD to convert the two
+diffusion transformers (DiTs) [32] to one-step generators, removing
+all iterative sampling from the inference pipeline. We will describe
+the components in the system in the following sections. -->
+E1 TTS 是一个级联条件生成模型，输入完整文本和部分 mask 的语音，输出完整语音。整体架构如下图：
+![](image/Pasted%20image%2020241001115221.png)
+
+模型类似于[Autoregressive Diffusion Transformer forText-to-Speech Synthesis 笔记](Autoregressive%20Diffusion%20Transformer%20forText-to-Speech%20Synthesis%20笔记.md)，
+但是所有 speech tokens 在第一阶段同时生成。采用 DMD 将两个 DiTs 转换为 one-step generators。
+
+### mel 谱 Autoencoder
+<!-- Directly training generative models on low-level speech represen-
+tations such as Mel spectrograms [11] and raw waveforms [8] is
+resource-consuming due to the long sequence lengths. We build a Mel
+spectrogram autoencoder with a Transformer encoder and a Diffusion
+Transformer decoder. The encoder takes log Mel spectrograms and
+outputs continuous tokens in R32 at a rate of approximately 24Hz.
+The decoder is a Rectified Flow model that takes speech tokens as
+input and outputs Mel spectrograms. The encoder and decoder are
+jointly trained with a diffusion loss and a KL loss to balance rate
+and distortion. The Mel spectrogram autoencoder is fine-tuned for
+the case where part of the spectrogram is known during synthesis to
+enhance its performance in speech inpainting. For the decoder, we
+appended layers of 2D convolutions after the transformer blocks to
+improve its performance on spectrograms. Please refer to [31] for
+further details regarding the training process and model architecture. -->
+构建 mel 谱 autoencoder，包含 Transformer encoder 和 Diffusion Transformer decoder。Encoder 输入 log Mel spectrograms，输出 $\mathbb{R}^{32}$ 的 continuous tokens，大约 24Hz。Decoder 是 Rectified Flow 模型，输入 speech tokens，输出 Mel spectrograms。Encoder 和 decoder 一起训练，使用 diffusion loss 和 KL loss 平衡 rate 和 distortion。Mel spectrogram autoencoder 在合成时当部分 spectrogram 已知的情况下进行 fine-tuning，以增强 speech inpainting 性能。Decoder 在 transformer blocks 后添加 2D convolutions 层，提高在 spectrograms 上的性能。
+
+<!-- Text-to-Token Diffusion Transformer -->
+### Text-to-Token Diffusion Transformer
+<!-- The Text-to-Token DiT is trained to estimate the masked part of
+input speech tokens given the full text. During training, the sequence
+of speech tokens is randomly split into three parts: the prefix part, the
+masked middle part, and the suffix part. We first sample the length of
+the middle part uniformly, and then we sample the beginning position
+of the middle part uniformly. With 10% probability we mask the
+entire speech token sequence -->
+Text-to-Token DiT 给定完整文本，估计 mask 部分的 speech tokens。训练时，speech tokens 随机分为三部分：prefix、masked middle 和 suffix。首先均匀采样 middle 部分的长度，然后均匀采样 middle 部分的开始位置。10% 的概率 mask 整个 speech token 序列。
+<!-- We adopted rotary positional embedding (RoPE) [33] in all Trans-
+former blocks in E1 TTS. For the Text-to-Token model, we designed the positional embedding to promote diagonal alignment between text
+and speech tokens, as illustrated in Figure 4. With RoPE, each token
+is associated with a position index, and the embeddings corresponding
+to the tokens are rotated by an angle proportional to their position
+index. For text tokens, we assign them increasing integer position
+indices. For speech tokens, we assign them fractional position indices,
+with an increment of ntext/nspeech. This design results in an initial
+attention pattern in the form of a diagonal line between text and
+speech. Similar designs have proven effective in other ID-NAR TTS
+models [5], [34]. -->
+在所有 Transformer blocks 中采用 RoPE。对于文本 token，为递增的整数位置索引。对于 speech token，为分数位置索引，增量为 $\frac{n_{\text{text}}}{n_{\text{speech}}}$。
+> 这种设计类似于 attention，在其他 ID-NAR TTS 模型中也被证明有效。
+
+<!-- Duration Modeling -->
+### Duration 建模
+<!-- Similar to most ID-NAR TTS models, E1 TTS requires the total
+duration of the speech to be provided during inference. We trained
+a duration predictor similar to the one in [35]. The rough alignment
+between text and speech tokens is first obtained by training an aligner
+based on RAD-TTS [36]. Then a regression-based duration model is
+trained to estimate partially masked durations. The duration model
+takes the full text (phoneme sequence in our case) and partially
+observed durations as input, then predicts unknown durations based
+on the context. We observed that minimizing the L1 difference in total
+duration [5], [6] works better than directly minimizing phoneme-level
+durations, resulting in a lower total duration error. -->
+训练类似于 [Voicebox- Text-Guided Multilingual Universal Speech Generation at Scale 笔记](Voicebox-%20Text-Guided%20Multilingual%20Universal%20Speech%20Generation%20at%20Scale%20笔记.md) 的 duration predictor。首先通过基于 RAD-TTS 的 aligner 获得 text 和 speech token 的粗略对齐，然后训练 duration model 估计部分 mask 的 durations。duration model 输入完整文本（phoneme sequence），部分 mask 的 durations，预测未知 durations。
+> 最小化总 duration 的 L1 loss 比直接最小化 phoneme-level durations 效果更好。
+
+### 推理
