@@ -152,3 +152,72 @@ our exploration based on our preliminary experiment. -->
 
 <!-- Data filtering in pre-training -->
 ### 预训练下的数据过滤
+<!-- We want to utilize a large amount of unlabeled data for pre-
+training to further improve the performance of the audio mod-
+els. However, real-world data is often low-quality and noisy,
+and using such data without proper filtering can negatively im-
+pact the model performance. Therefore, to ensure the quality
+of our models, we explore data filtering techniques that can ef-
+fectively identify and prioritize high-quality, noise-free samples
+for pre-training. Consequently, we employ the following two
+strategies to filter the pre-training data.
+Our first strategy involves filtering out the samples with
+more than one speaker. To detect the multiple speakers in an
+audio sample, we employ an in-house speaker change detec-
+tion model, and discard a sample whenever the speaker change
+is detected. Our second strategy involves assessing the speech
+quality of the samples. We employ the DNSMOS [18], a neural
+network-based mean opinion score estimator1, to evaluate the
+speech quality. We then discard samples that fall below a cer-
+tain DNSMOS value threshold DNSMOST. In the experiments
+section, we explore the impact of different threshold values for
+our second strategy. -->
+采用以下两种策略来过滤大量的无标签的预训练数据：
++ 过滤掉多说话人的样本。使用 speaker change detection model 检测多说话人，当检测到 speaker change 时丢弃样本
++ 评估样本的语音质量。使用 DNSMOS 评估语音质量，丢弃低于阈值的样本
+
+<!-- Masked speech denoising in pre-training -->
+### 预训练下的 mask speech denoising
+<!-- Masked speech denoising, introduced in WavLM [21], is an
+approach to enhance the model’s ability to focus on relevant
+speech signals amid noise. It involves estimating clean audio
+for the masked part from the noisy audio input. Inspired by the success of WavLM, we investigate a similar approach for flow-
+matching-based model pre-training. -->
+本文探索了类似于 WavLM 的 mask speech denoising 方法。
+<!-- During pre-training, in a probability of P pre
+n , we simu-
+late noisy speech by mixing training samples with randomly
+selected noise, which yields pairs of noisy speech and clean
+speech. We use the noisy speech to extract the context input
+xctx, and the original training sample as the training target. In
+the noise mixing phase, we randomly sample the noise from
+the DNS challenge corpus [22], crop it, and mixed it with the
+signal-to-noise ratio (SNR) ranging from 0dB to 20 dB. We
+ensure that the duration of the noise does not exceed 50% of
+that of the training audio. We also explore the mixing of a sec-
+ondary speaker into the audio with a probability P pre
+s , drawing
+parallels to WavLM. The secondary speaker is picked from the
+same training batch of the primary speaker. All the mixing set-
+tings are the same as the noise mixing one, except that the SNR
+ranges between [0, 10] dB. -->
+在预训练期间，以概率 $P^{\text{pre}}_n$，通过将训练样本与随机选噪声混合来模拟噪声语音，得到 带噪语音和干净语音 对。使用 带噪语音提取上下文输入 $x_{\text{ctx}}$，原始训练样本作为 target。在噪声混合阶段，从 DNS challenge corpus 随机采样噪声，混合使其 SNR 在 0dB 到 20 dB 之间。
+
+<!-- Fine-tuning with random noise mixing -->
+### 使用随机噪声混合进行 fine tune
+<!-- We also explore the fine-tuning strategy of the audio model.
+Conventionally, the audio model is fine-tuned with clean train-
+ing data [17]. On the other hand, Fujita et al. [16] concurrently2
+proposed to fine-tune their zero-shot TTS model by including
+noise to the audio prompt in a 50% ratio to improve the noise
+robustness. In our work, we also explore the similar approach in
+the context of flow-matching-based zero-shot TTS. Specifically,
+we randomly add noise in a probability P ft
+n to the audio to ex-
+tract the audio context xctx, while the training target remains the
+original clean audio. Noise samples from the DNS challenge
+corpus [22] are randomly selected and mixed at SNRs between
+-5 dB and 20 dB. -->
+在 fine-tuning 阶段，以概率 $P^{\text{ft}}_n$，随机添加噪声到音频中提取音频上下文 $x_{\text{ctx}}$，训练目标仍然是原始干净音频。噪声样本从 DNS challenge corpus 随机选择，混合 SNR 在 -5 dB 到 20 dB 之间。
+
+## 实验（略）
