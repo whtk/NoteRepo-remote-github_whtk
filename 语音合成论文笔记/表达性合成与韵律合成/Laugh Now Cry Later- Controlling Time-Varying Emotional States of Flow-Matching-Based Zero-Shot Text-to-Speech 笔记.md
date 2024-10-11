@@ -59,7 +59,7 @@ EmoCtrl-TTS 训练和推理过程如图：
 + 一是将情感分类为不同的情感类别，如 happiness 或 sadness，反映不同的情感状态；
 + 另一种是使用两个属性描述情感，arousal 和 valence，有时还有 dominance
 
-Arousal 表示情感的强度或激活水平，从 calm 到 highly stimulated。Valence 表示情感的愉悦程度，从 very positive 到 very negative。Dominance 表示一个人对情况的控制程度。
+Arousal 表示情感的强度或激活水平，从 calm 到 highly stimulated。Valence 表示情感的愉悦程度，从 very positive 到 very negative。Dominance 表示一个人对 situation 的控制程度。
 
 最终，使用预训练的 arousal-valence-dominance extractor 预测的 arousal 和 valence 值作为 emotion embedding。extractor 使用 wav2vec 2 模型初始化，并在 MSP-PODCAST 数据 fine-tune，预测 arousal、valence 和 dominance values。使用 0.5 秒的窗口大小和 0.25 秒的 hop size 提取 chunk-wise arousal-valence values。因为 extractor 输出的值在 0.0 到 1.0 范围内，将估计值减去 0.5 调整范围为 -0.5 到 0.5。通过线性插值将提取的值的长度与 phoneme embedding 对齐。这样可以捕捉每个 utterance 中更微妙的情感变化。
 > 作者发现，dominance value 的使用会降低音频质量，因此省略了 dominance value。
@@ -80,5 +80,3 @@ Arousal 表示情感的强度或激活水平，从 calm 到 highly stimulated。
 数据集：
 + Libri-light：用于 pre-training audio model，不包含 NV 和 emotion embeddings
 + LAUGH 和 IH-EMO：用于 fine-tuning audio model，包含 NV 和 emotion embeddings
-
-

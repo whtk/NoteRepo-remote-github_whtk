@@ -1,7 +1,7 @@
 > Microsoft Corporation, USA，preprint 2024.6
 
 1. 提出 Embarrassingly Easy TTS（E2 TTS），非自回归 zero-shot TTS
-    1. 文本输入转为 haracter sequence（带 filler token）
+    1. 文本输入转为 character sequence（带 filler token）
     2. 基于 audio infilling 任务训练 flow-matching-based mel spectrogram generator
     3. 无需额外模块（如 duration model, grapheme-to-phoneme）或 MAS 对齐
 2. E2 TTS 达到了与 Voicebox 和 NaturalSpeech 3 相当的 zero-shot TTS 性能
@@ -17,7 +17,7 @@
 2. 一些 fully NAR zero-shot TTS 模型效果不错：
     1. NaturalSpeech 2 和 3 采用 diffusion 估计 neural audio codec 的 latent vectors
     2. Voicebox 和 MatchaTTS 使用 flow-matching 
-3. 但 NAR 模型在文本和输出音频的对齐上有挑战
+3. 但 NAR 模型很难建模 文本 和 音频 的对齐
     1. NaturalSpeech 2、3 和 Voicebox 使用 frame-wise phoneme alignment
     2. MatchaTTS 使用 MAS
     3. E3 TTS 使用 cross-attention，需要 U-Net
@@ -30,22 +30,25 @@
 6. 提出 E2 TTS，一个简单的 NAR zero-shot TTS 系统
     1. E2 TTS 仅包含两个模块：flow-matching-based mel spectrogram generator 和 vocoder
     2. 文本输入转为 character sequence，带 filler tokens 以匹配输入和输出 mel-filterbank sequence 的长度
-    3. mel spectrogram generator 由 vanilla Transformer 和 U-Net skip connections 组成，使用 speech-infilling 任务训练
+    3. mel 谱 generator 由 Transformer 和 U-Net skip connections 组成，使用 speech-infilling 任务训练
     4. E2 TTS 达到了与 Voicebox 和 NaturalSpeech 3 相当的 zero-shot TTS 性能
 
 ## E2 TTS
 
+结构如图：
 ![](image/Pasted%20image%2020240801151059.png)
 
 ### 训练
-训练流程如图 a，假设有训练样本 $s$，其文本为 $y = (c_1, c_2, ..., c_M)$，其中 $c_i$ 表示第 $i$ 个 character。首先，提取 mel-filterbank 特征 $ \hat{s} \in \mathbb{R}^{D \times T}$，$D$ 为特征维度，$T$ 表示序列长度。然后，创建一个 extended character sequence $\tilde{y}$，在 $y$ 后面添加特殊的 filler token $\langle F \rangle$ 使得 $\tilde{y}$ 的长度等于 $T$：
+
+训练流程如图 a，假设有训练样本 $s$，其文本为 $y = (c_1, c_2, ..., c_M)$，其中 $c_i$ 表示第 $i$ 个 character。首先，提取 mel-filterbank 特征 $\hat{s} \in \mathbb{R}^{D \times T}$，$D$ 为特征维度，$T$ 表示序列长度。然后，创建一个 extended character sequence $\tilde{y}$，在 $y$ 后面添加特殊的 filler token $\langle F \rangle$ 使得 $\tilde{y}$ 的长度等于 $T$：
 $$\hat{y}=(c_1,c_2,\ldots,c_M,\underbrace{\langle F\rangle,\ldots,\langle F\rangle}_{(T-M)\mathrm{~times}}).$$
 
 然后训练一个 spectrogram generator，由 vanilla Transformer 和 U-net skip connection 组成，基于 speech infilling 任务训练。具体来说，模型训练学习分布 $P(m \odot \hat{s} | (1 - m) \odot \hat{s}, \hat{y})$，其中 $m \in \{0, 1\}^{D \times T}$ 表示 0-1 mask，$\odot$ 是 Hadamard 乘积。E2 TTS 使用 conditional flow-matching 学习这种分布。
 
 ### 推理
 
-上图 b 为推理过程。假设有一个音频 prompt $s^{aud}$ 和其文本 $y^{aud} = (c_1^\prime, c_2^\prime, ..., c_{M^{aud}}^\prime)$，用于模仿说话者特征。同时，有一个文本 prompt $y^{text} = (c_1^{\prime\prime}, c_2^{\prime\prime}, ..., c_{M^{text}}^{\prime\prime})$。在 E2 TTS 框架中，还需要目标语音的持续时间，可以任意确定，其由帧长 $T^{gen}$ 表示。
+上图 b 为推理过程。假设有一个音频 prompt $s^{aud}$ 和其文本 $y^{aud} = (c_1^\prime, c_2^\prime, ..., c_{M^{aud}}^\prime)$，用于模仿说话者特征。同时，有一个文本 prompt $y^{text} = (c_1^{\prime\prime}, c_2^{\prime\prime}, ..., c_{M^{text}}^{\prime\prime})$。
+> 还需要目标语音的持续时间，这里可以任意确定，其由帧长 $T^{gen}$ 表示。
 
 首先，从 $s^{aud}$ 提取 mel-filterbank 特征 $\hat{s}^{aud} \in \mathbb{R}^{D \times T^{aud}}$。然后，创建一个 extended character sequence $y^{\prime}$，通过连接 $y^{aud}$、$y^{text}$ 和重复的 $\langle F \rangle$ 得到：
 $$\hat{y}^{\prime}=(c_{1}^{\prime},c_{2}^{\prime},\ldots,c_{{M^{{\mathrm{aud}}}}}^{\prime},c_{1}^{\prime\prime},c_{2}^{\prime\prime},\ldots,c_{{M^{{\mathrm{text}}}}}^{\prime\prime},\underbrace{{\langle F\rangle,\ldots,\langle F\rangle}}_{{\mathcal{T}\mathrm{~times}}}),$$
