@@ -1,4 +1,4 @@
-> Google，preprint
+> Transactions of the Association for Computational Linguistics，Google
 
 1. 提出 SPEAR-TTS，是一个多说话人 TTS 系统，其将两种离散语音表征结合，把 TTS 分解成两个 seq2seq 的任务：
 	1. reading：从文本生成 high-level 的 semantic token
