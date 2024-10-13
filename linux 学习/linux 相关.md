@@ -129,7 +129,6 @@ pip 镜像 https://pypi.tuna.tsinghua.edu.cn/simple
 		2. 解释：因为直接使用清华的源是找不到 `torch==1.7.0+cu110` 的 torch 版本的，所以一般会报错 `ERROR: Could not find a version that satisfies the requirement`；目前只找到上交的这个路径可以直接原封不动地替换
 	2. 手动指定 cuda 路径， https://mirrors.aliyun.com/pytorch-wheels/cu118 （后面的 118 可以替换为任意的版本）
 		1. 示例：`pip install torch==1.7.0 torchvision==0.8.0 -f https://mirrors.aliyun.com/pytorch-wheels/cu110`
-	3. 去路径：
 
 
 ### linux 中的测试命令
