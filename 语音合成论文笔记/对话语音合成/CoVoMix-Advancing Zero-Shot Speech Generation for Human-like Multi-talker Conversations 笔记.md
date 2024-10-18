@@ -6,6 +6,8 @@
     3. 使用 HiFi-GAN 生成语音波形
 2. 实验表明，CoVoMix 可以生成自然、连贯的对话
 
+> token + flow-matching 的声学模型 + HiFi-GAN，做的是多轮对话
+
 ## Introduction
 
 1. spontaneous dialogues 生成的三个难点为：
