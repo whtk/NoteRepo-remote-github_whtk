@@ -1,146 +1,38 @@
 > preprint 2024.10，开源非营利性组织 Kyutai
-<!-- 翻译&理解 -->
-<!-- We introduce Moshi, a speech-text foundation model and full-duplex spoken dialogue frame-
-work. Current systems for spoken dialogue rely on pipelines of independent components,
-namely voice activity detection, speech recognition, textual dialogue and text-to-speech.
-Such frameworks cannot emulate the experience of real conversations. First, their complex-
-ity induces a latency of several seconds between interactions. Second, text being the inter-
-mediate modality for dialogue, non-linguistic information that modifies meaning— such as
-emotion or non-speech sounds— is lost in the interaction. Finally, they rely on a segmenta-
-tion into speaker turns, which does not take into account overlapping speech, interruptions
-and interjections. Moshi solves these independent issues altogether by casting spoken dia-
-logue as speech-to-speech generation. Starting from a text language model backbone, Moshi
-generates speech as tokens from the residual quantizer of a neural audio codec, while model-
-ing separately its own speech and that of the user into parallel streams. This allows for the
-removal of explicit speaker turns, and the modeling of arbitrary conversational dynamics.
-We moreover extend the hierarchical semantic-to-acoustic token generation of previous work
-to first predict time-aligned text tokens as a prefix to audio tokens. Not only this “Inner
-Monologue” method significantly improves the linguistic quality of generated speech, but we
-also illustrate how it can provide streaming speech recognition and text-to-speech. Our re-
-sulting model is the first real-time full-duplex spoken large language model, with a theoret-
-ical latency of 160ms, 200ms in practice, and is available at github.com/kyutai-labs/moshi. -->
+
 1. 提出 Moshi，是一个 speech-text foundation model，实现全双工的语音对话
 2. 现有的语音对话需要各种 pipeline，包括 VAD、ASR、文本对话和 TTS
 3. Moshi 将语音对话看成是 speech-to-speech 生成，其从文本的 LM 出发，生成 speech tokens，同时并行建模自己的语音和用户的语音
 4. 进一步将 hierarchical semantic-to-acoustic token 生成扩展到首先预测时间对齐的文本 token 作为音频 token 的 prefix
 
+> 重点在于整套 text+audio token 的组织方式。
 
 ## Introduction
-<!-- Yet, the experience offered by these interfaces remains far from natural conversations.
-First, latency compounds along the many components of these pipelines, resulting in a
-typical global latency of several seconds. This is unlike natural conversations which demon-
-strate response times of a few hundred milliseconds. Second, as language understanding
-and generation happens in the textual domain, any non-written information is ignored
-by the model. This goes from paralinguistic information, such as emotion and accent, to
-non-speech audio, such as surrounding acoustic events. Finally, these models remain fun-
-damentally turn-based, assuming that dialogue is a sequence of well-defined single-speaker
-segments. While this paradigm is suited to text dialogue, it falls short in modeling aspects
-of spoken conversations such as interruptions, overlapping speech— which amounts for 10 to
-20% of spoken time (C¸ etin and Shriberg, 2006) —and backchanneling (i.e. non-interrupting
-interjections such as “OK” or “I see”). -->
+
 1. 现有的对话系统还是不如自然对话：
     1. pipeline 太复杂，延迟很高
     2. 语言理解和生成是在 textual domain，忽略了 non-written 信息
     3. 模型基于 turn-based，其假定对话是一系列明确定义的单说话人片段，无法处理打断、重叠的语音和 backchanneling（非打断的插话）
-<!-- In this work we introduce Moshi, a speech-text foundation model and real-time spoken
-dialogue system that aims at solving the aforementioned limitations: latency, textual infor-
-mation bottleneck and turn-based modeling. Moshi augments a text LLM backbone with
-a smaller audio language model (Borsos et al., 2022; Yang et al., 2023) that ingests and
-predicts discrete audio units. This removes the information bottleneck of text by under-
-standing inputs and generating outputs directly in the audio domain, while benefiting from
-the knowledge and reasoning abilities of the underlying text LLM. We extend previous work
-on audio language models and design a streaming, hierarchical architecture, with a theo-
-retical latency of 160 ms—lower than the 230 ms average in natural conversations measured
-over 10 languages (Stivers et al., 2009). We furthermore introduce the first multi-stream
-audio language model, i.e. a model that explicitly processes the input and output audio
-streams jointly into two autoregressive token streams. This altogether removes the concept
-of speaker turn and thus allows training the model on natural conversations with arbitrary
-dynamics including overlap and interruptions. Our resulting model is the first full-duplex—
-it always listens and always generates sound, either speech or silence—real-time conversa-
-tional LLM. We summarize our contributions below: -->
 2. 提出 Moshi，是一个 speech-text foundation model 和实时语音对话系统，采用一个更小的 audio LM 来增强 text LLM，直接在 audio domain 处理输入和输出，同时利用 text LLM 的知识和推理能力；设计了一个 streaming、hierarchical 架构；引入了第一个 multi-stream audio LM，显式地将输入和输出音频流联合成两个自回归 token stream 来消除 speaker turn 的概念，从而允许训练模型在具有任意动态的自然对话上，包括重叠和打断；最后得到的模型是第一个全双工的实时对话 LLM；贡献如下：
-<!-- We present Helium, a 7B-parameter text LLM that we pretrain on 2.1T tokens of
-public English data. Section 3.2 describes the architecture and training of the model,
-while Section 4.1 provides details on the pretraining data collection and filtering -->
     + 提出 Helium，一个 7B 参数的 text LLM，使用 2.1T tokens 数据预训练
-<!-- We train Mimi, a neural audio codec (Zeghidour et al., 2022; D´efossez et al., 2023) that
-converts audio into the discrete tokens predicted by Moshi and back, using residual
-vector quantization (RVQ). Audio language models typically combine such acoustic to-
-kens with semantic tokens from a self-supervised speech model as it is necessary to pro-
-duce intelligible speech in absence of text conditioning (Borsos et al., 2022). We rather
-extend the approach of Zhang et al. (2024b) by distilling semantic information into the
-first level of acoustic tokens and introduce improved training tricks. Section 3.3 de-
-scribes the architecture and training of Mimi while Section 5.2 details ablation studies. -->
     + 训练 Mimi codec，，使用 RVQ 将 audio 转换为 Moshi 预测的离散 token；将语义信息蒸馏到 acoustic tokens 的第一级，并引入改进的训练技巧
-<!-- We propose Moshi, a new architecture for audio language modeling, which combines
-Helium with a smaller Transformer (Vaswani et al., 2017) model to predict audio to-
-kens in a hierarchical and streaming fashion. We show how challenging it is for such
-unconditioned audio language models to generate intelligible speech, and we pro-
-vide solutions that outperform the intelligibility and audio quality of non-streaming
-models while generating audio in a streaming fashion. We furthermore extend this ar-
-chitecture to model several audio streams in parallel, allowing for a conceptually and
-practically simple handling of full-duplex dialogues with arbitrary dynamics. Section
-3.4 describes this architecture. -->
     + 提出 Moshi，audio LM 架构，将 Helium 与一个较小的 Transformer 模型结合起来，以 hierarchical 和 streaming 的方式预测 audio tokens；将其扩展到并行模拟多个 audio stream，实现全双工对话
-<!-- In Section 3.4.4, we introduce Inner Monologue, a new training and inference setup
-for audio language models that significantly improves the factuality and linguistic
-quality of generated speech by predicting time-aligned text tokens before audio to-
-kens. Moshi is a speech-to-speech model as it allows reasoning about non-linguistic
-information, both from the user audio and from Moshi’s audio. Yet, this is not in-
-compatible with Moshi producing text along its speech output. Based on the past
-observation (Borsos et al., 2022; Zhang et al., 2024b) that coarse-to-fine generation
-(from semantic to acoustic tokens) is critical to generating consistent speech, we ex-
-tend this hierarchy to using text tokens as a per-timestep prefix to the semantic token.
-Our experiments show that not only this drastically improves the length and quality
-of generated speech, but we also show how forcing a delay between text and audio
-tokens allows deriving streaming ASR and streaming TTS from a Moshi model. -->
     + 引入 Inner Monologue，训练和推理方式，通过在 audio tokens 之前预测时间对齐的文本 tokens，提高生成语音的真实性和语言质量
-<!-- We evaluate all components of Moshi along several axes, including text understanding,
-speech intelligibility and consistency, audio quality and spoken question answering.
-Our experiments, reported in Section 5, show that our model is state of the art among
-existing speech-text models for speech modeling and spoken question answering while
-being streaming compatible and able to model several minutes of context (5 min in
-our experiments). -->
+
 
 ## 相关工作（略）
 
 ## 模型
 
 ### 概览
-<!-- Moshi is a multi-stream speech-to-speech Transformer model, which allows for full-duplex
-spoken dialogue with a user thanks to an innovative architecture summarized in Figure 1.
-Moshi is built on top of Helium, a text LLM which we build from scratch (Section 3.2),
-relying on high-quality text data to provide strong reasoning abilities to the model. We also
-propose Inner Monologue (Section 3.4.4), a training and inference procedure in which we
-jointly model text and audio tokens. This allows the model to fully exploit the knowledge
-imparted from the text modality, while remaining a speech-to-speech system. To enable
-real-time dialogue, we also design Moshi as a multi-stream architecture from the get-go
-(Section 3.4.3): The model is able to both speak and listen to the user at the same time,
-and does not need to explicitly model speaker turns. In addition, to capture the input user
-audio and output Moshi’s voice with high quality and in an efficient manner, we propose
-Mimi (Section 3.3), a neural audio codec combining semantic and acoustic information
-into a single tokenizer by using residual vector quantization and knowledge distillation. To
-jointly model the audio streams from Moshi and the user, as well as Moshi’s text tokens, we
-rely on a Depth Transformer compatible with streaming inference (Sections 3.4.1, 3.4.2). -->
+
 架构如图：
 ![](image/Pasted%20image%2020241019104516.png)
 
 基于 Helium LLM，采用 Inner Monologue 训练和推理方式，使得模型可以利用文本模态的知识，同时实现 speech-to-speech；设计为 multi-stream 架构，可以同时说话和听取用户，无需显式建模 speaker turns；提出 Mimi codec，通过 RVQ 和 knowledge distillation 将语义和 acoustic 信息合并为单一 tokenizer；为了联合模拟 Moshi 和用户的 audio streams，以及 Moshi 的 text tokens，使用 Depth Transformer 来支持 streaming 推理。
 
 ### Helium Text LLM
-<!-- Helium is an autoregressive language model, based on the Transformer architecture (Vaswani
-et al., 2017). Following previous work in this area, we make the following changes to the
-original architecture: First, we use RMS normalization (Zhang and Sennrich, 2019) at the
-input of the attention blocks, the feed-forward blocks and the output linear layer of the
-model. We use rotation positional embeddings (Su et al., 2024, RoPE), a context length
-of 4,096 tokens and FlashAttention (Dao et al., 2022) for efficient training. Finally, we
-change the architecture of the feed-forward blocks and use Gated Linear Units (Shazeer,
-2020), with the SiLU activation as a gating function (Hendrycks and Gimpel, 2016b). Our
-tokenizer is based on the unigram model from SentencePiece (Kudo and Richardson, 2018),
-and contains 32,000 elements mostly targeting English. We split all numbers into single
-digits, and use byte-backoff to ensure that our tokenizer does not lose information. We
-train the model with the AdamW (Loshchilov and Hutter, 2017) optimizer, with a fixed
-learning rate followed by a cosine learning rate decay (Loshchilov and Hutter, 2016). -->
+
 Helium 是一个基于 Transformer 架构的自回归语言模型，对原始架构进行了如下修改：
 + 采用 RMS normalization
 + 采用 RoPE 位置编码
@@ -148,75 +40,128 @@ Helium 是一个基于 Transformer 架构的自回归语言模型，对原始架
 + 将 feed-forward blocks 架构改为 Gated Linear Units，使用 SiLU 作为门控函数
 
 Tokenizer 基于 SentencePiece 的 unigram 模型，包含 32,000 个元素。使用 AdamW 优化器，固定学习率，然后使用余弦学习率衰减。
-<!-- Training data is one of the critical ingredients to train LLMs: we now describe our method to
-obtain a large and high-quality text dataset. We start from high-quality data sources, such
-as Wikipedia, Stack Exchange and a large collection of scientific articles. As the quantity
-of data from these sources is too small to train a LLM, we also rely on web crawled data,
-specifically from CommonCrawl, to extend our dataset. See more details on data sources in
-Section 4.1. Web data requires extensive processing to obtain a high-quality training set:
-we perform deduplication, language identification and quality filtering. In the following, we
-describe each operation in more details. -->
-从高质量数据源（如 Wikipedia、Stack Exchange 和大量科学文章）开始，再用 CommonCrawl 爬取数据。数据预处理包括去重、语种识别和质量过滤。
-<!-- Deduplication. We start from the WET files, which contain only the text content of web-
-pages, which was extracted by the CommonCrawl project. Because this format contains
-all the text of a page, it includes a lot of boilerplate such as navigation menus. Thus, the
-first step of our pipeline is to deduplicate each shard (there is 100 shards per crawl) at the
-line level, to remove this boilerplate. To do so, we compute the FNV-1a6 hash of each line,
-and use a bloom filter to remove duplicates. We also train a fastText (Joulin et al., 2016)
-classifier on duplicates vs. non-duplicates, to perform fuzzy deduplication: here we only
-remove blocks of at least 3 consecutive lines that are classified as duplicates. -->
-去重：从 WET 文件开始，只包含 CommonCrawl 提取的网页文本。其包括很多 boilerplate，是对每个 shard（每次爬取有 100 个 shard）进行去重，去除这些 boilerplate。
-<!-- Language identification. Once deduplication is performed, we apply a language identi-
-fier based on fastText to keep English data only. Language identification is performed at
-the document level, and we only keep documents above a certain threshold (0.85). -->
-语种识别：在去重后，使用 fastText 进行语种识别，只保留英文数据。
-<!-- Quality filtering. The last step is to filter the remaining data, to keep high-quality web-
-pages only. To perform this step, we train a fastText classifier on lines from our high quality
-data sources and from random CommonCrawl webpages. We obtain a classifier with 9 cat-
-egories, corresponding to our different high quality sources such as Wikipedia or Wikibooks
-and to subsets of StackExchange such as STEM or humanities. The motivation is to obtain
-a finer control over which documents to keep, not only based on similarity to high quality
-sources, but also based on their domains. This classifier is applied at the line level, and
-an aggregated score is obtained by computing the average scores of each line, weighted by
-their length. Again, we keep documents corresponding to scores above a certain threshold. -->
-质量过滤：训练 fastText 分类器，对高质量数据源和随机 CommonCrawl 网页的行进行分类。分类器有 9 个类别，对应不同的高质量来源，如 Wikipedia 或 Wikibooks，以及 StackExchange 的子集。计算每行的平均分数（按长度加权）得到聚合分数，保留分数高于某个阈值的文档。
+
+从高质量数据源（如 Wikipedia、Stack Exchange 和大量科学文章）开始，再用 CommonCrawl 爬取数据。数据预处理包括：
++ 去重：从 WET 文件开始，只包含 CommonCrawl 提取的网页文本。其包括很多 boilerplate，是对每个 shard（每次爬取有 100 个 shard）进行去重，去除这些 boilerplate。
++ 语种识别：在去重后，使用 fastText 进行语种识别，只保留英文数据。
++ 质量过滤：训练 fastText 分类器，对高质量数据源和随机 CommonCrawl 网页的行进行分类。分类器有 9 个类别，对应不同的高质量来源，如 Wikipedia 或 Wikibooks，以及 StackExchange 的子集。计算每行的平均分数（按长度加权）得到聚合分数，保留分数高于某个阈值的文档。
 
 ### Audio Tokenization
-<!-- To discretize waveforms into audio tokens, we introduce Mimi, a neural audio codec (Zeghi-
-dour et al., 2022; D´efossez et al., 2023) that operates as an autoencoder with a discrete
-bottleneck (van den Oord et al., 2017). In the literature, and following the terminology de-
-fined by Borsos et al. (2022), these tokens are referred to as acoustic tokens, as they model
-fine audio details and are optimized for high-quality reconstruction. While these acous-
-tic tokens provide appropriate targets for conditioned text-to-audio models (e.g. text-to-
-speech (Wang et al., 2023) or text-to-music (Copet et al., 2023)), unconditioned speech gen-
-eration requires combining them with semantic tokens extracted from self-supervised speech
-models (Baevski et al., 2020; Hsu et al., 2021; Chung et al., 2021). Unlike their acoustic
-counterpart, semantic tokens do not allow for reconstructing high-quality audio but correlate
-strongly with linguistic content. This similarity with language allows generating intelligible
-and consistent speech, even without text conditioning, by using semantic audio tokens as a
-prefix to predicting acoustic tokens. Yet, this hybrid tokenization approach is not compati-
-ble with real-time generation. Semantic tokens are typically not causal and can thus only be
-computed in an offline manner. Moreover, generating acoustic and semantic tokens with sep-
-arate encoders represents a non-negligible computational burden. Consequently, and taking
-inspiration from previous work on SpeechTokenizer (Zhang et al., 2024b), Mimi uses distil-
-lation to transfer non-causal, high-level semantic information into the tokens produced by
-a causal model, allowing for streaming encoding and decoding of semantic-acoustic tokens -->
+
 Mini codec 是一个带有离散 bottleneck 的自编码器，将 waveform 离散化为 audio tokens（acoustic tokens）semantic tokens 与 acoustic tokens 不同，不可以重构音频，但与内容相关。从而可以在没有文本条件是，使用 semantic audio tokens 作为 acoustic tokens 的 prefix 来生成可理解的语音。然而，这种混合 tokenization 方法不适用于实时生成。semantic tokens 只能离线计算。而且用不同的 encoder 生成 acoustic 和 semantic tokens 增加了计算量。因此，Mimi 使用 distillation 将非因果的语义信息转移到 causal model 生成的 tokens 中，实现流式编解码。
-<!-- Our baseline architecture takes inspiration from SoundStream (Zeghidour et al., 2022) and
-Encodec (D´efossez et al., 2023) and consists of a SeaNet (Tagliasacchi et al., 2020) autoen-
-coder and a Residual Vector Quantizer (Zeghidour et al., 2022). The encoder projects a
-single-channel waveform x ∈RL to a latent representation enc(x) ∈RS×D by cascading
-residual convolutional blocks that interleave dilated (van den Oord et al., 2016) and strided
-convolutions along with ELU (Clevert et al., 2016) non-linearities and Weight Normaliza-
-tion (Salimans and Kingma, 2016). All convolutions are causal, such that this autoencoder
-can run in a streaming fashion. With 4 convolutional blocks and respective striding fac-
-tors (4,5,6,8), and a final 1D convolution with stride 2, Mimi’s encoder projects a 24kHz
-waveform to a latent representation of 12.5 frames per second and dimension D = 512.
-Symmetrically, the decoder adopts a similar structure but with transposed convolutions
-rather than strided ones, to project the latent representation back to 24kHz audio. We
-discretize the latent space with a Residual Vector Quantizer (Zeghidour et al., 2022), which
-iteratively applies vector quantization (VQ) to the residuals of the previous quantizer. With
-Q quantizers, each with a codebook of NA centroids, the RVQ discretizes the latent space
-into {1,...,NA}S×Q. As a baseline, we train this model with a combination of reconstruc-
-tion and adversarial losses, following the setup of Encodec (D´efossez et al., 2023). We detail
-below the main changes of Mimi with respect to this default configuration. -->
+
+baseline 参考了 [SoundStream- An End-to-End Neural Audio Codec 笔记](../语音领域其他论文笔记/SoundStream-%20An%20End-to-End%20Neural%20Audio%20Codec%20笔记.md) 和 [EnCodec- High Fidelity Neural Audio Compression 笔记](../语音领域其他论文笔记/EnCodec-%20High%20Fidelity%20Neural%20Audio%20Compression%20笔记.md)，包含 SeaNet autoencoder 和 RVQ。encoder 将波形投影到 latent representation，decoder 将 latent representation 投影回 24kHz 音频。latent space 通过 RVQ 离散化。baseline 模型使用重构和对抗损失训练。Mimi 的主要改变如下：
++ 在 bottleneck 前后添加 Transformer 模块
++ Transformer 有 8 层，8 heads，RoPE 位置编码，250 帧的有限上下文，GELU 激活函数，模型维度 512，MLP 维度 2048
++ 使用 LayerScale 初始化，对角线值为 0.01
++ 两个 Transformer 使用因果 masking，从而兼容 streaming 推理
+
+Mimi 是因果的，可以流式编解码。初始帧大小和总步长都是 80ms，即给定 80ms 的音频帧，Mimi 输出一个 latent timestep，可以解码为 80ms 的输出音频。
+
+优化：使用 AdamW 优化器，学习率 8x10−4，动量衰减 0.5，梯度平方衰减 0.9，权重的指数移动平均衰减 0.99。batch size 128，随机 12s 窗口训练 4M steps，Transformer 的上下文限制在 10s。
+
+量化率：8 个 quantizers，每个 codebook 大小为 NA = 2048。12.5Hz，比特率 1.1kbps。latent dimension 512，RVQ 前后投影到 256 和 512。使用 quantizer dropout 提供比特率可扩展性。训练时只有 50% 的时间应用量化。
+
+仅使用对抗训练，去除重构损失，只保留特征损失和判别器损失。去除重构损失会显著降低客观指标，但主观评估音频质量有显著提升。
+
+与 SpeechTokenizer 类似，从 WavLM 中蒸馏语义信息到 RVQ 的第一级。WavLM 将 16kHz 波形投影到 1024 维度的 embeddings，Mimi 将 24kHz 波形投影到 512 维度。训练时，通过下采样输入波形到 16kHz，计算 WavLM embeddings，然后平均池化到 12.5Hz。线性投影到第一个 RVQ 级的输出，与 decoder 的实际 embedding 平行。计算第一个 quantizer 的输出和转换后的 WavLM embeddings 之间的余弦距离进行蒸馏。蒸馏损失与重构和对抗损失冲突，显著提高了第一个 quantizer 的语音区分度，但也对音频质量产生负面影响。提出 split RVQ，将语义信息蒸馏到普通 VQ，然后并行应用 7 级 RVQ。两者的输出求和，这样两者都可以用于重构，去除 acoustic 信息应该保留在 semantic quantizer 的残差中的约束。
+
+### Generative Audio Modeling
+
+下面拓展 Helium 模型，使其支持 Mimi codec 的 audio tokens。同时模拟两个 audio stream，一个代表用户，一个代表系统。最后使用 Inner Monologue 联合建模文本和音频模态。
+
+令 $U \in \{1,...,N\}^S$ 为离散随机序列，$N$ 为选择的个数，$S$ 为序列长度。令 $U_0 = 0$ 为一个确定的初始 token 值。自回归建模是通过估计所有步骤 $1 \leq s \leq S$ 的条件分布 $P[U_s|U_0,...U_{s-1}]$ 来估计联合分布 $P[U_1,...,U_S]$。
+
+建模语音时，使用 tokenized text 比 audio tokens 可以实现更紧凑的表征。
+> 使用 Mimi codec，Q = 8 codebooks，帧率 12.5hz，需要 100  step 来生成 1s 的音频。5 分钟音频需要 30,000 个 step，无法实现 streaming。而语音可以用每秒 3 到 4 个文本 token 表示。
+
+本文需要建模多个子序列。将这些子序列堆叠为 $V_{s,k}$，其中 $1 \leq s \leq S$，$1 \leq k \leq K$。对于每个 $1 \leq s \leq S$，$1 \leq k \leq K$，$V_{s,k} \in \{1,...,N_k\}$，$N_k$ 是第 $k$ 个子序列的选择个数。可以将 K 个序列展平为一个序列，预测数量增加 K 倍。
+
+RQ-Transformer 由两个 Transformer 模型组成，一个 Temporal Transformer 和一个较小的 Depth Transformer，如图：
+![](image/Pasted%20image%2020241020101239.png)
+
+记 $Tr_\text{Temp}$ 为 Temporal Transformer，$Tr_\text{Depth}$ 为 Depth Transformer。对所有 $s \leq S$，记 $V_s = (V_{s,1},...,V_{s,K})$ 为所有子序列在步骤 $s$ 的联合值。对于给定的 step $1 \leq s \leq S$，Temporal Transformer 将 $(V_0,...,V_{s-1})$ 映射到一个 temporal context vector：
+$$z_{s}={\mathrm{Tr}}_\mathrm{Temp}\left({{V}}_{0},\dots,{{V}}_{s-1}\right)\in\,{\mathbb{R}}^{d}$$
+
+如果进一步取一个子序列索引 $1 < k \leq K$，Depth Transformer 将 $z_s$ 与 $(V_{s,1},...,V_{s,k-1})$ 映射到 logits estimate：
+$$l_{s,k}=\mathrm{Tr}_{\mathrm{Depth}}(z_{s},V_{s,1},\dots,V_{s,k-1})\in\mathbb{R}^{N_{k}}.$$
+
+定义 $l_{s,1} = \mathrm{Lin}(z_s) \in \mathbb{R}^{N_1}$，其中 $\mathrm{Lin}$ 是一个专门的线性层。训练 $Tr_\text{Temp}$，$Tr_\text{Depth}$ 和 $\mathrm{Lin}$，使得 $\mathrm{softmax}(l_{s,k})$ 是 $V_{s,k}$ 在前一步的所有子序列和当前步的前一子序列的条件分布的近似：
+$$\begin{array}{r l}
+\{\mathrm{softmax}(l_{s,1})\}&\approx\mathbb{P}\left[V_{s,1}|V_{0},\dots,V_{s - 1}\right]\\
+\{\mathrm{softmax}(l_{s,k})\}&\approx\mathbb{P}\left[V_{s,k}|V_{0},\dots,V_{s - 1}, V_{s,1},\dots,V_{s,k - 1}\right]\quad\mathrm{if~}k>1.
+\end{array}$$
+
+Temporal Transformer 的步数始终等于 $S$，而不是 $K \cdot S$，Depth Transformer 的步数最多为 $K$。Temporal Transformer 在每个步骤 $s$ 输入为 $K$ 个 embedding table 的和，表示 $V_{s-1}$ 的值。对于 $1 < k \leq K$，Depth Transformer 输入为 $z_s$ 和单个 embedding $V_{s,k-1}$ 的和。
+
+#### Audio Modeling
+
+Mimi 输出 $Q$ 个子序列，每秒 12.5 个步骤的音频。记这些序列为 $A_{t,q} \in \{1,...,N_A\}$，$1 \leq t \leq T$，$T = 12.5 \cdot \text{duration}$，$1 \leq q \leq Q$，$Q = 8$。将音频子序列插入 RQ-Transformer 模型中。
+> 注意：第一个 codebook 对应 semantic 信息，其他 codebooks 对应 acoustic 特征。
+
+Acoustic delay：在 semantic 和 acoustic tokens 之间的引入轻微延迟可以得到更稳定的生成。因为可以减少给定时间步的子序列之间的依赖，从而使用较弱的模型来近似联合分布 $P[V_{s,k}|V_0,...,V_{s-1}]$。
+
+在 semantic 和 acoustic 特征之间引入 1 或 2 步的延迟使得 Temporal Transformer 可以建模 semantic 和 acoustic 特征之间的相互依赖。对所有 step $s$，有：
+$$\begin{array}{l l}
+\{V_{s,1}=A_{s,1}\\
+\{V_{s,q}=A_{s-\tau,q}\qquad\mathrm{if}\ s\ge\tau + 1,q>1\\
+\{V_{s,q}=0\qquad\mathrm{if}\ s< \tau + 1,q=1
+\end{array}$$
+
+本文的 semantic token 与 acoustic tokens 一起生成，从而可以流式建模 semantic 和 acoustic tokens。
+
+#### Multi-stream Modeling
+
+模拟两个说话人的对话：给定两个音频流 $(A_{t,q})$ 和 $(A^\prime_{t,q})$，两者都进行 acoustic delay，然后拼接得到 $V$。
+> 具体工作时，$A$ 表示 Moshi，$A^\prime$ 表示用户。
+
+#### Inner Monologue
+
+通过建模 Moshi 读出来的语音的文本表征可以提高生成语音质量。定义 text stream $W \in \{1,...,N_W\}^T$，其通过将 语音对应的文本使用 SentencePiece tokenizer 得到。将 $W$ 插入 $V$ 的第一个子序列，作为生成 semantic tokens 的 prefix。
+> 这里不使用用户的文本，因为实时获取用户的文本很困难，依赖外部 ASR 系统。
+
+对齐文本和音频 tokens：将文本 tokens 与音频 tokens 对齐到 12.5Hz 的帧率。通过 Whisper 得到 word-level timestamp，将文本中的第 $i$ 个单词映射到第 $n_i$ 个文本 tokens $w_{i,j}$，$j \leq n_i$，以及开始索引 $t_i$，定义为开始时间戳除以 12.5 Hz。定义两个特殊 tokens：PAD 和 EPAD，不出现在任何单词 tokens 中。构建 $W$ 如：当一个单词开始时，$(W_t)$ 包含其文本 tokens 和直到下一个单词之前的 PAD。EPAD 插入到下一个单词之前，表示填充结束。
+> 虽然不是必需的，但我们观察到这为模型提供了有用的指导，将结束单词的决策和下一个单词的选择分成两个步骤。
+
+首先，序列 $(W_t)$ 初始化为 PAD tokens，$W_t \leftarrow \text{PAD}$。然后，对每个单词 $i$ 和其开始索引 $t_i$，更新 $W$：
+$$\left.\left\{\begin{array}{ll}W_{t_i-1}&\leftarrow\mathrm{EPAD}\\W_{t_i+j}&\leftarrow w_{i,j}&\forall j\leq n_i.\end{array}\right.\right.$$
+
+如果 $t_i = 1$，则在索引 1 处插入 EPAD，并移动文本 tokens。如果 EPAD token 会覆盖前一个单词的文本 token，则不插入 EPAD token。由于文本 tokens 比音频 tokens 更紧凑，通常在 $W_t$ 中单词之间没有重叠。在英语对话中，padding tokens 占大约 65%。
+
+通过在文本序列 $(W_t)$ 和音频 tokens $(A_{t,q})$ 之间引入多一些延迟，可以控制 LM 在哪种模态下决定生成音频的内容：
++ 音频在文本之前，文本的内容将由前几步的音频决定。仅采样文本 tokens，输入 GT audio tokens 可以变成流式的 ASR 模型，且包含 precise word level alignment。
++ 文本在音频 tokens 之前，音频的内容由文本内容决定。给定适当填充的文本 tokens 序列，可以获得流式 TTS 模型。
+
+Moshi 的联合序列建模：将 multi-stream 和 inner monologue 结合，定义最终的序列 $V$：
+$$\begin{cases}V_{s,1}&=W_s&\text{aligned text tokens.}\\V_{s,2}&=A_{s,1}&\text{semantic tokens of Moshi.}\\V_{s,1+q}&=A_{s-\tau,q}&\mathrm{if}\quad s\geq\tau+1,1<q\leq Q&\text{delayed acoustic ok. of Moshi.}\\V_{s,1+Q+1}&=A_{s,1}^{\prime}&&\text{semantic tokens of }other.\\V_{s,1+Q+q}&=A_{s-\tau,q}^{\prime}&\mathrm{if}\quad s\geq\tau+1,1<q\leq Q&\text{delayed acoustic tok. of }other,&\end{cases}$$
+
+总共 $K = 2Q + 1$ 个 streams，实验中 $Q = 8$。具体流程如下图：
+![](image/Pasted%20image%2020241020112735.png)
+
+Moshi 的推理：在训练时，模型在任何 step $s$ 输入 $0,V_1,...,V_{s-1}$，输出估计的概率分布 $\hat{V}_s(0,V_1,...,V_{s-1})$。在推理时，对所有与 Moshi 输出对应的子序列索引 $k$，从 $V_{s,k}$ 中采样：$k=1$ 对应 Moshi 的文本 tokens，$k \in \{2,...,2+Q\}$ 对应 Moshi 的音频 tokens。实际使用时，丢掉预测的 user audio，而使用实际的 user audio。
+> Moshi 可以在任何时候 spear 和 listen，甚至同时进行。当 user 说话而 Moshi 保持沉默时，Moshi 的 audio tokens 解码为 “natural silence” 为几乎无声的波形，而非固定的、明确定义的值；同时，Moshi 的文本 stream 将填充 PAD tokens。
+
+## 数据集和训练
+
+### 文本数据
+
+训练数据集由高质量数据源和 CommonCrawl 过滤的 web 数据混合而成。12.5% 数据来自以下精选数据源：Wikipedia、Wikibooks、Wikisource、Wikinews、StackExchange 和科学文章集合 pes2o。剩余 87.5% 数据来自 CommonCrawl。
+
+### 语音数据
+
+使用 700 万小时的无监督音频数据集，大部分包含英语语音。使用 large-v3 Whisper 进行转录。数据用于音频预训练阶段。所有音频重新采样为 24kHz 单声道。
+
+为了实现 multi-stream，模型需要同时具备听和说的能力。使用 Fisher 数据集，包含 2000 小时的电话对话，每个对话人在不同的 channel 中录制，可以为 Moshi 提供 ground-truth separated stream。原始音频采样率为 8kHz，使用 AudioSR 将其上采样到 24kHz。
+
+最后使用 170 小时对话（每个说话人来自单独的 channel）微调模型来提高质量。称为 supervised multi-stream 数据集。不直接在此数据集上训练 Moshi，而是用于训练真实的 multi-stream TTS 模型，并在真实对话文本上微调 Helium。
+
+对于 Fisher 和最后的数据集，随机选择一个说话人作为主要说话人（即 Moshi 说话），另一个说话人作为第二个 audio stream。Fisher 的 text stream 只包含主要说话人的文本。
+
+
+### 语音-文本 Instruct 数据（略）
+
+### 训练阶段和超参数（略）
+
+## 实验（略）
+
+## 安全
