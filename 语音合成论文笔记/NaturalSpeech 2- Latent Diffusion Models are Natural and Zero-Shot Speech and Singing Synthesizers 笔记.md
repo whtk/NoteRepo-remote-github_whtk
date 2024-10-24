@@ -31,6 +31,8 @@
 
 ## 背景（略）
 
+## NaturalSpeech 2
+
 NaturalSpeech 2 包含：
 + audio codec（encoder + decoder）
 + 带有先验的 diffusion 模型

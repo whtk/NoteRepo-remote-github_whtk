@@ -28,7 +28,7 @@
 考虑单通道音频 $x\in\mathbb{R}^T$，然后通过以下三个组件处理：
 + tokenizer：将 $x$ 映射到序列 $h=\mathrm{enc}(x),h=(h_1,\ldots,h_{T^{\prime}})$ 为离散的 token 序列
 + decoder-only Transformer language model ：基于离散 token 来最大化似然 $\prod_{t=1}^{T'}p(h_t|h_{<t})$，推理时，模型自回归预测 $\hat{h}$
-+ detokenizer：将 token 映射回波形 $\hat{x}=\det(\hat{h})$
++ detokenizer：将 token 映射回波形 $\hat{x}=\mathrm{dec}(\hat{h})$
 
 tokenizer 和 detokenizer 是预训练的，只会训练 language model。
 
@@ -36,7 +36,7 @@ tokenizer 和 detokenizer 是预训练的，只会训练 language model。
 
 ![](image/Pasted%20image%2020230927172933.png)
 
-采用 SoundStream 计算 acoustic tokens，配置其使得，对于 16KHz 的信号，产生 50 Hz 的 embedding。
+采用 SoundStream 计算 acoustic tokens，对于 16KHz 的信号，产生 50 Hz 的 embedding。
 
 采用  w2v-BERT 来计算 semantic token，选择 intermediate layer，计算其 embedding，然后采用 k-means 获得 $K$ 个聚类，把聚类中心作为 semantic token。
 > 作者发现，提取的 token 和从 HuBERT 中提取的 token 很相似？
