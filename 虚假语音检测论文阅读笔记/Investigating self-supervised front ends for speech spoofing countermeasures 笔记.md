@@ -1,4 +1,4 @@
->The Speaker and Language Recognition Workshop 2022
+>The Speaker and Language Recognition Workshop 2022，NII，XinWang
 
 1. 本文使用预训练的自监督语音模型作为欺骗CM的前端
 2. 主要研究了 与自监督前端结合的不同后端架构、微调前端的有效性、不同预训练的自监督模型的性能 三个方面的问题
