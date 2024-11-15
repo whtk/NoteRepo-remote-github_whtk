@@ -16,7 +16,6 @@
 3. 还训练 VQ-VAE 来量化 SSL 的 embedding，而非使用 k-means 提取 semantic tokens
 4. 实验结果表明，MaskGCT 在 speech quality、similarity、prosody 和 intelligibility 上表现优于现有模型
 
-
 ## 相关工作（略）
 
 ## 方法
