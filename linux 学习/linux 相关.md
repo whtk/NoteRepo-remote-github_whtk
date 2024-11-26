@@ -109,7 +109,7 @@ pip 镜像 https://pypi.tuna.tsinghua.edu.cn/simple
 29. conda 相关：
     1. 在指定路径创建虚拟环境：`conda create -p /path/to/env`
     2. 复制环境：`conda create --name new_env --clone old_env`
-30. 大量文件复制的最佳解决方案，采用 rsync：
+30. 大量文件复制的最佳解决方案，采用 **rsync**：
     1. 一般就用：`rsync -av --progress /path/to/source /path/to/destination`，其中 `-a` 表示 archive，`-v` 表示 verbose，`--progress` 表示显示进度
     2. 上面的适用于单个文件比较大的时候，可以看到单个文件的传输进度
     3. 对于大量、小文件的情况，可以采用：`rsync -av /path/to/source /path/to/destination --info=progress2`，其中 `--info=progress2` 表示显示整体进度（非常有用！！！不用再去写什么脚本了）
