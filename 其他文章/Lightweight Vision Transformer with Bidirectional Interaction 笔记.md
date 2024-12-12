@@ -145,3 +145,43 @@ leads to the proposal of the Fully Adaptive Self-Attention (FASA) module. Our FA
 context-aware manners to model all three types of information adaptively. It comprises three modules:
 global adaptive aggregation, local adaptive aggregation, and bidirectional adaptive interaction. Given
 the input tokens X ∈RC×H×W , each part of the FASA will be elaborated in detail.-->
+FASA 使用 context-aware 方式自适应建模三种信息。包括三个模块：
++ global adaptive aggregation
++ local adaptive aggregation
++ bidirectional adaptive interaction
+
+给定输入 tokens $X \in \mathbb{R}^{C \times H \times W}$，下面详细介绍每个部分。
+
+#### Context-Aware Feature Aggregation 的定义
+<!-- In order to provide readers with a clear comprehension of FASA, we will begin by defining the various
+methods of context-aware feature aggregation (CAFA). CAFA is a widely used feature aggregation
+method. Instead of solely relying on shared trainable parameters, CAFA generates token-specific
+weights based on the target token and its local or global context. These newly generated weights,
+along with the associated context of the target token, are then used to modulate the target token during
+feature aggregation, enabling each token to adapt to its related context. Generally, CAFA consists of
+two processes: aggregation (A) and modulation (M). In the following, the target token is denoted by
+xi, and Frepresents a non-linear activation function. Based on the order of Aand M, CAFA can
+be classified into various types. Various forms of self-attention [56; 58; 57; 45] can be expressed as
+Eq. 2. Aggregation over the contexts X is performed after the attention scores between query and
+key are computed. The attention scores are obtained by modulating the query with the keys, and then
+applying a Softmax to the resulting values: yi = A(F(M(xi, X)), X), -->
+CAFA 基于 target token 和其 local 或 global context 生成 token-specific weights，用于调制 target token，使每个 token 适应其相关的 context。包括两个过程：aggregation (A) 和 modulation (M)。target token 记为 $x_i$，$\mathcal{F}$ 表示非线性激活函数。根据 A 和 M 的顺序，CAFA 可以分为不同类型。各种形式的 self-attention 可以表示为：
+$$y_i = A(\mathcal{F}(M(x_i, X)), X)$$
+<!-- In contrast to the approach outlined in Eq. 2, recent state-of-the-art ConvNets [22; 17; 66] utilize a
+different CAFA technique. Specifically, they employ DWConv to aggregate features, which are then
+used to modulate the original features. This process can be succinctly described using Eq. 3. yi = M(A(xi, X), xi),  -->
+最新的 ConvNets 使用 DWConv 聚合特征，然后用于调制原始特征：
+$$y_i = M(A(x_i, X), x_i)$$
+<!-- In our FASA module, global adaptive aggregation improves upon the traditional self-attention method
+with fine-grained downsampling and can be mathematically represented by Eq. 2. Meanwhile, our
+local adaptive aggregation, which differs slightly from Eq. 3, can be expressed as Eq. 4: yi = M(F(A(xi, X)), A(xi, X)),  -->
+在 FASA 模块中，global adaptive aggregation 通过细粒度下采样改进了传统的 self-attention 方法，可以表示为：
+$$y_i = M(F(A(x_i, X)), A(x_i, X))$$
+<!-- In terms of the bidirectional adaptive interaction process, it can be formulated by Eq. 5. Compared to
+the previous CAFA approaches, bidirectional adaptive interaction involves two feature aggregation
+operators (A1 and A2) that are modulated with each other: yi = M(F(A1(xi, X)), A2(xi, X)). -->
+双向自适应交互过程可以表示为：
+$$y_i = M(F(A_1(x_i, X)), A_2(x_i, X))$$
+相比于之前的 CAFA 方法，双向自适应交互涉及两个特征聚合操作符，相互调制。
+
+#### Global Adaptive Aggregation
