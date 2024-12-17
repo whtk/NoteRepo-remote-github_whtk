@@ -185,3 +185,21 @@ $$y_i = M(F(A_1(x_i, X)), A_2(x_i, X))$$
 相比于之前的 CAFA 方法，双向自适应交互涉及两个特征聚合操作符，相互调制。
 
 #### Global Adaptive Aggregation
+<!-- The inherently context-aware nature and capacity to model long-distance dependencies of self-
+attention make it highly suitable for adaptively extracting global representation. As such, we utilize
+self-attention with downsampling for global representation extraction. In contrast to other models
+that downsample tokens [57; 58; 60; 48] by using large stride convolutions or pooling operations, we
+adopt a fine-grained downsampling strategy to minimize loss of global information to the greatest
+extent possible. In particular, our fine-grained downsampling module is composed of several basic
+units. Each unit utilizes a DWConv with a kernel size of 5 ×5 and a stride of 2, followed by a 1 ×1
+convolution that subtly downsamples both K and V . After that, Q, K, and V are processed through
+the Multi-Head Self-Attention (MHSA) module. Unlike regular MHSA, we omit the last linear layer.
+The complete procedure for the global adaptive aggregation process is illustrated in Eq. 6 and Eq. 7.
+Fisrt, we define our fine-grained downsample strategy and the base unit of it in Eq. 6: -->
+self-attention 可以自适应提取全局表征，于是用 self-attention 进行下采样提取全局表征。细粒度下采样模块包括几个基本单元。
+每个单元为 DWConv，然后是 1×1 卷积，微妙地下采样 K 和 V。然后用 MHSA 实现 attention，但是省略了最后的线性层。全局自适应的完整过程如下：
+$$\begin{aligned}&\mathrm{BaseUnit}(X)\triangleq\mathrm{Conv}_{1\times1}(\mathrm{BN}(\mathrm{DWConv}(X))),\\&\mathrm{pool}(X)\triangleq\mathrm{BN}(\mathrm{DWConv}(\mathrm{BaseUnit}^{(\mathrm{n})}(X)),\end{aligned}$$
+<!-- where (n) represents the number of base units that are concatenated and pool denotes our fine-grained
+downsample operator. Then, the MHSA is conducted as Eq. 7: -->
+其中 $\mathrm{n}$ 表示连接的基本单元的数量，pool 表示下采样操作。MHSA 过程如下：
+$$$$
