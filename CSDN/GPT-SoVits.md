@@ -38,7 +38,7 @@ webui 支持
 > 2. chinese-roberta-wwm-ext-large 用于从文本中提取自监督特征
 
 ## 从 SoVITS 到 GPT-SoVITS
-SoVITS 做的是 VC，不做 TTS，因此输入只有两端音频而没有文本。
+SoVITS 做的是 VC，不做 TTS，因此输入只有两段音频而没有文本。
 
 采用 SoftVC 作为 先验编码器，目的是去除音色信息（speaker）保留内容或语义信息。
 得到的语义特征再通过 VITS 进行语音合成
@@ -196,38 +196,14 @@ train_s1：
 
 
 
-## 记录
 
-1. gradio 端口上报：
-    . /data/bore_run_script/common/util.sh
-    report "gradio" "${ENV_IP}" "9874" "gradio_token"
-2. 占卡代码：nohup /group/40076/kevinmo/envs/GPTSoVits/bin/python -u /group/30106/goodli/keepworking_v4/run.py > /dev/null 2>&1 &
-3. 将公司数据集格式转为 GPT-SoVITS 能够读取的 list 文件的代码：/group/30106/yinlinguo/code/preprocess.py
-4. 特征提起的命令行代码：/group/30106/yinlinguo/GPT-SoVITS/kevinmo/get_audio_feature.py、/group/30106/yinlinguo/GPT-SoVITS/kevinmo/get_text_feature.py
-5. 现在的 lr 是 0.0001，然后微调的时候，文本模块的学习率乘以了一个 0.4 的系数
-6. 训练 VITS 的代码：/group/30106/yinlinguo/GPT-SoVITS/
+5. ckpt的两种加载方式，一种是加载 log_s2 里面的模型，然后进行 fine tune；另一种是默认的，当 los_s2 里面没有时，按照 except 的代码加载，此时 加载的文件 要和 默认的底模 或者 fine tune 得到的那一系列的模型（weight 的那种） 是一样的。
 
-10k_data_005_lin 是修复命名 bug 之前，用 500 h 提取的数据，但是
+> 首先加载默认的路径，根据 list 自动找（默认路径是 exp_name/log_s2），找到了就忽略输入的路径，没有的话，则按照 weight 那种格式读取给定路径的模型。
 
 
-ckpt的两种加载方式，一种是加载 log_s2 里面的模型，然后进行 fine tune；另一种是默认的，当 los_s2 里面没有时，按照 except 的代码加载，此时 加载的文件 要和 默认的底模 或者 fine tune 得到的那一系列的模型（weight 的那种） 是一样的。
 
-首先加载默认的路径，根据 list 自动找（默认路径是 exp_name/log_s2），找到了就忽略输入的路径，没有的话，则按照 weight 那种格式读取给定路径的模型。
-
-
-70h 底模：
-+ /group/30106/yinlinguo/GPT-SoVITS/logs/10k_data_005_lin/logs_s2/D_233333333333.pth
-+ /group/30106/yinlinguo/GPT-SoVITS/logs/10k_data_005_lin/logs_s2/D_233333333333.pth
-+ /group/30106/yinlinguo/GPT-SoVITS/SoVITS_weights/10k_data_005_lin_e1_s1177.pth
-+ 
-
-150h_500h：
-+ VITS：
-    + /group/30106/yinlinguo/GPT-SoVITS/SoVITS_weights/500h_data_D_e1_s1457.pth
-    + /group/30106/yinlinguo/GPT-SoVITS/SoVITS_weights/500h_data_e1_s1457.pth
-    + /group/30106/yinlinguo/GPT-SoVITS/GPT_weights/500h_data-ei.ckpt
-
-关于 GPT 模块的训练：
+6. 关于 GPT 模块的训练：
 > 来自作者的经验：训练acc太高不是件好事，train的acc和loss曲线对最终合成效果的意义不大。
 
 
@@ -243,22 +219,8 @@ SoVITS 每次训练要注意调的参数：
 + exp_dir：这个别调了（这个目前仅用于给出 2- 3- 4- 特征文件的路径）
 + s2_ckpt_dir：和 output_dir 作用类似了，eg: logs/0p5h_data/logs_s2_fix_quantizer
 + name：这个是保存在 SoVITS_weights 下的文件名，eg：0p5h_data_fix_quantizer
-+ gpu_numbers：
++ gpu_numbers
 
-增训模型的取名规则：
-+ SoVITS：
-    + {name}_fix_quantizer_ft_from_pretrained_{version}
-    + {name}_tune_quantizer_train_from_scratch_{version}
-    + {name}_tune_quantizer_ft_from_pretrained_{version}
-    + eg: 0p5h_data_fix_quantizer_ft_from_pretrained_v1
-
-+ GPT：
-    + {name}_train_gpt_from_pretrained_with_sovits==pretrained_s2G488k=={version}
-    + {name}_train_gpt_from_scratch_with_sovits=={sovits_name}=={version}
-    + {name}_train_gpt_ft_from_pretrained_with_sovits=={sovits_name}=={version}
-    + eg: {name}_train_gpt_from_scratch_with_sovits==tune_quantizer_train_from_scratch_v1==v1
-
-> 添加了 new 的是修复了 enc_q 的 bug 之后的模型
 
 目前增训的模型配置：
 
@@ -273,48 +235,6 @@ SoVITS 每次训练要注意调的参数：
 
 5. 还有一个，tune quantizer 训练 SoVITS，然后基于这个 tune 的 SoVITS 训 GPT
 
-
-需要测试的：
-1. 原始底模（c1）
-2. 不训 SoVITS，只增训 GPT，SoVITS 直接用底模（c2）
-3. fix quantizer 增训 SoVITS，GPT 则用 2 中增训的 GPT（c3）
-4. 从零开始训两个模型（c4）
-5. 从零开始训练 GPT、但是 SoVITS 是底模或者增训的模型得到的（c5）
-
-目前已出的 demo：
-A: 在配置 1 下测试所有的说话人：《御姐》、《范闲》、《妲己》、《吕布》、《猴哥》、《四郎》、《小帅》
-B: 在配置 2 下，用小说文本测试：《御姐》、《猴哥》、《范闲》、《妲己》、《吕布》、《四郎》、《小帅》
-C: 在配置 3 下， 用小说文本测试：《御姐》
-
-
-> 只要 VITS 不训练 或者 训练的时候不改变量化器，得到的 semantic 特征是一样的（已验证）。
-
-
-yj_orig_ft_v1_c2: 2 的配置进行 fine tune
-yj_300h_ft_scratch_v1: 4 的配置进行 fine tune
-yj_300h_ft_v1: 5 的配置进行 fine tune
-yj_orig_ft_v1: 1 的配置进行 fine tune
-
-
-测试
-1. 猴哥数据：
-    1. 从底模 fine tune，loss 正常 
-    2. 从 300h 增训模型（fix vits 的 quantizer）训练，loss 不正常
-    3. 从 御姐 tune 好的模型 再进行 fine tune， loss 不正常
-
-2. qqfm 集内数据：
-    1. 从 300h 增训模型（fix vits 的 quantizer）训练，loss 不正常
-
-4. 御姐数据：
-    1. 从底模 fine tune，loss 正常
-    2. 从 300h 增训模型（fix vits 的 quantizer）训练，loss 不正常
-    3. 妲己 tune 好的模型 再进行 fine tune， loss 不正常
-
-SoVITS_weights/300h_data_balanced_fix_quantizer_ft_from_pretrained_v1_G_e6_s9624.pth
-SoVITS_weights/300h_data_balanced_fix_quantizer_ft_from_pretrained_v1_D_e6_s9624.pth
-GPT_weights/300h_data_balanced_train_gpt_from_pretrained_with_sovits==pretrained_s2G488k==v1-e8.ckpt
-
-300h_data_random_300_line
 
 
 关于增训后 loss 异常的尝试：
@@ -354,7 +274,8 @@ GPT_weights/300h_data_balanced_train_gpt_from_pretrained_with_sovits==pretrained
 而此时对应的 phoneme 序列为：
 > ['zh', 'e4', 'j', 'i3', 'sh', 'ir2', 'n', 'ian2', 'SP3', 'h', 'uang2', 'd', 'i4', 'SP3', 'h', 'uan4', 'l', 'e5', 'SP3', 'h', 'ao2', 'j', 'i3', 'r', 'en4', '.']
 
-### 推理
+## 推理
+
 1. 原始的推理核心（GPT 部分）：
 
 得到 xy_pos，输入为 transformer decoder 中，得到 xy_dec，通过 ar_predict_layer 得到 logits，对于第一次推理，删除 EOS token 防止一开始就结束。然后进入采样函数，得到采样后的 token，将其拼到 y（y 是 token 序列），同时将当前时刻预测得到的 y_emb 拼接到 xy_pos 中，然后继续下一时刻的预测。直到 EOS token 出现则 break。
@@ -370,32 +291,3 @@ GPT_weights/300h_data_balanced_train_gpt_from_pretrained_with_sovits==pretrained
 4. 引入 temperature
 5. top_k 采样
 6. softmax 得到概率
-
-### 从零开始训-计划
-1. qqfm-300h 训练 SoVITS，训练了 120 epoch
-2. 基于上面训练的，用 1000h-qqfm 继续训练
-
-### VALL-E 2 
-
-1. 固定住 SoVITS 的底模，从零训练 GPT
-2. 改好代码无bug之后，测试通过
-3. 可以提前测试一下速度（好像不行，因为是自回归，长度随时变）
-4. 还是直接训练吧
-
-
-## TEMP
-conda activate /group/30106/yinlinguo/envs/GPTSoVits/
-
-python GPT_SoVITS/inference_from_phonemes_v2.py --ref_wav_path /group/40052/kevinmo/dataset/yujie/all_data/102366.wav --prompt_text "我也相信，谢谢你和我讨论这个话题，让我更加了解了你的想法。" --phoneme_path ../phonemes/xiaoshuo.txt --save_path ../phonemes/
-
-python GPT_SoVITS/inference_from_phonemes_v2.py --ref_wav_path /group/30106/yinlinguo/houge/clips/12.wav --prompt_text "我们先去看看机器人展区吧，我听说那里有很多新奇的东西。" --phoneme_path ../phonemes/xiaoshuo.txt --save_path ../phonemes/
-
-python GPT_SoVITS/inference_from_phonemes_v2.py --ref_wav_path /group/30106/yinlinguo/fx/wave_16khz_norm/10030073.wav --prompt_text "柳姨，要不我先过去，咱们都是自家亲戚，以后我常来看您。" --phoneme_path ../phonemes/xiaoshuo.txt --save_path ../phonemes/fx/
-
-python GPT_SoVITS/inference_from_phonemes_v2.py --ref_wav_path /group/30106/rayrtxiao/data/voc/tts_data/daji/wave_16khz/010001.wav --prompt_text "山城居民们的财产损失也相当惨重。" --phoneme_path ../phonemes/xiaoshuo.txt --save_path ../phonemes/dj_300h_1/
-
-python GPT_SoVITS/inference_from_phonemes_v2.py --ref_wav_path /group/30106/rayrtxiao/data/voc/tts_data/lvbu/wave_16khz/010001.wav --prompt_text "山城居民们的财产损失也相当惨重。" --phoneme_path ../phonemes/xiaoshuo.txt --save_path ../phonemes/lb_300h_1/
-
-python GPT_SoVITS/inference_from_phonemes_v2.py --ref_wav_path /group/30106/yinlinguo/si_lang/clips/12.wav --prompt_text "我听说那里有很多新奇的东西，好啊，我对机器人一直很感兴趣。" --phoneme_path ../phonemes/xiaoshuo.txt --save_path ../phonemes/silang_300h_1/
-
-python GPT_SoVITS/inference_from_phonemes_v2.py --ref_wav_path /group/30106/yinlinguo/xiao_suai/clips/10.wav --prompt_text "我听说那里有很多新奇的东西，好啊，我对机器人一直很感兴趣。" --phoneme_path ../phonemes/xiaoshuo.txt --save_path ../phonemes/xiaosuai_300h_1/
