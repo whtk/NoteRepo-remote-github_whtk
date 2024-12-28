@@ -19,4 +19,4 @@ ImageNet dataset, and accelerates autoregressive decoding
 by up to 64x. Besides, we illustrate that MaskGIT can be
 easily extended to various image editing tasks, such as in-
 painting, extrapolation, and image manipulation. -->
-1. 现有的 generative transformer 将图像视为 token 序列，按照 raster scan 顺序（逐行）解码，不优化也不高效
+1. 现有的 generative transformer 将图像视为 token 序列，按照 raster scan 顺序（逐行）解码，不高效
