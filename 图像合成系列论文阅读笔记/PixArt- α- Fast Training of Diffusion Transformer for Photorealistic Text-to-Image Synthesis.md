@@ -41,7 +41,7 @@ T2I 训练缓慢的原因：
 模型结构如下：
 ![](image/Pasted%20image%2020241224153432.png)
 
-PIXART-α 采用 [Scalable Diffusion Models with Transformers 笔记](Scalable%20Diffusion%20Models%20with%20Transformers%20笔记.md) 作为基础架构，但是修改了 Transformer blocks 来处理 T2I 任务：
+PIXART-α 采用 [DiT- Scalable Diffusion Models with Transformers 笔记](DiT-%20Scalable%20Diffusion%20Models%20with%20Transformers%20笔记.md) 作为基础架构，但是修改了 Transformer blocks 来处理 T2I 任务：
 + Cross-Attention 层：在 DiT block 中加入 multi-head cross-attention（在self-attention 和 feed-forward 之间），使模型可以与文本嵌入交互
 + AdaLN-single：DiT 中 adaLN 的线性投影占了很大的参数，提出 adaLN-single，只在第一个 block 中使用 time embedding 作为输入。具体来说，对于第 $i$ 个 block，$S^{i} = [β^{i}_{1},β^{i}_{2},γ^{i}_{1},γ^{i}_{2},α^{i}_{1},α^{i}_{2}]$ 是 adaLN 中所有的 scale 和 shift 参数，通过 MLP $S^{i} = f^{i}(c+t)$ 得到，其中 $c$ 和 $t$ 分别表示 class condition 和 time embedding，而在 adaLN-single 中，只在第一个 block 中计算一组全局的 shift 和 scale，然后通过 $S^{i} = g(S,E^{i})$ 得到 $S^{i}$，其中 $g$ 是求和函数，$E^{i}$ 是一个与 $S$ 形状相同的可训练的 embedding，用于调整不同 block 中的 scale 和 shift 参数
 + Re-parameterization：为了利用预训练权重，所有 $E^{i}$ 都初始化为使得 $S^{i}$ 与 DiT 中的相同的值，这种设计有效地用全局 MLP 和 layer-specific 可训练的 embeddings 替换了 layer-specific MLPs，同时保持了与预训练权重的兼容性

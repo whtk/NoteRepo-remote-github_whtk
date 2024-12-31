@@ -281,7 +281,7 @@ textual intelligence. For example, in the Huggingface’s open-source Speech-To-
 an additional Voice Activity Detection (VAD) module8 was further layered onto the traditional
 cascaded modules to distinguish between speech and silent segments, as well as between different
 speakers -->
-最早的级联 SDM 原型可以追溯到 AudioGPT，实现语音对话功能：首先使用 ASR 模型将语音转换为文本，然后使用 ChatGPT 进行文本对话，最后使用 TTS 模型将生成的文本转换回语音。这里语音仅用作输入输出接口，保留了最基本的文本智能。
+最早的级联 SDM 为 AudioGPT，实现语音对话功能：首先使用 ASR 模型将语音转换为文本，然后使用 ChatGPT 进行文本对话，最后使用 TTS 模型将生成的文本转换回语音。这里语音仅用作输入输出接口，保留了最基本的文本智能。
 <!-- After the basic textual intelligence had been established in the cascaded spoken dialogue models,
 researchers began incorporating paralinguistic features, such as emotion and style, to enhance the
 speech intelligence in the cascaded spoken dialogue models. For instance, ParalinGPT [129] and
@@ -292,7 +292,7 @@ introduces an Emotion2Vec [144] module to provide style vectors to the Llama2-Ch
 LoRA [80] fine-tuning, Llama2-Chat is trained not only to generate content-based text responses but
 also to produce text responses with specific stylistic attributes (e.g., <cheerful, fast, normal>), which
 can guide downstream TTS systems in generating expressive speech. -->
-后续在级联 SDM 中加入了语音智能，如情感和风格，以增强语音智能。例如，ParalinGPT 和 E-chat 将对话上下文、语音嵌入和语音属性整合到自回归模型中，通过滑动窗口，结合历史文本和情感表示生成更准确的文本回复。类似地，Spoken-LLM 引入 Emotion2Vec 模块为 Llama2-Chat 模型提供风格向量。通过 LoRA 微调，Llama2-Chat 不仅训练生成基于内容的文本回复，还生成具有特定风格属性的文本回复，指导下游 TTS 系统生成富有表现力的语音。
+后续加入语音智能，如情感和风格，以增强语音智能。例如，ParalinGPT 和 E-chat 将对话上下文、语音嵌入和语音属性整合到自回归模型中，通过滑动窗口，结合历史文本和情感表示生成更准确的文本回复。类似地，Spoken-LLM 引入 Emotion2Vec 模块为 Llama2-Chat 模型提供风格向量。通过 LoRA 微调，Llama2-Chat 不仅训练生成基于内容的文本回复，还生成具有特定风格属性的文本回复，指导下游 TTS 系统生成富有表现力的语音。
 <!-- In addition to understanding acoustic information within cascaded spoken dialogue models, there have
 been efforts to directly input speech representations while retaining text as the output modality [41,
 34, 112]. This forces cascaded spoken dialogue systems to process input speech directly. A common
