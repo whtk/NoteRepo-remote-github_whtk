@@ -1,10 +1,11 @@
 > ICML 2024，Stability AI
 
-
 1. 提出 Stable Audio，专注于生成 44.1kHz 双声道长音频：
     1. 基于 latent diffusion，latent 来自全卷积 VAE
     2. 条件是 text prompts 和 timing embeddings，可以控制生成的内容和长度
 2. 在 A100 GPU 上可以在 8 秒内生成 95 秒的 44.1kHz 双声道音频
+
+> 合成时间可控
 
 ## Introduction
 

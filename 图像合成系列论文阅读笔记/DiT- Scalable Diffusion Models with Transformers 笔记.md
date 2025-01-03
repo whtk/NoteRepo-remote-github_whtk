@@ -35,7 +35,6 @@ Conditional diffusion 需要额外的信息作为输入，如类别标签 $c$。
 
 本文将 DiTs 应用于 latent space，使得图像生成 pipeline 成为一种混合方法；混合 convolutional VAEs 和基于 transformer 的 DDPMs。
 
-
 ### DiT Design Space
 
 下面介绍 DiTs。DiT 基于 ViT 架构，输入为 sequence of patches。架构如图：
@@ -51,18 +50,14 @@ DiTs 的输入是 spatial representation $z$（对于 256 × 256 × 3 图像，$
 
 ### DiT 模块设计
 
-在 patchify 之后，输入 token 通过一系列 transformer blocks。除了噪声输入，diffusion 还有处理额外的条件，如时间步 $t$、类别 $c$等。本文探索了四种 transformer blocks 变体，处理不同方式的条件输入。所有 blocks 的设计如上图。
-
+在 patchify 之后，输入 token 通过一系列 transformer blocks。除了噪声输入，diffusion 还有处理额外的条件，如时间步 $t$、类别 $c$等。本文探索了四种 transformer blocks 变体，处理不同方式的条件输入。所有 blocks 的设计如上图。包含：
 + In-context conditioning：将 $t$ 和 $c$ 的 embedding 作为两个额外的 token 附加到输入序列中，与图像 token 一样（类似于 ViTs 中的 cls token）。在通过最后一个 block 之后，从序列中移除条件 token。
 > 这种方法对模型的 Gflops 影响微乎其微。
-
 + Cross-attention block：将 $t$ 和 $c$ 的 embedding 连接为长度为 2 的序列，与图像 token 序列分开。修改 transformer block，添加一个额外的 multi-head cross-attention layer。
 > cross-attention 对模型的 Gflops 影响最大，大约 15% 的额外开销。
 > 个人感觉这种方法的效果最差。
-
 + Adaptive layer norm (adaLN) block：将 transformer block 中的标准 layer norm 替换为 adaptive layer norm。不直接学习维度缩放和偏移参数 $\gamma$ 和 $\beta$，而是从 $t$ 和 $c$ 的 embedding 中得到。
 > adaLN 对模型的 Gflops 影响最小，最高效。
-
 + adaLN-Zero block：在 ResNets 中，将每个 residual block 初始化为 identity function。本文修改 adaLN DiT block，除计算 $\gamma$ 和 $\beta$，还计算 dimension-wise scaling 参数 $\alpha$，这个参数用于 DiT block 中的 residual connections 之前。初始化 MLP 为所有 $\alpha$ 输出零向量，将整个 DiT block 初始化为 identity function。
 > 与 vanilla adaLN block 一样，adaLN-Zero 对模型的 Gflops 影响微乎其微。
 
@@ -78,9 +73,7 @@ DiTs 的输入是 spatial representation $z$（对于 256 × 256 × 3 图像，$
 
 模型命名方式为 config 和 latent patch size $p$，如 DiT-XL/2 表示 XLarge config 和 $p = 2$。
 
-训练：
-
-在 ImageNet 数据集上训练 256 × 256 和 512 × 512 图像分辨率的 class-conditional latent DiT 模型。使用 AdamW 训练，学习率为 $1 \times 10^{-4}$，无权重衰减，batch size 为 256。只使用水平翻转数据增强。训练过程中没有 warmup 和正则化。训练过程非常稳定，没有观察到常见的 transformer 训练中的 loss spikes。使用 EMA 权重，衰减为 0.9999。所有结果使用 EMA 模型。所有 DiT 模型大小和 patch 大小使用相同的训练超参数。训练超参数几乎完全来自 ADM。没有调整学习率、衰减/ warm-up schedules、Adam $\beta_1/\beta_2$ 或权重衰减。
+训练：在 ImageNet 数据集上训练 256 × 256 和 512 × 512 图像分辨率的 class-conditional latent DiT 模型。使用 AdamW 训练，学习率为 $1 \times 10^{-4}$，无权重衰减，batch size 为 256。只使用水平翻转数据增强。训练过程中没有 warmup 和正则化。训练过程非常稳定，没有观察到常见的 transformer 训练中的 loss spikes。使用 EMA 权重，衰减为 0.9999。所有结果使用 EMA 模型。所有 DiT 模型大小和 patch 大小使用相同的训练超参数。训练超参数几乎完全来自 ADM。没有调整学习率、衰减/ warm-up schedules、Adam $\beta_1/\beta_2$ 或权重衰减。
 
 使用 Stable Diffusion 中的预训练 VAE 模型。VAE encoder 下采样因子为 8，即输入 256 × 256 × 3 图像，$z = E(x)$ 的形状为 32 × 32 × 4。在所有实验中，diffusion models 在 Z-space 中操作。采样新的 latent 后，使用 VAE decoder 解码为像素。保留 ADM 的 diffusion 超参数：$t_{\max} = 1000$，线性方差调度从 $1 \times 10^{-4}$ 到 $2 \times 10^{-2}$。
 
