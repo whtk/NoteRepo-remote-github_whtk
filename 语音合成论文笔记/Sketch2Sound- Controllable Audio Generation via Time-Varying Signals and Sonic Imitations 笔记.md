@@ -28,7 +28,7 @@
 
 ### 在 LDM 上使用时变控制信号
 
-使用 [Stable Audio- Fast Timing-Conditioned Latent Audio Diffusion 笔记](Stable%20Audio-%20Fast%20Timing-Conditioned%20Latent%20Audio%20Diffusion%20笔记.md) 和 [Stable Audio 2- Long-form music generation with latent diffusion](Stable%20Audio%202-%20Long-form%20music%20generation%20with%20latent%20diffusion.md) 中的 DiT，基于上面的控制信号来生成声音，其包含两部分：
+使用 [Stable Audio- Fast Timing-Conditioned Latent Audio Diffusion 笔记](Stable%20Audio-%20Fast%20Timing-Conditioned%20Latent%20Audio%20Diffusion%20笔记.md) 和 [Stable Audio 2- Long-form music generation with latent diffusion 笔记](Stable%20Audio%202-%20Long-form%20music%20generation%20with%20latent%20diffusion%20笔记.md) 中的 DiT，基于上面的控制信号来生成声音，其包含两部分：
 1. VAE：将 48kHz 单声道音频压缩为 64 维连续向量序列，频率 40Hz
 2. Transformer 解码器：生成新的 latent 序列，可以通过 VAE decoder 解码为音频
 
