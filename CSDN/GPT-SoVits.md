@@ -291,3 +291,6 @@ SoVITS 每次训练要注意调的参数：
 4. 引入 temperature
 5. top_k 采样
 6. softmax 得到概率
+
+关于原始 vits 的 loss：
+![](image/Pasted%20image%2020250208121747.png)
